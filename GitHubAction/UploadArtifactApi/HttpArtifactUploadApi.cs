@@ -23,7 +23,7 @@ public class HttpArtifactUploadApi : IArtifactUploadApi, IDisposable
         CancellationToken cancellationToken)
     {
         using var formData = new MultipartFormDataContent();
-        formData.Headers.Add("Dcp-Key", key);
+        formData.Headers.Add("Ocp-Apim-Subscription-Key", key);
         formData.Add(new StringContent(name), "name"); 
         formData.Add(new StringContent(version), "version");
         formData.Add(new StringContent(contentType), "contentType");
