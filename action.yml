@@ -1,0 +1,38 @@
+name: 'Skyline DataMiner Deploy Action'
+description: 'The action builds a DataMiner Application Package from your solution and deploys it to your cloud connected DataMiner System.'
+branding:
+  icon: 'download-cloud'  
+  color: '#00517d'
+env:
+    working-directory: ./GitHubAction/Package.Builder 
+inputs:
+  api-key:  # id of input
+    description: 'The API-key generated in the DCP Admin app as authentication for a certain DataMiner System. E.g. g597e77412e34297b827c2570a8fa2bc'
+    required: true
+  solution-path:
+    description: 'The path to the .sln file of the solution. Atm only DataMiner Automation Script solutions are supported. E.g ./Example/Script.sln.' 
+    required: true
+  package-name:
+    description: 'The chosen name of the package. E.g. MyPackageName.'
+    required: true
+  version:
+    description: 'The version number for the package (format A.B.C). E.g. 1.0.1.'
+    required: true
+  timeout:
+    description: 'The maximum time spend on waiting for the deployment to finish (format: HH:MM). E.g. 5:00.'
+    required: false
+    default: "12:00"
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - --api-key
+    - ${{ inputs.api-key }}
+    - --solution-path
+    - ${{ inputs.solution-path }}
+    - --package-name
+    - ${{ inputs.package-name }}
+    - --version
+    - ${{ inputs.version }}
+    - --timeout
+    - ${{ inputs.timeout }}
