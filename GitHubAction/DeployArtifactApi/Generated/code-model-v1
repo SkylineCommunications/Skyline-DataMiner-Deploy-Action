@@ -9,7 +9,7 @@
      "$id": "3",
      "isReadOnly": false,
      "realPath": [
-      "deploymentId"
+      "artifactId"
      ],
      "collectionFormat": "none",
      "defaultValue": {
@@ -26,26 +26,90 @@
      "name": {
       "$id": "6",
       "fixed": false,
-      "raw": "deploymentId"
+      "raw": "artifactId"
      },
-     "serializedName": "deploymentId",
+     "serializedName": "artifactId",
      "modelType": {
       "$id": "7",
       "$type": "PrimaryType",
       "knownPrimaryType": "string",
+      "deprecated": false,
       "name": {
        "$id": "8",
        "fixed": false,
        "raw": "String"
-      },
-      "deprecated": false
+      }
+     }
+    }
+   ],
+   "serializedName": "deployArtifactAsSystemForm",
+   "containsConstantProperties": false,
+   "name": {
+    "$id": "9",
+    "fixed": false,
+    "raw": "deployArtifactAsSystemForm"
+   },
+   "extensions": {
+    "x-ms-metadata": {
+     "apiVersions": [
+      "1.0.0"
+     ],
+     "filename": [
+      "mem:///102?oai3.shaken.json"
+     ],
+     "name": "deployArtifactAsSystemForm",
+     "originalLocations": [
+      "file:///C:/CCAGITHUB/Skyline-DataMiner-Deploy-Action/GitHubAction/DeployArtifactApi/Meta/swagger.json#/components/schemas/deployArtifactAsSystemForm"
+     ]
+    }
+   },
+   "deprecated": false
+  },
+  {
+   "$id": "10",
+   "$type": "CompositeType",
+   "properties": [
+    {
+     "$id": "11",
+     "isReadOnly": false,
+     "realPath": [
+      "deploymentId"
+     ],
+     "collectionFormat": "none",
+     "defaultValue": {
+      "$id": "12",
+      "fixed": false
+     },
+     "deprecated": false,
+     "documentation": {
+      "$id": "13",
+      "fixed": false
+     },
+     "isRequired": false,
+     "isConstant": false,
+     "name": {
+      "$id": "14",
+      "fixed": false,
+      "raw": "deploymentId"
+     },
+     "serializedName": "deploymentId",
+     "modelType": {
+      "$id": "15",
+      "$type": "PrimaryType",
+      "knownPrimaryType": "string",
+      "deprecated": false,
+      "name": {
+       "$id": "16",
+       "fixed": false,
+       "raw": "String"
+      }
      }
     }
    ],
    "serializedName": "deploymentModel",
    "containsConstantProperties": false,
    "name": {
-    "$id": "9",
+    "$id": "17",
     "fixed": false,
     "raw": "deploymentModel"
    },
@@ -59,7 +123,7 @@
      ],
      "name": "deploymentModel",
      "originalLocations": [
-      "file:///C:/GitHub/Deploy-to-dms/GitHubAction/DeployArtifactApi/Meta/swagger.json#/components/schemas/deploymentModel"
+      "file:///C:/CCAGITHUB/Skyline-DataMiner-Deploy-Action/GitHubAction/DeployArtifactApi/Meta/swagger.json#/components/schemas/deploymentModel"
      ]
     }
    },
@@ -74,71 +138,19 @@
  "documentation": "Deploy Artifact API can be used to deploy an artifact to a dms.",
  "properties": [
   {
-   "$id": "10",
-   "isReadOnly": false,
-   "realPath": [
-    "artifactId"
-   ],
-   "collectionFormat": "none",
-   "defaultValue": {
-    "$id": "11",
-    "fixed": false
-   },
-   "deprecated": false,
-   "documentation": {
-    "$id": "12",
-    "fixed": false,
-    "raw": "The artifact Id"
-   },
-   "extensions": {
-    "x-ms-metadata": {
-     "apiVersions": [
-      "1.0.0"
-     ],
-     "filename": [
-      "mem:///102?oai3.shaken.json"
-     ],
-     "name": "paths·10srdw·key_artifact_deploy-v1_0-private-deploy·post·parameters·0",
-     "originalLocations": [
-      "file:///C:/GitHub/Deploy-to-dms/GitHubAction/DeployArtifactApi/Meta/swagger.json#/components/parameters/paths·10srdw·key_artifact_deploy-v1_0-private-deploy·post·parameters·0"
-     ]
-    },
-    "x-ms-parameter-location": "method"
-   },
-   "isRequired": true,
-   "isConstant": false,
-   "name": {
-    "$id": "13",
-    "fixed": false,
-    "raw": "artifactId"
-   },
-   "serializedName": "artifactId",
-   "modelType": {
-    "$id": "14",
-    "$type": "PrimaryType",
-    "knownPrimaryType": "string",
-    "name": {
-     "$id": "15",
-     "fixed": false,
-     "raw": "String"
-    },
-    "deprecated": false
-   }
-  },
-  {
-   "$id": "16",
+   "$id": "18",
    "isReadOnly": false,
    "realPath": [
     "Ocp-Apim-Subscription-Key"
    ],
    "collectionFormat": "none",
    "defaultValue": {
-    "$id": "17",
+    "$id": "19",
     "fixed": false
    },
    "deprecated": false,
    "documentation": {
-    "$id": "18",
+    "$id": "20",
     "fixed": false,
     "raw": "The api-key created in the Admin app and used to authorize this action."
    },
@@ -150,9 +162,9 @@
      "filename": [
       "mem:///102?oai3.shaken.json"
      ],
-     "name": "paths·d1qwlw·key_artifact_deploy-v1_0-private-deploy·post·parameters·1",
+     "name": "paths·10srdw·key_artifact_deploy-v1_0-private-deploy·post·parameters·0",
      "originalLocations": [
-      "file:///C:/GitHub/Deploy-to-dms/GitHubAction/DeployArtifactApi/Meta/swagger.json#/components/parameters/paths·d1qwlw·key_artifact_deploy-v1_0-private-deploy·post·parameters·1"
+      "file:///C:/CCAGITHUB/Skyline-DataMiner-Deploy-Action/GitHubAction/DeployArtifactApi/Meta/swagger.json#/components/parameters/paths·10srdw·key_artifact_deploy-v1_0-private-deploy·post·parameters·0"
      ]
     },
     "x-ms-parameter-location": "method"
@@ -160,45 +172,42 @@
    "isRequired": true,
    "isConstant": false,
    "name": {
-    "$id": "19",
+    "$id": "21",
     "fixed": false,
     "raw": "Ocp-Apim-Subscription-Key"
    },
    "serializedName": "Ocp-Apim-Subscription-Key",
    "modelType": {
-    "$id": "20",
+    "$id": "22",
     "$type": "PrimaryType",
     "knownPrimaryType": "string",
+    "deprecated": false,
     "name": {
-     "$id": "21",
+     "$id": "23",
      "fixed": false,
      "raw": "String"
-    },
-    "deprecated": false
+    }
    }
   }
  ],
  "operations": [
   {
-   "$id": "22",
+   "$id": "24",
    "methods": [
     {
-     "$id": "23",
+     "$id": "25",
      "parameters": [
       {
-       "$id": "24",
-       "clientProperty": {
-        "$ref": "10"
-       },
-       "location": "query",
+       "$id": "26",
+       "location": "body",
        "collectionFormat": "none",
        "defaultValue": {
-        "$id": "25",
+        "$id": "27",
         "fixed": false
        },
        "deprecated": false,
        "documentation": {
-        "$id": "26",
+        "$id": "28",
         "fixed": false,
         "raw": "The artifact Id"
        },
@@ -210,37 +219,28 @@
          "filename": [
           "mem:///102?oai3.shaken.json"
          ],
-         "name": "paths·10srdw·key_artifact_deploy-v1_0-private-deploy·post·parameters·0",
+         "name": "paths·1ewn3hb·key_artifact_deploy-v1_0-private-deploy·post·requestbody",
          "originalLocations": [
-          "file:///C:/GitHub/Deploy-to-dms/GitHubAction/DeployArtifactApi/Meta/swagger.json#/components/parameters/paths·10srdw·key_artifact_deploy-v1_0-private-deploy·post·parameters·0"
+          "file:///C:/CCAGITHUB/Skyline-DataMiner-Deploy-Action/GitHubAction/DeployArtifactApi/Meta/swagger.json#/components/requestBodies/paths·1ewn3hb·key_artifact_deploy-v1_0-private-deploy·post·requestbody"
          ]
-        },
-        "x-ms-parameter-location": "method"
+        }
        },
        "isRequired": true,
        "isConstant": false,
        "name": {
-        "$id": "27",
+        "$id": "29",
         "fixed": false,
-        "raw": "artifactId"
+        "raw": "body"
        },
-       "serializedName": "artifactId",
+       "serializedName": "body",
        "modelType": {
-        "$id": "28",
-        "$type": "PrimaryType",
-        "knownPrimaryType": "string",
-        "name": {
-         "$id": "29",
-         "fixed": false,
-         "raw": "String"
-        },
-        "deprecated": false
+        "$ref": "2"
        }
       },
       {
        "$id": "30",
        "clientProperty": {
-        "$ref": "16"
+        "$ref": "18"
        },
        "location": "header",
        "collectionFormat": "none",
@@ -262,9 +262,9 @@
          "filename": [
           "mem:///102?oai3.shaken.json"
          ],
-         "name": "paths·d1qwlw·key_artifact_deploy-v1_0-private-deploy·post·parameters·1",
+         "name": "paths·10srdw·key_artifact_deploy-v1_0-private-deploy·post·parameters·0",
          "originalLocations": [
-          "file:///C:/GitHub/Deploy-to-dms/GitHubAction/DeployArtifactApi/Meta/swagger.json#/components/parameters/paths·d1qwlw·key_artifact_deploy-v1_0-private-deploy·post·parameters·1"
+          "file:///C:/CCAGITHUB/Skyline-DataMiner-Deploy-Action/GitHubAction/DeployArtifactApi/Meta/swagger.json#/components/parameters/paths·10srdw·key_artifact_deploy-v1_0-private-deploy·post·parameters·0"
          ]
         },
         "x-ms-parameter-location": "method"
@@ -281,12 +281,12 @@
         "$id": "34",
         "$type": "PrimaryType",
         "knownPrimaryType": "string",
+        "deprecated": false,
         "name": {
          "$id": "35",
          "fixed": false,
          "raw": "String"
-        },
-        "deprecated": false
+        }
        }
       }
      ],
@@ -308,7 +308,7 @@
       "OK": {
        "$id": "38",
        "body": {
-        "$ref": "2"
+        "$ref": "10"
        },
        "extensions": {
         "$id": "39",
@@ -321,7 +321,7 @@
          ],
          "name": "paths·w8p5jl·key_artifact_deploy-v1_0-private-deploy·post·responses·200",
          "originalLocations": [
-          "file:///C:/GitHub/Deploy-to-dms/GitHubAction/DeployArtifactApi/Meta/swagger.json#/components/responses/paths·w8p5jl·key_artifact_deploy-v1_0-private-deploy·post·responses·200"
+          "file:///C:/CCAGITHUB/Skyline-DataMiner-Deploy-Action/GitHubAction/DeployArtifactApi/Meta/swagger.json#/components/responses/paths·w8p5jl·key_artifact_deploy-v1_0-private-deploy·post·responses·200"
          ]
         }
        },
@@ -340,7 +340,7 @@
          ],
          "name": "paths·1cxirl8·key_artifact_deploy-v1_0-private-deploy·post·responses·400",
          "originalLocations": [
-          "file:///C:/GitHub/Deploy-to-dms/GitHubAction/DeployArtifactApi/Meta/swagger.json#/components/responses/paths·1cxirl8·key_artifact_deploy-v1_0-private-deploy·post·responses·400"
+          "file:///C:/CCAGITHUB/Skyline-DataMiner-Deploy-Action/GitHubAction/DeployArtifactApi/Meta/swagger.json#/components/responses/paths·1cxirl8·key_artifact_deploy-v1_0-private-deploy·post·responses·400"
          ]
         }
        },
@@ -359,7 +359,7 @@
          ],
          "name": "paths·12drj74·key_artifact_deploy-v1_0-private-deploy·post·responses·403",
          "originalLocations": [
-          "file:///C:/GitHub/Deploy-to-dms/GitHubAction/DeployArtifactApi/Meta/swagger.json#/components/responses/paths·12drj74·key_artifact_deploy-v1_0-private-deploy·post·responses·403"
+          "file:///C:/CCAGITHUB/Skyline-DataMiner-Deploy-Action/GitHubAction/DeployArtifactApi/Meta/swagger.json#/components/responses/paths·12drj74·key_artifact_deploy-v1_0-private-deploy·post·responses·403"
          ]
         }
        },
@@ -378,7 +378,7 @@
          ],
          "name": "paths·501u3k·key_artifact_deploy-v1_0-private-deploy·post·responses·500",
          "originalLocations": [
-          "file:///C:/GitHub/Deploy-to-dms/GitHubAction/DeployArtifactApi/Meta/swagger.json#/components/responses/paths·501u3k·key_artifact_deploy-v1_0-private-deploy·post·responses·500"
+          "file:///C:/CCAGITHUB/Skyline-DataMiner-Deploy-Action/GitHubAction/DeployArtifactApi/Meta/swagger.json#/components/responses/paths·501u3k·key_artifact_deploy-v1_0-private-deploy·post·responses·500"
          ]
         }
        },
@@ -392,7 +392,7 @@
      "returnType": {
       "$id": "47",
       "body": {
-       "$ref": "2"
+       "$ref": "10"
       },
       "isNullable": true
      },

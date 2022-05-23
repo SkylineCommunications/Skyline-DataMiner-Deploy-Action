@@ -60,7 +60,7 @@ public class HttpPackageGateway : IPackageGateway
         {
             Console.WriteLine(uploadedPackage.ArtifactId);
             Console.WriteLine(key);
-            res = await _deployArtifactApi.DeployArtifactWithApiKeyFunctionWithHttpMessagesAsync(uploadedPackage.ArtifactId, key);
+            res = await _deployArtifactApi.DeployArtifactWithApiKeyFunctionWithHttpMessagesAsync(new DeployArtifactAsSystemForm(uploadedPackage.ArtifactId), key);
         }
         catch (Exception e)
         {

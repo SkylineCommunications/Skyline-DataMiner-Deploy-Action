@@ -41,7 +41,7 @@ namespace DeployArtifactApi.Generated
         ServiceClientCredentials Credentials { get; }
 
 
-        /// <param name='artifactId'>
+        /// <param name='body'>
         /// The artifact Id
         /// </param>
         /// <param name='ocpApimSubscriptionKey'>
@@ -54,7 +54,7 @@ namespace DeployArtifactApi.Generated
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<DeploymentModel>> DeployArtifactWithApiKeyFunctionWithHttpMessagesAsync(string artifactId, string ocpApimSubscriptionKey, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<DeploymentModel>> DeployArtifactWithApiKeyFunctionWithHttpMessagesAsync(DeployArtifactAsSystemForm body, string ocpApimSubscriptionKey, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
     }
 }

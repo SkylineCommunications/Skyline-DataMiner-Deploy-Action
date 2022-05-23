@@ -18,21 +18,21 @@ namespace DeployArtifactApi.Generated
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='artifactId'>
+            /// <param name='body'>
             /// The artifact Id
             /// </param>
             /// <param name='ocpApimSubscriptionKey'>
             /// The api-key created in the Admin app and used to authorize this action.
             /// </param>
-            public static DeploymentModel DeployArtifactWithApiKeyFunction(this IDeployArtifactAPI operations, string artifactId, string ocpApimSubscriptionKey)
+            public static DeploymentModel DeployArtifactWithApiKeyFunction(this IDeployArtifactAPI operations, DeployArtifactAsSystemForm body, string ocpApimSubscriptionKey)
             {
-                return operations.DeployArtifactWithApiKeyFunctionAsync(artifactId, ocpApimSubscriptionKey).GetAwaiter().GetResult();
+                return operations.DeployArtifactWithApiKeyFunctionAsync(body, ocpApimSubscriptionKey).GetAwaiter().GetResult();
             }
 
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='artifactId'>
+            /// <param name='body'>
             /// The artifact Id
             /// </param>
             /// <param name='ocpApimSubscriptionKey'>
@@ -41,9 +41,9 @@ namespace DeployArtifactApi.Generated
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<DeploymentModel> DeployArtifactWithApiKeyFunctionAsync(this IDeployArtifactAPI operations, string artifactId, string ocpApimSubscriptionKey, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<DeploymentModel> DeployArtifactWithApiKeyFunctionAsync(this IDeployArtifactAPI operations, DeployArtifactAsSystemForm body, string ocpApimSubscriptionKey, CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.DeployArtifactWithApiKeyFunctionWithHttpMessagesAsync(artifactId, ocpApimSubscriptionKey, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.DeployArtifactWithApiKeyFunctionWithHttpMessagesAsync(body, ocpApimSubscriptionKey, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }

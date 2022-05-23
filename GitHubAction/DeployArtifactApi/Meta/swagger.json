@@ -19,15 +19,6 @@
         "operationId": "DeployArtifactWithApiKeyFunction",
         "parameters": [
           {
-            "name": "artifactId",
-            "in": "query",
-            "description": "The artifact Id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
             "name": "Ocp-Apim-Subscription-Key",
             "in": "header",
             "description": "The api-key created in the Admin app and used to authorize this action.",
@@ -37,6 +28,17 @@
             }
           }
         ],
+        "requestBody": {
+          "description": "The artifact Id",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/deployArtifactAsSystemForm"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "The artifact deployment info",
@@ -60,7 +62,7 @@
         },
         "security": [
           {
-            "ApiKey": [ ]
+            "ApiKey": []
           }
         ]
       }
@@ -68,6 +70,14 @@
   },
   "components": {
     "schemas": {
+      "deployArtifactAsSystemForm": {
+        "type": "object",
+        "properties": {
+          "artifactId": {
+            "type": "string"
+          }
+        }
+      },
       "deploymentModel": {
         "type": "object",
         "properties": {
