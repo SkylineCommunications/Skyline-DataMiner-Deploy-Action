@@ -38,7 +38,7 @@ jobs:
       - name: Checkout	
         uses: actions/checkout@v3
       - name: Deploy the package on the DataMiner System step
-        uses: ./ # Uses an action in the root directory
+        uses: actions/Skyline-DataMiner-Deploy-Action@v1 # Uses the action in the root directory
         id: deploy_package_step
         with:
           api-key: 'g597e77412e34297b827c2570a8fa2bc'
