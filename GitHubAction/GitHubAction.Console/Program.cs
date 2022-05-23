@@ -78,7 +78,7 @@ try
         workingDirectory,
         packageName,
         version,
-        SolutionType.Automation);
+        SolutionType.DmScript);
 
     await gitHubAction.RunAsync(
         inputs[Input.ApiKey], 

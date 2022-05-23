@@ -44,7 +44,7 @@ namespace GitHubAction.UnitTest
                 workingDirectory,
                 packageName,
                 version,
-                SolutionType.Automation);
+                SolutionType.DmScript);
 
             Expression<Func<IPackageService, Task<CreatedPackage>>> createPackageAsync = s =>
                 s.CreatePackageAsync(localPackageConfig);
@@ -124,7 +124,7 @@ namespace GitHubAction.UnitTest
                 workingDirectory,
                 packageName,
                 version,
-                SolutionType.Automation);
+                SolutionType.DmScript);
 
             Expression<Func<IPackageService, Task<CreatedPackage>>> createPackageAsync = s =>
                 s.CreatePackageAsync(localPackageConfig);
@@ -201,7 +201,7 @@ namespace GitHubAction.UnitTest
                 workingDirectory,
                 packageName,
                 version,
-                SolutionType.Automation);
+                SolutionType.DmScript);
 
             Expression<Func<IPackageService, Task<CreatedPackage>>> createPackageAsync = s =>
                 s.CreatePackageAsync(localPackageConfig);
@@ -290,7 +290,7 @@ namespace GitHubAction.UnitTest
                 workingDirectory,
                 packageName,
                 version,
-                SolutionType.Automation);
+                SolutionType.DmScript);
 
             Expression<Func<IPackageService, Task<CreatedPackage>>> createPackageAsync = s =>
                 s.CreatePackageAsync(localPackageConfig);
@@ -376,7 +376,7 @@ namespace GitHubAction.UnitTest
                 workingDirectory,
                 packageName,
                 version,
-                SolutionType.Automation);
+                SolutionType.DmScript);
 
             Expression<Func<IPackageService, Task<CreatedPackage>>> createPackageAsync = s =>
                 s.CreatePackageAsync(localPackageConfig);
@@ -462,7 +462,7 @@ namespace GitHubAction.UnitTest
                 workingDirectory,
                 packageName,
                 version,
-                SolutionType.Automation);
+                SolutionType.DmScript);
 
             Expression<Func<IPackageService, Task<CreatedPackage>>> createPackageAsync = s =>
                 s.CreatePackageAsync(localPackageConfig);
@@ -525,7 +525,7 @@ namespace GitHubAction.UnitTest
                 workingDirectory,
                 packageName,
                 version,
-                SolutionType.Automation);
+                SolutionType.DmScript);
 
             Expression<Func<IPackageService, Task<CreatedPackage>>> createPackageAsync = s =>
                 s.CreatePackageAsync(localPackageConfig);
@@ -589,7 +589,7 @@ namespace GitHubAction.UnitTest
                 workingDirectory,
                 packageName,
                 version,
-                SolutionType.Automation);
+                SolutionType.DmScript);
 
             Expression<Func<IPackageService, Task<CreatedPackage>>> createPackageAsync = s =>
                 s.CreatePackageAsync(localPackageConfig);
@@ -653,7 +653,7 @@ namespace GitHubAction.UnitTest
                 workingDirectory,
                 packageName,
                 version,
-                SolutionType.Automation);
+                SolutionType.DmScript);
 
             Expression<Func<IPackageService, Task<CreatedPackage>>> createPackageAsync = s =>
                 s.CreatePackageAsync(localPackageConfig);
@@ -703,7 +703,7 @@ namespace GitHubAction.UnitTest
                 workingDirectory,
                 packageName,
                 version,
-                SolutionType.Automation);
+                SolutionType.DmScript);
 
             Expression<Func<IPackageService, Task<CreatedPackage>>> createPackageAsync = s =>
                 s.CreatePackageAsync(localPackageConfig);
@@ -751,7 +751,7 @@ namespace GitHubAction.UnitTest
                 workingDirectory,
                 packageName,
                 version,
-                SolutionType.Automation);
+                SolutionType.DmScript);
 
             Expression<Func<IPackageService, Task<CreatedPackage>>> createPackageAsync = s =>
                 s.CreatePackageAsync(localPackageConfig);

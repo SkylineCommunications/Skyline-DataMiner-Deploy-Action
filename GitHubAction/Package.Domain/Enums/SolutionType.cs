@@ -2,6 +2,6 @@
 {
     public enum SolutionType
     {
-        Automation
+        DmScript
     };
 }

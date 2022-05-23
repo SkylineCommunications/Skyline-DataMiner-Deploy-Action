@@ -40,7 +40,7 @@ namespace Package.Application.UnitTest
                 workingDirectory,
                 packageName,
                 version,
-                SolutionType.Automation);
+                SolutionType.DmScript);
 
             Expression<Func<IPackageBuilder, Task<CreatedPackage>>> createPackageAsync = s =>
                 s.CreatePackageAsync(localPackageConfig);

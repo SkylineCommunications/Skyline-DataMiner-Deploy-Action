@@ -14,7 +14,7 @@ namespace Package.Builder
             var convertedFilesDirectory =
                 new DirectoryInfo(Path.Combine(localPackageConfig.ConvertedSolutionWorkingDirectory.FullName, "__SLC_CONVERTED__"));
 
-            if (localPackageConfig.Type != SolutionType.Automation)
+            if (localPackageConfig.Type != SolutionType.DmScript)
             {
                 throw new UnsupportedSolutionException($"Solution of type {localPackageConfig.Type} is not supported.");
             }
