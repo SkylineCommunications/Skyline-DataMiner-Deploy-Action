@@ -2,7 +2,7 @@ name: 'Skyline DataMiner Deploy Action'
 description: 'The action builds a DataMiner Application Package from your solution and deploys it to your cloud connected DataMiner System.'
 branding:
   icon: 'download-cloud'  
-  color: '#00517d'
+  color: 'gray-dark'
 env:
     working-directory: ./GitHubAction/Package.Builder 
 inputs:
