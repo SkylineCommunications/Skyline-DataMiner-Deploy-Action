@@ -47,3 +47,6 @@ jobs:
           version: '1.0.1'
           timeout: '5:00'
 ```
+## License
+
+Code and documentation in this project are released under the [MIT License](https://github.com/SkylineCommunications/Skyline-DataMiner-Deploy-Action/blob/feature/preRelease/LICENSE.txt). 
