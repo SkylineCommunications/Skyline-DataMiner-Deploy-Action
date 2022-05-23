@@ -2,7 +2,7 @@
   <Name>Install</Name>
   <Description />
   <Type>Automation</Type>
-  <Author>SKYLINE2\RepoManager</Author>
+  <Author>SKYLINE2\KoenAnnys</Author>
   <CheckSets>FALSE</CheckSets>
   <Folder />
   <Protocols></Protocols>
@@ -57,7 +57,7 @@ Revision History:
 
 DATE		VERSION		AUTHOR			COMMENTS
 
-dd/mm/2021	1.0.0.1		XXX, Skyline	Initial version
+23/05/2022	1.0.0.1		KAN, Skyline	Initial version
 ****************************************************************************
 */
 
