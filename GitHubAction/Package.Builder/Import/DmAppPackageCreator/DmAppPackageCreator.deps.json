@@ -1,0 +1,58 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v6.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v6.0": {
+      "DmAppPackageCreator/1.0.0": {
+        "dependencies": {
+          "Communication": "1.0.0",
+          "GlobalDefaults": "1.0.0",
+          "SLAppPackageCreator": "1.0.0"
+        },
+        "runtime": {
+          "DmAppPackageCreator.dll": {}
+        }
+      },
+      "Communication/1.0.0": {
+        "runtime": {
+          "Communication.dll": {}
+        }
+      },
+      "GlobalDefaults/1.0.0": {
+        "runtime": {
+          "GlobalDefaults.dll": {}
+        }
+      },
+      "SLAppPackageCreator/1.0.0": {
+        "runtime": {
+          "SLAppPackageCreator.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "DmAppPackageCreator/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Communication/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "GlobalDefaults/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "SLAppPackageCreator/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

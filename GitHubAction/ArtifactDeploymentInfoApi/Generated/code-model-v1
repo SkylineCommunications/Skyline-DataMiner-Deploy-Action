@@ -1,0 +1,1289 @@
+{
+ "$id": "1",
+ "modelTypes": [
+  {
+   "$id": "2",
+   "$type": "CompositeType",
+   "properties": [
+    {
+     "$id": "3",
+     "isReadOnly": false,
+     "realPath": [
+      "id"
+     ],
+     "collectionFormat": "none",
+     "defaultValue": {
+      "$id": "4",
+      "fixed": false
+     },
+     "deprecated": false,
+     "documentation": {
+      "$id": "5",
+      "fixed": false
+     },
+     "isRequired": false,
+     "isConstant": false,
+     "name": {
+      "$id": "6",
+      "fixed": false,
+      "raw": "id"
+     },
+     "serializedName": "id",
+     "modelType": {
+      "$id": "7",
+      "$type": "PrimaryType",
+      "knownPrimaryType": "string",
+      "deprecated": false,
+      "name": {
+       "$id": "8",
+       "fixed": false,
+       "raw": "String"
+      }
+     }
+    },
+    {
+     "$id": "9",
+     "isReadOnly": false,
+     "realPath": [
+      "timestamp"
+     ],
+     "collectionFormat": "none",
+     "defaultValue": {
+      "$id": "10",
+      "fixed": false
+     },
+     "deprecated": false,
+     "documentation": {
+      "$id": "11",
+      "fixed": false
+     },
+     "isRequired": false,
+     "isConstant": false,
+     "name": {
+      "$id": "12",
+      "fixed": false,
+      "raw": "timestamp"
+     },
+     "serializedName": "timestamp",
+     "modelType": {
+      "$id": "13",
+      "$type": "PrimaryType",
+      "format": "date-time",
+      "knownPrimaryType": "dateTime",
+      "deprecated": false,
+      "name": {
+       "$id": "14",
+       "fixed": false,
+       "raw": "DateTime"
+      }
+     }
+    },
+    {
+     "$id": "15",
+     "isReadOnly": false,
+     "realPath": [
+      "context"
+     ],
+     "collectionFormat": "none",
+     "defaultValue": {
+      "$id": "16",
+      "fixed": false
+     },
+     "deprecated": false,
+     "documentation": {
+      "$id": "17",
+      "fixed": false
+     },
+     "isRequired": false,
+     "isConstant": false,
+     "name": {
+      "$id": "18",
+      "fixed": false,
+      "raw": "context"
+     },
+     "serializedName": "context",
+     "modelType": {
+      "$id": "19",
+      "$type": "PrimaryType",
+      "knownPrimaryType": "string",
+      "deprecated": false,
+      "name": {
+       "$id": "20",
+       "fixed": false,
+       "raw": "String"
+      }
+     }
+    },
+    {
+     "$id": "21",
+     "isReadOnly": false,
+     "realPath": [
+      "kind"
+     ],
+     "collectionFormat": "none",
+     "defaultValue": {
+      "$id": "22",
+      "fixed": false
+     },
+     "deprecated": false,
+     "documentation": {
+      "$id": "23",
+      "fixed": false
+     },
+     "isRequired": false,
+     "isConstant": false,
+     "name": {
+      "$id": "24",
+      "fixed": false,
+      "raw": "kind"
+     },
+     "serializedName": "kind",
+     "modelType": {
+      "$id": "25",
+      "$type": "PrimaryType",
+      "knownPrimaryType": "string",
+      "deprecated": false,
+      "name": {
+       "$id": "26",
+       "fixed": false,
+       "raw": "String"
+      }
+     }
+    },
+    {
+     "$id": "27",
+     "isReadOnly": false,
+     "realPath": [
+      "metadata"
+     ],
+     "collectionFormat": "none",
+     "defaultValue": {
+      "$id": "28",
+      "fixed": false
+     },
+     "deprecated": false,
+     "documentation": {
+      "$id": "29",
+      "fixed": false
+     },
+     "isRequired": false,
+     "isConstant": false,
+     "name": {
+      "$id": "30",
+      "fixed": false,
+      "raw": "metadata"
+     },
+     "serializedName": "metadata",
+     "modelType": {
+      "$id": "31",
+      "$type": "DictionaryType",
+      "valueType": {
+       "$id": "32",
+       "$type": "PrimaryType",
+       "knownPrimaryType": "string",
+       "deprecated": false,
+       "name": {
+        "$id": "33",
+        "fixed": false,
+        "raw": "String"
+       }
+      },
+      "supportsAdditionalProperties": false,
+      "deprecated": false,
+      "name": {
+       "$id": "34",
+       "fixed": false
+      }
+     }
+    }
+   ],
+   "serializedName": "deploymentEventModel",
+   "containsConstantProperties": false,
+   "name": {
+    "$id": "35",
+    "fixed": false,
+    "raw": "deploymentEventModel"
+   },
+   "extensions": {
+    "x-ms-metadata": {
+     "apiVersions": [
+      "1.0.0"
+     ],
+     "filename": [
+      "mem:///102?oai3.shaken.json"
+     ],
+     "name": "deploymentEventModel",
+     "originalLocations": [
+      "file:///C:/GitHub/Deploy-to-dms/GitHubAction/ArtifactDeploymentInfoApi/Meta/swagger.json#/components/schemas/deploymentEventModel"
+     ]
+    }
+   },
+   "deprecated": false
+  },
+  {
+   "$id": "36",
+   "$type": "CompositeType",
+   "properties": [
+    {
+     "$id": "37",
+     "isReadOnly": false,
+     "realPath": [
+      "id"
+     ],
+     "collectionFormat": "none",
+     "defaultValue": {
+      "$id": "38",
+      "fixed": false
+     },
+     "deprecated": false,
+     "documentation": {
+      "$id": "39",
+      "fixed": false
+     },
+     "isRequired": false,
+     "isConstant": false,
+     "name": {
+      "$id": "40",
+      "fixed": false,
+      "raw": "id"
+     },
+     "serializedName": "id",
+     "modelType": {
+      "$id": "41",
+      "$type": "PrimaryType",
+      "knownPrimaryType": "string",
+      "deprecated": false,
+      "name": {
+       "$id": "42",
+       "fixed": false,
+       "raw": "String"
+      }
+     }
+    },
+    {
+     "$id": "43",
+     "isReadOnly": false,
+     "realPath": [
+      "artifactId"
+     ],
+     "collectionFormat": "none",
+     "defaultValue": {
+      "$id": "44",
+      "fixed": false
+     },
+     "deprecated": false,
+     "documentation": {
+      "$id": "45",
+      "fixed": false
+     },
+     "isRequired": false,
+     "isConstant": false,
+     "name": {
+      "$id": "46",
+      "fixed": false,
+      "raw": "artifactId"
+     },
+     "serializedName": "artifactId",
+     "modelType": {
+      "$id": "47",
+      "$type": "PrimaryType",
+      "knownPrimaryType": "string",
+      "deprecated": false,
+      "name": {
+       "$id": "48",
+       "fixed": false,
+       "raw": "String"
+      }
+     }
+    },
+    {
+     "$id": "49",
+     "isReadOnly": false,
+     "realPath": [
+      "dcpId"
+     ],
+     "collectionFormat": "none",
+     "defaultValue": {
+      "$id": "50",
+      "fixed": false
+     },
+     "deprecated": false,
+     "documentation": {
+      "$id": "51",
+      "fixed": false
+     },
+     "isRequired": false,
+     "isConstant": false,
+     "name": {
+      "$id": "52",
+      "fixed": false,
+      "raw": "dcpId"
+     },
+     "serializedName": "dcpId",
+     "modelType": {
+      "$id": "53",
+      "$type": "PrimaryType",
+      "knownPrimaryType": "string",
+      "deprecated": false,
+      "name": {
+       "$id": "54",
+       "fixed": false,
+       "raw": "String"
+      }
+     }
+    },
+    {
+     "$id": "55",
+     "isReadOnly": false,
+     "realPath": [
+      "organizationId"
+     ],
+     "collectionFormat": "none",
+     "defaultValue": {
+      "$id": "56",
+      "fixed": false
+     },
+     "deprecated": false,
+     "documentation": {
+      "$id": "57",
+      "fixed": false
+     },
+     "isRequired": false,
+     "isConstant": false,
+     "name": {
+      "$id": "58",
+      "fixed": false,
+      "raw": "organizationId"
+     },
+     "serializedName": "organizationId",
+     "modelType": {
+      "$id": "59",
+      "$type": "PrimaryType",
+      "knownPrimaryType": "string",
+      "deprecated": false,
+      "name": {
+       "$id": "60",
+       "fixed": false,
+       "raw": "String"
+      }
+     }
+    },
+    {
+     "$id": "61",
+     "isReadOnly": false,
+     "realPath": [
+      "coordinationId"
+     ],
+     "collectionFormat": "none",
+     "defaultValue": {
+      "$id": "62",
+      "fixed": false
+     },
+     "deprecated": false,
+     "documentation": {
+      "$id": "63",
+      "fixed": false
+     },
+     "isRequired": false,
+     "isConstant": false,
+     "name": {
+      "$id": "64",
+      "fixed": false,
+      "raw": "coordinationId"
+     },
+     "serializedName": "coordinationId",
+     "modelType": {
+      "$id": "65",
+      "$type": "PrimaryType",
+      "knownPrimaryType": "string",
+      "deprecated": false,
+      "name": {
+       "$id": "66",
+       "fixed": false,
+       "raw": "String"
+      }
+     }
+    },
+    {
+     "$id": "67",
+     "isReadOnly": false,
+     "realPath": [
+      "currentState"
+     ],
+     "collectionFormat": "none",
+     "defaultValue": {
+      "$id": "68",
+      "fixed": false
+     },
+     "deprecated": false,
+     "documentation": {
+      "$id": "69",
+      "fixed": false
+     },
+     "isRequired": false,
+     "isConstant": false,
+     "name": {
+      "$id": "70",
+      "fixed": false,
+      "raw": "currentState"
+     },
+     "serializedName": "currentState",
+     "modelType": {
+      "$id": "71",
+      "$type": "PrimaryType",
+      "knownPrimaryType": "string",
+      "deprecated": false,
+      "name": {
+       "$id": "72",
+       "fixed": false,
+       "raw": "String"
+      }
+     }
+    },
+    {
+     "$id": "73",
+     "isReadOnly": false,
+     "realPath": [
+      "requestTime"
+     ],
+     "collectionFormat": "none",
+     "defaultValue": {
+      "$id": "74",
+      "fixed": false
+     },
+     "deprecated": false,
+     "documentation": {
+      "$id": "75",
+      "fixed": false
+     },
+     "isRequired": false,
+     "isConstant": false,
+     "name": {
+      "$id": "76",
+      "fixed": false,
+      "raw": "requestTime"
+     },
+     "serializedName": "requestTime",
+     "modelType": {
+      "$id": "77",
+      "$type": "PrimaryType",
+      "format": "date-time",
+      "knownPrimaryType": "dateTime",
+      "deprecated": false,
+      "name": {
+       "$id": "78",
+       "fixed": false,
+       "raw": "DateTime"
+      }
+     }
+    },
+    {
+     "$id": "79",
+     "isReadOnly": false,
+     "realPath": [
+      "lastModified"
+     ],
+     "collectionFormat": "none",
+     "defaultValue": {
+      "$id": "80",
+      "fixed": false
+     },
+     "deprecated": false,
+     "documentation": {
+      "$id": "81",
+      "fixed": false
+     },
+     "isRequired": false,
+     "isConstant": false,
+     "name": {
+      "$id": "82",
+      "fixed": false,
+      "raw": "lastModified"
+     },
+     "serializedName": "lastModified",
+     "modelType": {
+      "$id": "83",
+      "$type": "PrimaryType",
+      "format": "date-time",
+      "knownPrimaryType": "dateTime",
+      "deprecated": false,
+      "name": {
+       "$id": "84",
+       "fixed": false,
+       "raw": "DateTime"
+      }
+     }
+    },
+    {
+     "$id": "85",
+     "isReadOnly": false,
+     "realPath": [
+      "eventChain"
+     ],
+     "collectionFormat": "none",
+     "defaultValue": {
+      "$id": "86",
+      "fixed": false
+     },
+     "deprecated": false,
+     "documentation": {
+      "$id": "87",
+      "fixed": false
+     },
+     "isRequired": false,
+     "isConstant": false,
+     "name": {
+      "$id": "88",
+      "fixed": false,
+      "raw": "eventChain"
+     },
+     "serializedName": "eventChain",
+     "modelType": {
+      "$id": "89",
+      "$type": "SequenceType",
+      "elementType": {
+       "$ref": "2"
+      },
+      "deprecated": false,
+      "name": {
+       "$id": "90",
+       "fixed": false
+      }
+     }
+    }
+   ],
+   "serializedName": "deploymentInfoModel",
+   "containsConstantProperties": false,
+   "name": {
+    "$id": "91",
+    "fixed": false,
+    "raw": "deploymentInfoModel"
+   },
+   "extensions": {
+    "x-ms-metadata": {
+     "apiVersions": [
+      "1.0.0"
+     ],
+     "filename": [
+      "mem:///102?oai3.shaken.json"
+     ],
+     "name": "deploymentInfoModel",
+     "originalLocations": [
+      "file:///C:/GitHub/Deploy-to-dms/GitHubAction/ArtifactDeploymentInfoApi/Meta/swagger.json#/components/schemas/deploymentInfoModel"
+     ]
+    }
+   },
+   "deprecated": false
+  }
+ ],
+ "name": "ArtifactDeploymentInfoAPI",
+ "namespace": "ArtifactDeploymentInfoApi.Generated",
+ "modelsName": "Models",
+ "apiVersion": "1.0.0",
+ "baseUrl": "https://func-artifact-deployment-test3.azurewebsites.net/api",
+ "documentation": "Artifact Deployment Info API can be used to view the various deployments.",
+ "properties": [
+  {
+   "$id": "92",
+   "isReadOnly": false,
+   "realPath": [
+    "organizationId"
+   ],
+   "collectionFormat": "none",
+   "defaultValue": {
+    "$id": "93",
+    "fixed": false
+   },
+   "deprecated": false,
+   "documentation": {
+    "$id": "94",
+    "fixed": false,
+    "raw": "The Organization Id"
+   },
+   "extensions": {
+    "x-ms-metadata": {
+     "apiVersions": [
+      "1.0.0"
+     ],
+     "filename": [
+      "mem:///102?oai3.shaken.json"
+     ],
+     "name": "paths·qxleq4·user_deployment_info-v1_0-organization-organizationid-coordination-coordinationid-deployments·get·parameters·0",
+     "originalLocations": [
+      "file:///C:/GitHub/Deploy-to-dms/GitHubAction/ArtifactDeploymentInfoApi/Meta/swagger.json#/components/parameters/paths·qxleq4·user_deployment_info-v1_0-organization-organizationid-coordination-coordinationid-deployments·get·parameters·0"
+     ]
+    },
+    "x-ms-parameter-location": "method"
+   },
+   "isRequired": true,
+   "isConstant": false,
+   "name": {
+    "$id": "95",
+    "fixed": false,
+    "raw": "organizationId"
+   },
+   "serializedName": "organizationId",
+   "modelType": {
+    "$id": "96",
+    "$type": "PrimaryType",
+    "format": "uuid",
+    "knownPrimaryType": "uuid",
+    "deprecated": false,
+    "name": {
+     "$id": "97",
+     "fixed": false,
+     "raw": "Uuid"
+    }
+   }
+  },
+  {
+   "$id": "98",
+   "isReadOnly": false,
+   "realPath": [
+    "coordinationId"
+   ],
+   "collectionFormat": "none",
+   "defaultValue": {
+    "$id": "99",
+    "fixed": false
+   },
+   "deprecated": false,
+   "documentation": {
+    "$id": "100",
+    "fixed": false,
+    "raw": "The Coordination Id"
+   },
+   "extensions": {
+    "x-ms-metadata": {
+     "apiVersions": [
+      "1.0.0"
+     ],
+     "filename": [
+      "mem:///102?oai3.shaken.json"
+     ],
+     "name": "paths·18s7nro·user_deployment_info-v1_0-organization-organizationid-coordination-coordinationid-deployments·get·parameters·1",
+     "originalLocations": [
+      "file:///C:/GitHub/Deploy-to-dms/GitHubAction/ArtifactDeploymentInfoApi/Meta/swagger.json#/components/parameters/paths·18s7nro·user_deployment_info-v1_0-organization-organizationid-coordination-coordinationid-deployments·get·parameters·1"
+     ]
+    },
+    "x-ms-parameter-location": "method"
+   },
+   "isRequired": true,
+   "isConstant": false,
+   "name": {
+    "$id": "101",
+    "fixed": false,
+    "raw": "coordinationId"
+   },
+   "serializedName": "coordinationId",
+   "modelType": {
+    "$id": "102",
+    "$type": "PrimaryType",
+    "format": "uuid",
+    "knownPrimaryType": "uuid",
+    "deprecated": false,
+    "name": {
+     "$id": "103",
+     "fixed": false,
+     "raw": "Uuid"
+    }
+   }
+  },
+  {
+   "$id": "104",
+   "isReadOnly": false,
+   "realPath": [
+    "deploymentId"
+   ],
+   "collectionFormat": "none",
+   "defaultValue": {
+    "$id": "105",
+    "fixed": false
+   },
+   "deprecated": false,
+   "documentation": {
+    "$id": "106",
+    "fixed": false,
+    "raw": "The Deployment Id"
+   },
+   "extensions": {
+    "x-ms-metadata": {
+     "apiVersions": [
+      "1.0.0"
+     ],
+     "filename": [
+      "mem:///102?oai3.shaken.json"
+     ],
+     "name": "paths·zyq09p·key_deployment_info-v1_0-private-deployment-deploymentid·get·parameters·0",
+     "originalLocations": [
+      "file:///C:/GitHub/Deploy-to-dms/GitHubAction/ArtifactDeploymentInfoApi/Meta/swagger.json#/components/parameters/paths·zyq09p·key_deployment_info-v1_0-private-deployment-deploymentid·get·parameters·0"
+     ]
+    },
+    "x-ms-parameter-location": "method"
+   },
+   "isRequired": true,
+   "isConstant": false,
+   "name": {
+    "$id": "107",
+    "fixed": false,
+    "raw": "deploymentId"
+   },
+   "serializedName": "deploymentId",
+   "modelType": {
+    "$id": "108",
+    "$type": "PrimaryType",
+    "format": "uuid",
+    "knownPrimaryType": "uuid",
+    "deprecated": false,
+    "name": {
+     "$id": "109",
+     "fixed": false,
+     "raw": "Uuid"
+    }
+   }
+  },
+  {
+   "$id": "110",
+   "isReadOnly": false,
+   "realPath": [
+    "Ocp-Apim-Subscription-Key"
+   ],
+   "collectionFormat": "none",
+   "defaultValue": {
+    "$id": "111",
+    "fixed": false
+   },
+   "deprecated": false,
+   "documentation": {
+    "$id": "112",
+    "fixed": false,
+    "raw": "The api-key created in the Admin app and used to authorize this action."
+   },
+   "extensions": {
+    "x-ms-metadata": {
+     "apiVersions": [
+      "1.0.0"
+     ],
+     "filename": [
+      "mem:///102?oai3.shaken.json"
+     ],
+     "name": "paths·1lz0x81·key_deployment_info-v1_0-private-deployment-deploymentid·get·parameters·1",
+     "originalLocations": [
+      "file:///C:/GitHub/Deploy-to-dms/GitHubAction/ArtifactDeploymentInfoApi/Meta/swagger.json#/components/parameters/paths·1lz0x81·key_deployment_info-v1_0-private-deployment-deploymentid·get·parameters·1"
+     ]
+    },
+    "x-ms-parameter-location": "method"
+   },
+   "isRequired": true,
+   "isConstant": false,
+   "name": {
+    "$id": "113",
+    "fixed": false,
+    "raw": "Ocp-Apim-Subscription-Key"
+   },
+   "serializedName": "Ocp-Apim-Subscription-Key",
+   "modelType": {
+    "$id": "114",
+    "$type": "PrimaryType",
+    "knownPrimaryType": "string",
+    "deprecated": false,
+    "name": {
+     "$id": "115",
+     "fixed": false,
+     "raw": "String"
+    }
+   }
+  }
+ ],
+ "operations": [
+  {
+   "$id": "116",
+   "methods": [
+    {
+     "$id": "117",
+     "parameters": [
+      {
+       "$id": "118",
+       "clientProperty": {
+        "$ref": "92"
+       },
+       "location": "path",
+       "collectionFormat": "none",
+       "defaultValue": {
+        "$id": "119",
+        "fixed": false
+       },
+       "deprecated": false,
+       "documentation": {
+        "$id": "120",
+        "fixed": false,
+        "raw": "The Organization Id"
+       },
+       "extensions": {
+        "x-ms-metadata": {
+         "apiVersions": [
+          "1.0.0"
+         ],
+         "filename": [
+          "mem:///102?oai3.shaken.json"
+         ],
+         "name": "paths·qxleq4·user_deployment_info-v1_0-organization-organizationid-coordination-coordinationid-deployments·get·parameters·0",
+         "originalLocations": [
+          "file:///C:/GitHub/Deploy-to-dms/GitHubAction/ArtifactDeploymentInfoApi/Meta/swagger.json#/components/parameters/paths·qxleq4·user_deployment_info-v1_0-organization-organizationid-coordination-coordinationid-deployments·get·parameters·0"
+         ]
+        },
+        "x-ms-parameter-location": "method"
+       },
+       "isRequired": true,
+       "isConstant": false,
+       "name": {
+        "$id": "121",
+        "fixed": false,
+        "raw": "organizationId"
+       },
+       "serializedName": "organizationId",
+       "modelType": {
+        "$id": "122",
+        "$type": "PrimaryType",
+        "format": "uuid",
+        "knownPrimaryType": "uuid",
+        "deprecated": false,
+        "name": {
+         "$id": "123",
+         "fixed": false,
+         "raw": "Uuid"
+        }
+       }
+      },
+      {
+       "$id": "124",
+       "clientProperty": {
+        "$ref": "98"
+       },
+       "location": "path",
+       "collectionFormat": "none",
+       "defaultValue": {
+        "$id": "125",
+        "fixed": false
+       },
+       "deprecated": false,
+       "documentation": {
+        "$id": "126",
+        "fixed": false,
+        "raw": "The Coordination Id"
+       },
+       "extensions": {
+        "x-ms-metadata": {
+         "apiVersions": [
+          "1.0.0"
+         ],
+         "filename": [
+          "mem:///102?oai3.shaken.json"
+         ],
+         "name": "paths·18s7nro·user_deployment_info-v1_0-organization-organizationid-coordination-coordinationid-deployments·get·parameters·1",
+         "originalLocations": [
+          "file:///C:/GitHub/Deploy-to-dms/GitHubAction/ArtifactDeploymentInfoApi/Meta/swagger.json#/components/parameters/paths·18s7nro·user_deployment_info-v1_0-organization-organizationid-coordination-coordinationid-deployments·get·parameters·1"
+         ]
+        },
+        "x-ms-parameter-location": "method"
+       },
+       "isRequired": true,
+       "isConstant": false,
+       "name": {
+        "$id": "127",
+        "fixed": false,
+        "raw": "coordinationId"
+       },
+       "serializedName": "coordinationId",
+       "modelType": {
+        "$id": "128",
+        "$type": "PrimaryType",
+        "format": "uuid",
+        "knownPrimaryType": "uuid",
+        "deprecated": false,
+        "name": {
+         "$id": "129",
+         "fixed": false,
+         "raw": "Uuid"
+        }
+       }
+      }
+     ],
+     "name": {
+      "$id": "130",
+      "fixed": false,
+      "raw": "GetArtifactDeploymentInfo"
+     },
+     "group": {
+      "$id": "131",
+      "fixed": false,
+      "raw": ""
+     },
+     "serializedName": "GetArtifactDeploymentInfo",
+     "url": "/user-deployment-info/v1-0/organization/{organizationId}/coordination/{coordinationId}/deployments",
+     "isAbsoluteUrl": false,
+     "httpMethod": "get",
+     "responses": {
+      "OK": {
+       "$id": "132",
+       "body": {
+        "$id": "133",
+        "$type": "DictionaryType",
+        "valueType": {
+         "$id": "134",
+         "$type": "SequenceType",
+         "elementType": {
+          "$ref": "36"
+         },
+         "deprecated": false,
+         "name": {
+          "$id": "135",
+          "fixed": false
+         }
+        },
+        "supportsAdditionalProperties": false,
+        "deprecated": false,
+        "name": {
+         "$id": "136",
+         "fixed": false
+        }
+       },
+       "extensions": {
+        "$id": "137",
+        "x-ms-metadata": {
+         "apiVersions": [
+          "1.0.0"
+         ],
+         "filename": [
+          "mem:///102?oai3.shaken.json"
+         ],
+         "name": "paths·915agr·user_deployment_info-v1_0-organization-organizationid-coordination-coordinationid-deployments·get·responses·200",
+         "originalLocations": [
+          "file:///C:/GitHub/Deploy-to-dms/GitHubAction/ArtifactDeploymentInfoApi/Meta/swagger.json#/components/responses/paths·915agr·user_deployment_info-v1_0-organization-organizationid-coordination-coordinationid-deployments·get·responses·200"
+         ]
+        }
+       },
+       "isNullable": true
+      },
+      "Unauthorized": {
+       "$id": "138",
+       "extensions": {
+        "$id": "139",
+        "x-ms-metadata": {
+         "apiVersions": [
+          "1.0.0"
+         ],
+         "filename": [
+          "mem:///102?oai3.shaken.json"
+         ],
+         "name": "paths·ho1mh1·user_deployment_info-v1_0-organization-organizationid-coordination-coordinationid-deployments·get·responses·401",
+         "originalLocations": [
+          "file:///C:/GitHub/Deploy-to-dms/GitHubAction/ArtifactDeploymentInfoApi/Meta/swagger.json#/components/responses/paths·ho1mh1·user_deployment_info-v1_0-organization-organizationid-coordination-coordinationid-deployments·get·responses·401"
+         ]
+        }
+       },
+       "isNullable": true
+      },
+      "Forbidden": {
+       "$id": "140",
+       "extensions": {
+        "$id": "141",
+        "x-ms-metadata": {
+         "apiVersions": [
+          "1.0.0"
+         ],
+         "filename": [
+          "mem:///102?oai3.shaken.json"
+         ],
+         "name": "paths·1csi5tr·user_deployment_info-v1_0-organization-organizationid-coordination-coordinationid-deployments·get·responses·403",
+         "originalLocations": [
+          "file:///C:/GitHub/Deploy-to-dms/GitHubAction/ArtifactDeploymentInfoApi/Meta/swagger.json#/components/responses/paths·1csi5tr·user_deployment_info-v1_0-organization-organizationid-coordination-coordinationid-deployments·get·responses·403"
+         ]
+        }
+       },
+       "isNullable": true
+      }
+     },
+     "defaultResponse": {
+      "$id": "142",
+      "isNullable": true
+     },
+     "returnType": {
+      "$id": "143",
+      "body": {
+       "$ref": "133"
+      },
+      "isNullable": true
+     },
+     "requestContentType": "application/json; charset=utf-8",
+     "responseContentTypes": [
+      "application/json"
+     ],
+     "extensions": {
+      "servers": [
+       {
+        "url": "https://func-artifact-deployment-test3.azurewebsites.net/api"
+       }
+      ],
+      "security": [
+       {
+        "Bearer": []
+       }
+      ]
+     },
+     "deprecated": false,
+     "hidden": false
+    },
+    {
+     "$id": "144",
+     "parameters": [
+      {
+       "$id": "145",
+       "clientProperty": {
+        "$ref": "104"
+       },
+       "location": "path",
+       "collectionFormat": "none",
+       "defaultValue": {
+        "$id": "146",
+        "fixed": false
+       },
+       "deprecated": false,
+       "documentation": {
+        "$id": "147",
+        "fixed": false,
+        "raw": "The Deployment Id"
+       },
+       "extensions": {
+        "x-ms-metadata": {
+         "apiVersions": [
+          "1.0.0"
+         ],
+         "filename": [
+          "mem:///102?oai3.shaken.json"
+         ],
+         "name": "paths·zyq09p·key_deployment_info-v1_0-private-deployment-deploymentid·get·parameters·0",
+         "originalLocations": [
+          "file:///C:/GitHub/Deploy-to-dms/GitHubAction/ArtifactDeploymentInfoApi/Meta/swagger.json#/components/parameters/paths·zyq09p·key_deployment_info-v1_0-private-deployment-deploymentid·get·parameters·0"
+         ]
+        },
+        "x-ms-parameter-location": "method"
+       },
+       "isRequired": true,
+       "isConstant": false,
+       "name": {
+        "$id": "148",
+        "fixed": false,
+        "raw": "deploymentId"
+       },
+       "serializedName": "deploymentId",
+       "modelType": {
+        "$id": "149",
+        "$type": "PrimaryType",
+        "format": "uuid",
+        "knownPrimaryType": "uuid",
+        "deprecated": false,
+        "name": {
+         "$id": "150",
+         "fixed": false,
+         "raw": "Uuid"
+        }
+       }
+      },
+      {
+       "$id": "151",
+       "clientProperty": {
+        "$ref": "110"
+       },
+       "location": "header",
+       "collectionFormat": "none",
+       "defaultValue": {
+        "$id": "152",
+        "fixed": false
+       },
+       "deprecated": false,
+       "documentation": {
+        "$id": "153",
+        "fixed": false,
+        "raw": "The api-key created in the Admin app and used to authorize this action."
+       },
+       "extensions": {
+        "x-ms-metadata": {
+         "apiVersions": [
+          "1.0.0"
+         ],
+         "filename": [
+          "mem:///102?oai3.shaken.json"
+         ],
+         "name": "paths·1lz0x81·key_deployment_info-v1_0-private-deployment-deploymentid·get·parameters·1",
+         "originalLocations": [
+          "file:///C:/GitHub/Deploy-to-dms/GitHubAction/ArtifactDeploymentInfoApi/Meta/swagger.json#/components/parameters/paths·1lz0x81·key_deployment_info-v1_0-private-deployment-deploymentid·get·parameters·1"
+         ]
+        },
+        "x-ms-parameter-location": "method"
+       },
+       "isRequired": true,
+       "isConstant": false,
+       "name": {
+        "$id": "154",
+        "fixed": false,
+        "raw": "Ocp-Apim-Subscription-Key"
+       },
+       "serializedName": "Ocp-Apim-Subscription-Key",
+       "modelType": {
+        "$id": "155",
+        "$type": "PrimaryType",
+        "knownPrimaryType": "string",
+        "deprecated": false,
+        "name": {
+         "$id": "156",
+         "fixed": false,
+         "raw": "String"
+        }
+       }
+      }
+     ],
+     "name": {
+      "$id": "157",
+      "fixed": false,
+      "raw": "GetPrivateArtifactDeploymentInfo"
+     },
+     "group": {
+      "$id": "158",
+      "fixed": false,
+      "raw": ""
+     },
+     "serializedName": "GetPrivateArtifactDeploymentInfo",
+     "url": "/key-deployment-info/v1-0/private/deployment/{deploymentId}",
+     "isAbsoluteUrl": false,
+     "httpMethod": "get",
+     "responses": {
+      "OK": {
+       "$id": "159",
+       "body": {
+        "$id": "160",
+        "$type": "DictionaryType",
+        "valueType": {
+         "$ref": "36"
+        },
+        "supportsAdditionalProperties": false,
+        "deprecated": false,
+        "name": {
+         "$id": "161",
+         "fixed": false
+        }
+       },
+       "extensions": {
+        "$id": "162",
+        "x-ms-metadata": {
+         "apiVersions": [
+          "1.0.0"
+         ],
+         "filename": [
+          "mem:///102?oai3.shaken.json"
+         ],
+         "name": "paths·1qnz890·key_deployment_info-v1_0-private-deployment-deploymentid·get·responses·200",
+         "originalLocations": [
+          "file:///C:/GitHub/Deploy-to-dms/GitHubAction/ArtifactDeploymentInfoApi/Meta/swagger.json#/components/responses/paths·1qnz890·key_deployment_info-v1_0-private-deployment-deploymentid·get·responses·200"
+         ]
+        }
+       },
+       "isNullable": true
+      },
+      "BadRequest": {
+       "$id": "163",
+       "extensions": {
+        "$id": "164",
+        "x-ms-metadata": {
+         "apiVersions": [
+          "1.0.0"
+         ],
+         "filename": [
+          "mem:///102?oai3.shaken.json"
+         ],
+         "name": "paths·y4m1r7·key_deployment_info-v1_0-private-deployment-deploymentid·get·responses·400",
+         "originalLocations": [
+          "file:///C:/GitHub/Deploy-to-dms/GitHubAction/ArtifactDeploymentInfoApi/Meta/swagger.json#/components/responses/paths·y4m1r7·key_deployment_info-v1_0-private-deployment-deploymentid·get·responses·400"
+         ]
+        }
+       },
+       "isNullable": true
+      },
+      "Forbidden": {
+       "$id": "165",
+       "extensions": {
+        "$id": "166",
+        "x-ms-metadata": {
+         "apiVersions": [
+          "1.0.0"
+         ],
+         "filename": [
+          "mem:///102?oai3.shaken.json"
+         ],
+         "name": "paths·2borm·key_deployment_info-v1_0-private-deployment-deploymentid·get·responses·403",
+         "originalLocations": [
+          "file:///C:/GitHub/Deploy-to-dms/GitHubAction/ArtifactDeploymentInfoApi/Meta/swagger.json#/components/responses/paths·2borm·key_deployment_info-v1_0-private-deployment-deploymentid·get·responses·403"
+         ]
+        }
+       },
+       "isNullable": true
+      },
+      "NotFound": {
+       "$id": "167",
+       "extensions": {
+        "$id": "168",
+        "x-ms-metadata": {
+         "apiVersions": [
+          "1.0.0"
+         ],
+         "filename": [
+          "mem:///102?oai3.shaken.json"
+         ],
+         "name": "paths·1phu7wk·key_deployment_info-v1_0-private-deployment-deploymentid·get·responses·404",
+         "originalLocations": [
+          "file:///C:/GitHub/Deploy-to-dms/GitHubAction/ArtifactDeploymentInfoApi/Meta/swagger.json#/components/responses/paths·1phu7wk·key_deployment_info-v1_0-private-deployment-deploymentid·get·responses·404"
+         ]
+        }
+       },
+       "isNullable": true
+      }
+     },
+     "defaultResponse": {
+      "$id": "169",
+      "isNullable": true
+     },
+     "returnType": {
+      "$id": "170",
+      "body": {
+       "$ref": "160"
+      },
+      "isNullable": true
+     },
+     "requestContentType": "application/json; charset=utf-8",
+     "responseContentTypes": [
+      "application/json"
+     ],
+     "extensions": {
+      "servers": [
+       {
+        "url": "https://func-artifact-deployment-test3.azurewebsites.net/api"
+       }
+      ]
+     },
+     "deprecated": false,
+     "hidden": false
+    }
+   ],
+   "name": {
+    "$id": "171",
+    "fixed": false,
+    "raw": ""
+   },
+   "typeName": {
+    "$id": "172",
+    "fixed": false
+   },
+   "nameForProperty": "ArtifactDeploymentInfoAPI"
+  }
+ ]
+}
