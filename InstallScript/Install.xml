@@ -2,7 +2,7 @@
   <Name>Install</Name>
   <Description />
   <Type>Automation</Type>
-  <Author>SKYLINE2\KoenAnnys</Author>
+  <Author>Skyline DataMiner Deploy Action</Author>
   <CheckSets>FALSE</CheckSets>
   <Folder />
   <Protocols></Protocols>
