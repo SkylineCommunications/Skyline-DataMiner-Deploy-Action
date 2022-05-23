@@ -58,11 +58,13 @@ public class HttpPackageGateway : IPackageGateway
         HttpOperationResponse<DeploymentModel> res;
         try
         {
+            Console.WriteLine(uploadedPackage.ArtifactId);
+            Console.WriteLine(key);
             res = await _deployArtifactApi.DeployArtifactWithApiKeyFunctionWithHttpMessagesAsync(uploadedPackage.ArtifactId, key);
         }
         catch (Exception e)
         {
-            throw new DeployPackageException("Couldn't deploy the package", e);
+            throw new DeployPackageException($"Couldn't deploy the package {e.ToString()}", e);
         }
 
         if (res.Response.IsSuccessStatusCode)
