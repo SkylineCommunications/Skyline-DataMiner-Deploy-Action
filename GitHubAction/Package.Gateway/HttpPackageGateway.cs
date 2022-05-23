@@ -49,7 +49,7 @@ public class HttpPackageGateway : IPackageGateway
         }
         catch (Exception e)
         {
-            throw new UploadPackageException("Couldn't upload the package. Error message: {0}", e.Message);
+            throw new UploadPackageException($"Couldn't upload the package. Error message: {e.Message}");
         }
     }
 
