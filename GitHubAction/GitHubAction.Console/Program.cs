@@ -30,11 +30,11 @@ try
         })
         .AddScoped<IArtifactDeploymentInfoAPI>(s => 
             new ArtifactDeploymentInfoAPI(
-                new Uri("https://api-qa.dataminer.services/qa/"), 
+                new Uri("https://api-qa.dataminer.services/qa/api"), 
                 new BasicAuthenticationCredentials()))
         .AddScoped<IDeployArtifactAPI>(s => 
             new DeployArtifactAPI(
-                new Uri("https://api-qa.dataminer.services/qa/"), 
+                new Uri("https://api-qa.dataminer.services/qa/api"), 
                 new BasicAuthenticationCredentials()))
         .AddScoped<IPackageService, PackageService>()
         .AddScoped<IPackageGateway, HttpPackageGateway>()
