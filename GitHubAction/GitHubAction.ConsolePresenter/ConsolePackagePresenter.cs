@@ -98,7 +98,7 @@ namespace GitHubAction.ConsolePackagePresenter
 
         public void PresentStartingPackageDeploymentFailed(DeployPackageException e)
         {
-            _logger.LogError("The package deployment couldn't be started.");
+            _logger.LogError("The package deployment couldn't be started. {0}", e.Message);
             Environment.Exit(500); // Internal Server Error
         }
     }
