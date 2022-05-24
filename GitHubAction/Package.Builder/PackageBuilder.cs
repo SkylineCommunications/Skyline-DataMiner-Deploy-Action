@@ -87,6 +87,9 @@ namespace Package.Builder
 
             try
             {
+                var installScriptFilePath = new FileInfo("/InstallScript/Install.xml");
+                var libraryDirectory = new DirectoryInfo("/InstallScript/InstallDependencies");
+
                 await Skyline.SystemEngineering.CiCd.Tools.Program.Main(new[]
                 {
                     convertedSolutionWorkingDirectory.FullName,
@@ -96,7 +99,9 @@ namespace Package.Builder
                     "1",
                     "Automation",
                     "Customer",
-                    version
+                    version,
+                    installScriptFilePath.FullName,
+                    libraryDirectory.FullName
                 });
 
                 var dmAppPackageFile =

@@ -10,4 +10,5 @@ RUN dotnet publish ./GitHubAction/GitHubAction.Console/GitHubAction.Console.cspr
 # Relayer the .NET SDK, anew with the build output
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
 COPY --from=build-env /app/out .
+COPY --from=build-env /app/InstallScript ./InstallScript
 ENTRYPOINT [ "dotnet", "/GitHubAction.Console.dll" ]
