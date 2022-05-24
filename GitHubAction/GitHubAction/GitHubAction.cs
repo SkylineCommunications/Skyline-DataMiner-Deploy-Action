@@ -97,7 +97,7 @@ namespace GitHubAction
                                 return null;
                             }
                         },
-                        (output) => output != null!,
+                        (output) => output is { Status: "Succeeded" },
                         (backOffDelaySeconds) => _packagePresenter.PresentWaitingMoreForFinishedPackageDeployment(backOffDelaySeconds),
                         deploymentBackOff,
                         deploymentMaxBackOff,

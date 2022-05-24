@@ -414,9 +414,9 @@ namespace GitHubAction.UnitTest
             _packageServiceMock
                 .SetupSequence(getDeployedPackageAsync)
                 .ReturnsAsync((DeployedPackage)null!)
-                .ReturnsAsync((DeployedPackage)null!)
-                .ReturnsAsync((DeployedPackage)null!)
-                .ReturnsAsync((DeployedPackage)null!);
+                .ReturnsAsync(new DeployedPackage(deployingPackage.ArtifactId, deploymentId, "Error"))
+                .ReturnsAsync(new DeployedPackage(deployingPackage.ArtifactId, deploymentId, "Timeout"))
+                .ReturnsAsync(new DeployedPackage(deployingPackage.ArtifactId, deploymentId, "fdqfqqfqfq"));
 
             // When
             await _gitHubAction.RunAsync(
