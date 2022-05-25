@@ -110,7 +110,7 @@ public class HttpPackageGateway : IPackageGateway
         
         if (res.Response.StatusCode is HttpStatusCode.Forbidden or HttpStatusCode.Unauthorized)
         {
-            throw new KeyException($"The GetDeployedPackage API returned a {res.Response.StatusCode} response");
+            throw new KeyException($"The GetDeployedPackage API returned a response with status code {res.Response.StatusCode}");
         }
 
         var responseContent = string.Empty;

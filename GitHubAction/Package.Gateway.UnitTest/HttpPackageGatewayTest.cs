@@ -260,7 +260,7 @@ namespace Package.Gateway.UnitTest
         public async Task GetDeployedPackageAsync_ThrowsKeyExceptionTest(HttpStatusCode statusCode)
         {
             // Given
-            var expectedText = $"The GetDeployedPackage API returned a {statusCode} response";
+            var expectedText = $"The GetDeployedPackage API returned a response with status code {statusCode}";
 
             const string responseContentText = "Something went wrong.";
             var result = new HttpOperationResponse<IDictionary<string, DeploymentInfoModel>>();
