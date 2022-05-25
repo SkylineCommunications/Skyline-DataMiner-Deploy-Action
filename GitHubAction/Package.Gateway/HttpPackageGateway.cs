@@ -58,8 +58,6 @@ public class HttpPackageGateway : IPackageGateway
         HttpOperationResponse<DeploymentModel> res;
         try
         {
-            Console.WriteLine(uploadedPackage.ArtifactId);
-            Console.WriteLine(key);
             res = await _deployArtifactApi.DeployArtifactWithApiKeyFunctionWithHttpMessagesAsync(new DeployArtifactAsSystemForm(uploadedPackage.ArtifactId), key);
         }
         catch (Exception e)
@@ -75,13 +73,18 @@ public class HttpPackageGateway : IPackageGateway
             }
             throw new DeployPackageException("Received an invalid deployment ID");
         }
-        
+
         if (res.Response.StatusCode is HttpStatusCode.Forbidden or HttpStatusCode.Unauthorized)
         {
-            throw new KeyException($"The deploy API returned a {res.Response.StatusCode} response");
+            throw new KeyException($"The deploy API returned a response with status code {res.Response.StatusCode}");
         }
-        
-        throw new DeployPackageException($"The deploy API returned a {res.Response.StatusCode} response");
+
+        var responseContent = string.Empty;
+        if (res.Response.Content != null)
+        {
+            responseContent = await res.Response.Content.ReadAsStringAsync().ConfigureAwait(false);
+        }
+        throw new DeployPackageException($"The deploy API returned a response with status code {res.Response.StatusCode}, content: {responseContent}");
     }
 
     public async Task<DeployedPackage> GetDeployedPackageAsync(DeployingPackage deployingPackage, string key)
@@ -93,7 +96,7 @@ public class HttpPackageGateway : IPackageGateway
         }
         catch (Exception e)
         {
-            throw new GetDeploymentPackageException("Couldn't get the deployed package", e);
+            throw new GetDeploymentPackageException($"Couldn't get the deployed package {e.ToString()}", e);
         }
 
         if (res.Response.IsSuccessStatusCode)
@@ -107,9 +110,14 @@ public class HttpPackageGateway : IPackageGateway
         
         if (res.Response.StatusCode is HttpStatusCode.Forbidden or HttpStatusCode.Unauthorized)
         {
-            throw new KeyException($"The deploy API returned a {res.Response.StatusCode} response");
+            throw new KeyException($"The GetDeployedPackage API returned a {res.Response.StatusCode} response");
         }
 
-        throw new GetDeploymentPackageException($"The GetDeployedPackage API returned a {res.Response.StatusCode} response");
+        var responseContent = string.Empty;
+        if (res.Response.Content != null)
+        {
+            responseContent = await res.Response.Content.ReadAsStringAsync().ConfigureAwait(false);
+        }
+        throw new GetDeploymentPackageException($"The GetDeployedPackage API returned a response with status code {res.Response.StatusCode}, content: {responseContent}");
     }
 }
