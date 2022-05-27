@@ -25,16 +25,16 @@ try
         .AddScoped<IArtifactUploadApi>(s =>
         {
             var httpClient = s.GetRequiredService<IHttpClientFactory>().CreateClient(nameof(HttpArtifactUploadApi));
-            httpClient.BaseAddress = new Uri("https://api-qa.dataminer.services/qa/");
+            httpClient.BaseAddress = new Uri("https://api.dataminer.services/");
             return new HttpArtifactUploadApi(httpClient);
         })
         .AddScoped<IArtifactDeploymentInfoAPI>(s => 
             new ArtifactDeploymentInfoAPI(
-                new Uri("https://api-qa.dataminer.services/qa/api"), 
+                new Uri("https://api.dataminer.services/api"), 
                 new BasicAuthenticationCredentials()))
         .AddScoped<IDeployArtifactAPI>(s => 
             new DeployArtifactAPI(
-                new Uri("https://api-qa.dataminer.services/qa/api"), 
+                new Uri("https://api.dataminer.services/api"), 
                 new BasicAuthenticationCredentials()))
         .AddScoped<IPackageService, PackageService>()
         .AddScoped<IPackageGateway, HttpPackageGateway>()
