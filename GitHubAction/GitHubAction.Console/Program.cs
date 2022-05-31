@@ -17,6 +17,12 @@ GitHubAction.GitHubAction gitHubAction;
 ILogger<Program> logger;
 try
 {
+    // Get Environment
+    var environment = Environment.GetEnvironmentVariable("Skyline-deploy-action-namespace");
+    var apiBaseUrl = environment != null
+        ? $"https://api-{environment}.dataminer.services/{environment}"
+        : "https://api.dataminer.services/";
+
     // Setup DI
     var serviceProvider = new ServiceCollection()
         .AddScoped<GitHubAction.GitHubAction>()
@@ -25,16 +31,16 @@ try
         .AddScoped<IArtifactUploadApi>(s =>
         {
             var httpClient = s.GetRequiredService<IHttpClientFactory>().CreateClient(nameof(HttpArtifactUploadApi));
-            httpClient.BaseAddress = new Uri("https://api.dataminer.services/");
+            httpClient.BaseAddress = new Uri(apiBaseUrl);
             return new HttpArtifactUploadApi(httpClient);
         })
-        .AddScoped<IArtifactDeploymentInfoAPI>(s => 
+        .AddScoped<IArtifactDeploymentInfoAPI>(s =>
             new ArtifactDeploymentInfoAPI(
-                new Uri("https://api.dataminer.services/api"), 
+                new Uri($"{apiBaseUrl}/api"),
                 new BasicAuthenticationCredentials()))
-        .AddScoped<IDeployArtifactAPI>(s => 
+        .AddScoped<IDeployArtifactAPI>(s =>
             new DeployArtifactAPI(
-                new Uri("https://api.dataminer.services/api"), 
+                new Uri($"{apiBaseUrl}/api"),
                 new BasicAuthenticationCredentials()))
         .AddScoped<IPackageService, PackageService>()
         .AddScoped<IPackageGateway, HttpPackageGateway>()
