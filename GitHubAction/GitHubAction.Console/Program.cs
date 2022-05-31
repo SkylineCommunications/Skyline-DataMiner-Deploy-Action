@@ -19,9 +19,16 @@ try
 {
     // Get Environment
     var environment = Environment.GetEnvironmentVariable("Skyline-deploy-action-namespace");
-    var apiBaseUrl = environment != null
-        ? $"https://api-{environment}.dataminer.services/{environment}"
-        : "https://api.dataminer.services/";
+
+    string apiBaseUrl;
+    if (environment != null)
+    {
+        apiBaseUrl = $"https://api-{environment}.dataminer.services/{environment}";
+        Console.WriteLine("Set the base url for the api to: {0}", apiBaseUrl);
+    } else {
+        apiBaseUrl = "https://api.dataminer.services/";
+    }
+
 
     // Setup DI
     var serviceProvider = new ServiceCollection()
