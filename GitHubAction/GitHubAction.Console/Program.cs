@@ -47,6 +47,7 @@ public class Program
         Host.CreateDefaultBuilder(args)
             .ConfigureServices((hostContext, services) =>
             {
+                services.AddHostedService<GitHubAction>();
                 services.AddScoped<GitHubAction>();
                 services.AddHttpClient();
                 services.AddScoped<IPackagePresenter, ConsolePackagePresenter>();
