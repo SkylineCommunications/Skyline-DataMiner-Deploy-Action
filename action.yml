@@ -30,10 +30,10 @@ inputs:
     description: 'The path to the package to publish. Only required when the stage is Publish.'
     required: false
   package-type:
-    description: 'The type of the package you'ld like to publish. Only required when the stage is Publish;'
+    description: 'The type of the package you would like to publish. Only required when the stage is Publish.'
     required: false
   artifact-id:
-    description: 'The artifact Id of the package that you'ld like to deploy'
+    description: 'The artifact Id of the package that you would like to deploy'
     required: false
   
 runs:
