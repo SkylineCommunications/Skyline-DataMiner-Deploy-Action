@@ -10,7 +10,7 @@ using Package.Domain.Services;
 
 namespace GitHubAction
 {
-    public class GitHubAction : IHostedService
+    public class GitHubAction
     {
         private readonly IPackageService _packageService;
         private readonly IPackagePresenter _packagePresenter;
@@ -29,11 +29,6 @@ namespace GitHubAction
             _logger = logger;
             _deploymentBackOff = TimeSpan.FromSeconds(3);
             _deploymentMaxBackOff = TimeSpan.FromMinutes(2);
-        }
-
-        public Task StartAsync(CancellationToken cancellationToken)
-        {
-            return RunAsync(cancellationToken);
         }
 
         public async Task RunAsync(CancellationToken cancellationToken)
@@ -209,11 +204,6 @@ namespace GitHubAction
 
             _packagePresenter.PresentPackageCreationSucceeded();
             return createdPackage;
-        }
-
-        public Task StopAsync(CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
         }
     }
 }

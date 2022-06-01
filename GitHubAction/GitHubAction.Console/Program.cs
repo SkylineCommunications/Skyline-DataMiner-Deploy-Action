@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Diagnostics.Metrics;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Rest;
 using Package.Application;
 using Package.Domain.Services;
@@ -21,16 +22,16 @@ namespace GitHubAction.Console;
 
 public class Program
 {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
         Log.Logger = new LoggerConfiguration()
             .WriteTo.Console()
             .CreateBootstrapLogger();
         try
         {
-            CreateHostBuilder(args)
-                .Build()
-                .Run();
+            var host = CreateHostBuilder(args).Build();
+            var gitHubAction = host.Services.GetRequiredService<GitHubAction>();
+            await gitHubAction.RunAsync(new CancellationToken());
         }
         catch (Exception ex)
         {
@@ -47,7 +48,6 @@ public class Program
         Host.CreateDefaultBuilder(args)
             .ConfigureServices((hostContext, services) =>
             {
-                services.AddHostedService<GitHubAction>();
                 services.AddScoped<GitHubAction>();
                 services.AddHttpClient();
                 services.AddScoped<IPackagePresenter, ConsolePackagePresenter>();
