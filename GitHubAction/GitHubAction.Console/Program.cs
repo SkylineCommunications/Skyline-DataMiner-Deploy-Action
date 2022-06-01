@@ -12,11 +12,14 @@ using Package.Builder;
 using Package.Domain.Enums;
 using Package.Domain.Models;
 using UploadArtifactApi;
+using Serilog;
 
 GitHubAction.GitHubAction gitHubAction;
 ILogger<Program> logger;
 try
 {
+    Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateLogger();
+
     // Get Environment
     var environment = Environment.GetEnvironmentVariable("Skyline-deploy-action-namespace");
 
@@ -24,8 +27,8 @@ try
     if (environment != null)
     {
         apiBaseUrl = $"https://api-{environment}.dataminer.services/{environment}";
-        Console.WriteLine("Found the \"Skyline-deploy-action-namespace\" environment variable");
-        Console.WriteLine("Setting the base url for the api to: {0}", apiBaseUrl);
+        Log.Information("Found the \"Skyline-deploy-action-namespace\" environment variable");
+        Log.Information("Setting the base url for the api to: {0}", apiBaseUrl);
     } 
     else 
     {
