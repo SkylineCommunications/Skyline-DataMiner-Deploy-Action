@@ -12,11 +12,30 @@ using Package.Builder;
 using Package.Domain.Enums;
 using Package.Domain.Models;
 using UploadArtifactApi;
+using Serilog;
 
 GitHubAction.GitHubAction gitHubAction;
 ILogger<Program> logger;
 try
 {
+    Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateLogger();
+
+    // Get Environment
+    var environment = Environment.GetEnvironmentVariable("Skyline-deploy-action-namespace");
+
+    string apiBaseUrl;
+    if (environment != null)
+    {
+        apiBaseUrl = $"https://api-{environment}.dataminer.services/{environment}";
+        Log.Information("Found the \"Skyline-deploy-action-namespace\" environment variable");
+        Log.Information("Setting the base url for the api to: {0}", apiBaseUrl);
+    } 
+    else 
+    {
+        apiBaseUrl = "https://api.dataminer.services/";
+    }
+
+
     // Setup DI
     var serviceProvider = new ServiceCollection()
         .AddScoped<GitHubAction.GitHubAction>()
@@ -25,16 +44,16 @@ try
         .AddScoped<IArtifactUploadApi>(s =>
         {
             var httpClient = s.GetRequiredService<IHttpClientFactory>().CreateClient(nameof(HttpArtifactUploadApi));
-            httpClient.BaseAddress = new Uri("https://api-qa.dataminer.services/qa/");
+            httpClient.BaseAddress = new Uri(apiBaseUrl);
             return new HttpArtifactUploadApi(httpClient);
         })
-        .AddScoped<IArtifactDeploymentInfoAPI>(s => 
+        .AddScoped<IArtifactDeploymentInfoAPI>(s =>
             new ArtifactDeploymentInfoAPI(
-                new Uri("https://api-qa.dataminer.services/qa/api"), 
+                new Uri($"{apiBaseUrl}/api"),
                 new BasicAuthenticationCredentials()))
-        .AddScoped<IDeployArtifactAPI>(s => 
+        .AddScoped<IDeployArtifactAPI>(s =>
             new DeployArtifactAPI(
-                new Uri("https://api-qa.dataminer.services/qa/api"), 
+                new Uri($"{apiBaseUrl}/api"),
                 new BasicAuthenticationCredentials()))
         .AddScoped<IPackageService, PackageService>()
         .AddScoped<IPackageGateway, HttpPackageGateway>()
