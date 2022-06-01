@@ -25,18 +25,16 @@ public class Program
     public static async Task Main(string[] args)
     {
         Log.Logger = new LoggerConfiguration()
-            .WriteTo.Console()
-            .CreateBootstrapLogger();
+            .WriteTo.Console().CreateLogger();
         try
         {
             var host = CreateHostBuilder(args).Build();
             var gitHubAction = host.Services.GetRequiredService<GitHubAction>();
-            await gitHubAction.RunAsync(new CancellationToken());
+            await gitHubAction.RunAsync(args, new CancellationToken());
         }
         catch (Exception ex)
         {
-            Log.Fatal(ex, "An unhandled exception occurred during bootstrapping");
-            throw;
+            Log.Fatal(ex, "An unhandled exception occurred");
         }
         finally
         {

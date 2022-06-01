@@ -17,7 +17,6 @@ namespace GitHubAction
         private readonly ILogger _logger;
         private readonly TimeSpan _deploymentBackOff;
         private readonly TimeSpan _deploymentMaxBackOff;
-        private readonly TimeSpan _deploymentMaxTimeout;
 
         public GitHubAction(
             IPackageService packageService,
@@ -31,11 +30,8 @@ namespace GitHubAction
             _deploymentMaxBackOff = TimeSpan.FromMinutes(2);
         }
 
-        public async Task RunAsync(CancellationToken cancellationToken)
+        public async Task RunAsync(string[] args, CancellationToken cancellationToken)
         {
-            var args = Environment.GetCommandLineArgs();
- 
-
             var inputs = ParseInputs.ParseAndValidateInputs(args, _logger);
             if (inputs == null)
             {

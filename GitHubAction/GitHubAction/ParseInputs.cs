@@ -6,7 +6,7 @@ namespace GitHubAction;
 
 public class ParseInputs
 {
-    internal static List<string> ValidArgs = new() { InputArgurments.ApiKey, InputArgurments.PackageName, InputArgurments.SolutionPath, InputArgurments.Version, InputArgurments.Timeout, InputArgurments.Stage };
+    internal static List<string> ValidArgs = new() { InputArgurments.ApiKey, InputArgurments.PackageName, InputArgurments.SolutionPath, InputArgurments.Version, InputArgurments.Timeout, InputArgurments.Stage, InputArgurments.PackagePath, InputArgurments.PackageType, InputArgurments.ArtifactId };
 
     public static Inputs? ParseAndValidateInputs(string[] args, ILogger logger)
     {
