@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using Package.Builder;
@@ -16,6 +17,7 @@ namespace GitHubAction.UnitTest
     {
         private Mock<IPackageService> _packageServiceMock = null!;
         private Mock<IPackagePresenter> _packagePresenterMock = null!;
+        private Mock<ILogger<GitHubAction>> _logger = null!;
         private GitHubAction _gitHubAction = null!;
 
         [SetUp]
@@ -23,8 +25,9 @@ namespace GitHubAction.UnitTest
         {
             _packageServiceMock = new Mock<IPackageService>();
             _packagePresenterMock = new Mock<IPackagePresenter>();
+            _logger = new Mock<ILogger<GitHubAction>>();
 
-            _gitHubAction = new GitHubAction(_packageServiceMock.Object, _packagePresenterMock.Object);
+            _gitHubAction = new GitHubAction(_packageServiceMock.Object, _packagePresenterMock.Object, _logger.Object);
         }
 
         [Test]

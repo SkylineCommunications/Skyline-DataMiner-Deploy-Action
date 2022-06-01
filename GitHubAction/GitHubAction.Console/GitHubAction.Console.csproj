@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -16,7 +16,6 @@
   <ItemGroup>
     <ProjectReference Include="..\ArtifactDeploymentInfoApi\ArtifactDeploymentInfoApi.csproj" />
     <ProjectReference Include="..\DeployArtifactApi\DeployArtifactApi.csproj" />
-    <ProjectReference Include="..\GitHubAction.ConsolePresenter\GitHubAction.ConsolePackagePresenter.csproj" />
     <ProjectReference Include="..\GitHubAction\GitHubAction.csproj" />
     <ProjectReference Include="..\Package.Application\Package.Application.csproj" />
     <ProjectReference Include="..\Package.Builder\Package.Builder.csproj" />
