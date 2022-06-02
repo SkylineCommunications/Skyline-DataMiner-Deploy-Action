@@ -16,6 +16,7 @@ using Package.Domain.Enums;
 using Package.Domain.Models;
 using UploadArtifactApi;
 using Serilog;
+using Serilog.Filters;
 
 
 namespace GitHubAction.Console;
@@ -89,9 +90,13 @@ public class Program
                 loggerConfiguration
                     .ReadFrom.Configuration(configuration)
                     .Enrich.FromLogContext()
-                    .WriteTo.Console(
-                        outputTemplate:
-                        "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff} {Level:u3}]{Message:lj}[{SourceContext}]{NewLine}{Exception}"
-                    );
+                    .WriteTo.Logger(lc => lc
+                        .Filter.ByExcluding(Matching.WithProperty<string>("type", type => type == "githubCommand"))
+                        .WriteTo.Console(
+                            outputTemplate:
+                                "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff} {Level:u3}]{Message:lj}[{SourceContext}]{NewLine}{Exception}"))
+                    .WriteTo.Logger(lc => lc
+                        .Filter.ByIncludingOnly(Matching.WithProperty<string>("type", type => type == "githubCommand"))
+                        .WriteTo.Console());
             });
 }

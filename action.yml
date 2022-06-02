@@ -29,6 +29,10 @@ inputs:
   artifact-id:
     description: 'The artifact Id of the package that you would like to deploy'
     required: false
+
+outputs:
+  artifact-id:
+    description: 'The artifact Id of the package has been published'
   
 runs:
   using: 'docker'

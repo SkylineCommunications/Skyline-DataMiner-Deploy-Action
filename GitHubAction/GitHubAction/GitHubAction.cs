@@ -7,6 +7,8 @@ using Package.Domain.Enums;
 using Package.Domain.Exceptions;
 using Package.Domain.Models;
 using Package.Domain.Services;
+using Serilog;
+using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace GitHubAction
 {
@@ -61,6 +63,7 @@ namespace GitHubAction
 
                     uploadedPackage = await UploadPackage(inputs.ApiKey, createdPackage);
                     if(uploadedPackage == null) return;
+                    Log.Information("::set-output name=artifact-id::{0}", uploadedPackage.ArtifactId, "GithubCommand");
                 }
 
                 // Deploy
