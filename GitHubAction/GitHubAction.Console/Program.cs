@@ -76,11 +76,6 @@ public class Program
                 services.AddScoped<IPackageService, PackageService>();
                 services.AddScoped<IPackageGateway, HttpPackageGateway>();
                 services.AddScoped<IPackageBuilder, PackageBuilder>();
-                services.AddLogging(builder =>
-                {
-                    builder.ClearProviders();
-                    builder.AddConsole();
-                });
                 services.BuildServiceProvider();
             })
             .UseSerilog((context, services, loggerConfiguration) =>
@@ -97,6 +92,6 @@ public class Program
                                 "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff} {Level:u3}]{Message:lj}[{SourceContext}]{NewLine}{Exception}"))
                     .WriteTo.Logger(lc => lc
                         .Filter.ByIncludingOnly(Matching.WithProperty<string>("type", type => type == "githubCommand"))
-                        .WriteTo.Console());
+                        .WriteTo.Console(outputTemplate: "{Message:lj}{NewLine}"));
             });
 }

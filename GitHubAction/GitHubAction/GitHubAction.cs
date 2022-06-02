@@ -63,8 +63,7 @@ namespace GitHubAction
 
                     uploadedPackage = await UploadPackage(inputs.ApiKey, createdPackage);
                     if(uploadedPackage == null) return;
-                    Log.ForContext("type", "GithubCommand")
-                        .Information("::set-output name=artifact-id::{0}", uploadedPackage.ArtifactId);
+                    Log.ForContext("type", "githubCommand").Information("::set-output name=artifact-id::{0}", uploadedPackage.ArtifactId);
                 }
 
                 // Deploy
