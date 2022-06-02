@@ -26,12 +26,6 @@ inputs:
     description: 'The specific stage to run in this action. Possible values are: Build, Publish and Deploy. All will run all 3 stages consecutively.'
     required: false
     default: "All"
-  package-path:
-    description: 'The path to the package to publish. Only required when the stage is Publish.'
-    required: false
-  package-type:
-    description: 'The type of the package you would like to publish. Only required when the stage is Publish.'
-    required: false
   artifact-id:
     description: 'The artifact Id of the package that you would like to deploy'
     required: false
@@ -52,9 +46,5 @@ runs:
     - ${{ inputs.timeout }}
     - --stage
     - ${{ inputs.stage }}
-    - --package-path
-    - ${{ inputs.package-path }}
-    - --package-type
-    - ${{ inputs.package-type }}
     - --artifact-id
     - ${{ inputs.artifact-id }}

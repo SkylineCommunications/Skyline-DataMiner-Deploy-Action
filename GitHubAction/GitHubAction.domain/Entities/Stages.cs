@@ -2,8 +2,7 @@
 
 public static class Stages
 {
-    public const string Build = "Build";
-    public const string Publish = "Publish";
+    public const string BuildAndPublish = "BuildAndPublish";
     public const string Deploy = "Deploy";
     public const string All = "All";
 }

@@ -40,13 +40,12 @@ namespace GitHubAction
                 return;
             }
 
-            CreatedPackage? createdPackage = null;
             UploadedPackage? uploadedPackage = null;
 
             try
             { 
-                // Build
-                if (inputs.Stage == Stages.All || inputs.Stage == Stages.Build)
+                // BuildAndPublish
+                if (inputs.Stage == Stages.All || inputs.Stage == Stages.BuildAndPublish)
                 {
                     var workingDirectory = new DirectoryInfo(Environment.CurrentDirectory == "/github/workspace" ? Environment.CurrentDirectory : Path.Join(Environment.CurrentDirectory, "../../../../../"));
 
@@ -56,23 +55,10 @@ namespace GitHubAction
                         inputs.PackageName!,
                         inputs.Version!,
                         SolutionType.DmScript);
-                    createdPackage = await CreatePackage(localPackageConfig);
+
+                    var createdPackage = await CreatePackage(localPackageConfig);
                     if (createdPackage == null) return;
-                }
-                
 
-                // Publish
-                if (inputs.Stage == Stages.All || inputs.Stage == Stages.Publish)
-                {
-                    if (createdPackage == null)
-                    {
-                        createdPackage = new CreatedPackage(
-                            new FileInfo(inputs.PackagePath!),
-                            inputs.PackageName!,
-                            inputs.PackageType!,
-                            inputs.Version!);
-
-                    }
                     uploadedPackage = await UploadPackage(inputs.ApiKey, createdPackage);
                     if(uploadedPackage == null) return;
                 }

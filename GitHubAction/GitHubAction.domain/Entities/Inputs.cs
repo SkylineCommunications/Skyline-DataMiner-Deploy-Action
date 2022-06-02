@@ -31,8 +31,6 @@ public class Inputs
         var solutionPath = givenArgs[InputArgurments.SolutionPath];
         var packageName = givenArgs[InputArgurments.PackageName];
         var version = givenArgs[InputArgurments.Version];
-        var packagePath = givenArgs[InputArgurments.PackagePath];
-        var packageType = givenArgs[InputArgurments.PackageType];
         var artifactId = givenArgs[InputArgurments.ArtifactId];
 
         if (!ValidateArgument(InputArgurments.Stage, stage, stage)) return null;
@@ -42,7 +40,7 @@ public class Inputs
         switch (stage)
         {
             case Stages.All:
-            case Stages.Build:
+            case Stages.BuildAndPublish:
                 // validate solution path
                 argumentsAreValid &= ValidateArgument(InputArgurments.SolutionPath, solutionPath, stage);
                 argumentsAreValid &= ValidateArgument(InputArgurments.PackageName, packageName, stage);
@@ -59,23 +57,6 @@ public class Inputs
                     TimeOut = TimeSpan.Parse(timeOut),
                     Version = version
                 };
-            case Stages.Publish:
-                // validate package name
-                argumentsAreValid &= ValidateArgument(InputArgurments.PackageName, packageName, stage);
-                argumentsAreValid &= ValidateArgument(InputArgurments.PackageType, packageType, stage);
-                argumentsAreValid &= ValidateArgument(InputArgurments.PackagePath, packagePath, stage);
-                argumentsAreValid &= ValidateArgument(InputArgurments.Version, version, stage);
-
-                if (!argumentsAreValid) return null;
-
-                return new Inputs()
-                {
-                    ApiKey = apiKey,
-                    PackageName = packageName,
-                    PackageType = packageType,
-                    PackagePath = packagePath,
-                    Version = version
-                };
             case Stages.Deploy:
                 // validate package name
                 argumentsAreValid &= ValidateArgument(InputArgurments.ArtifactId, artifactId, stage);
@@ -85,10 +66,11 @@ public class Inputs
                 return new Inputs()
                 {
                     ApiKey = apiKey,
-                    ArtifactId = artifactId
+                    ArtifactId = artifactId,
+                    TimeOut = TimeSpan.Parse(timeOut)
                 };
             default:
-                Log.Error("Invalid stage argument. Valid values are: Build, Publish, Deploy or All");
+                Log.Error("Invalid stage argument. Valid values are: BuildAndPublish, Publish, Deploy or All");
                 return null;
         }
     }
@@ -111,15 +93,6 @@ public class Inputs
                     Log.Error(
                         "Invalid format for argument {argument}. The provided value {value} does not match the format \"x.x.x\"",
                         key, value);
-                    return false;
-                }
-
-                break;
-
-            case InputArgurments.PackageType:
-                if (!Enum.IsDefined(typeof(SolutionType), value))
-                {
-                    Log.Error("The package type '{0}' is not supported. Supported types are {1}", value, string.Join(", ", Enum.GetNames<SolutionType>()));
                     return false;
                 }
 
