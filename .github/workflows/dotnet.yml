@@ -19,7 +19,7 @@ jobs:
         dotnet-version: 6.0.x
     - name: Restore dependencies
       working-directory:
-      run: dotnet restore
+      run: dotnet restore ./GitHubAction.sln
     - name: Build
       working-directory:
       run: dotnet build --no-restore
