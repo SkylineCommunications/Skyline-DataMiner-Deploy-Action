@@ -18,8 +18,11 @@ jobs:
       with:
         dotnet-version: 6.0.x
     - name: Restore dependencies
-      run: dotnet restore ./GitHubAction/GitHubAction.sln
+      working-directory:
+      run: dotnet restore
     - name: Build
+      working-directory:
       run: dotnet build --no-restore
     - name: Test
+      working-directory:
       run: dotnet test --no-build --verbosity normal
