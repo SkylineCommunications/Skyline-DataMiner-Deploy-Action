@@ -29,6 +29,7 @@ public class Program
         catch (Exception ex)
         {
             Log.Fatal(ex, "An unhandled exception occurred");
+            Environment.Exit(1);
         }
         finally
         {
