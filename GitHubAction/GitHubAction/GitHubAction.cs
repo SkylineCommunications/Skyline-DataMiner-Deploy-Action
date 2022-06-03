@@ -1,8 +1,6 @@
 ﻿using GitHubAction.Domain.Entities;
 using GitHubAction.Domain.Presenters;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.VisualStudio.TestPlatform.PlatformAbstractions.Interfaces;
 using Package.Builder;
 using Package.Builder.Exceptions;
 using Package.Domain.Enums;

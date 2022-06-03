@@ -1,22 +1,13 @@
-﻿using System.Diagnostics.Metrics;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Rest;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Package.Application;
 using Package.Domain.Services;
 using Package.Gateway;
-using ArtifactDeploymentInfoApi.Generated;
-using DeployArtifactApi.Generated;
 using GitHubAction.Console.Extensions;
 using GitHubAction.Console.Options;
 using GitHubAction.Domain.Presenters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.VisualStudio.TestPlatform.PlatformAbstractions.Interfaces;
 using Package.Builder;
-using Package.Domain.Enums;
-using Package.Domain.Models;
-using UploadArtifactApi;
 using Serilog;
 using Serilog.Filters;
 
