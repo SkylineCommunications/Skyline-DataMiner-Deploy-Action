@@ -14,4 +14,8 @@
     <ProjectReference Include="..\Package.Domain\Package.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Presenters\" />
+  </ItemGroup>
+
 </Project>

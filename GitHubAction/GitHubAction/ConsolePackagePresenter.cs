@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Package.Builder;
 using Package.Domain.Exceptions;
+using Package.Domain.Models;
 using Package.Domain.Services;
 
 namespace GitHubAction;
@@ -100,5 +101,11 @@ public class ConsolePackagePresenter : IPackagePresenter
     {
         _logger.LogError("The package deployment couldn't be started. Error message: {0}", e.Message);
         Environment.Exit(500); // Internal Server Error
+    }
+
+    public void PresentPackageDeploymentFailed(DeployedPackage deployedPackage)
+    {
+        _logger.LogError("Package deployment failed with the following status: {0}", deployedPackage.Status);
+        Environment.Exit(500);
     }
 }

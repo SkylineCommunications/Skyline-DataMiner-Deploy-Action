@@ -8,9 +8,11 @@ using ArtifactDeploymentInfoApi.Generated;
 using DeployArtifactApi.Generated;
 using GitHubAction.Console.Extensions;
 using GitHubAction.Console.Options;
+using GitHubAction.Domain.Presenters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.VisualStudio.TestPlatform.PlatformAbstractions.Interfaces;
 using Package.Builder;
 using Package.Domain.Enums;
 using Package.Domain.Models;
@@ -76,6 +78,7 @@ public class Program
                 services.AddScoped<IPackageService, PackageService>();
                 services.AddScoped<IPackageGateway, HttpPackageGateway>();
                 services.AddScoped<IPackageBuilder, PackageBuilder>();
+                services.AddScoped<IGithubPresenter, GithubPresenter>();
                 services.BuildServiceProvider();
             })
             .UseSerilog((context, services, loggerConfiguration) =>

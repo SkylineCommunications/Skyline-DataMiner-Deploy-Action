@@ -1,5 +1,6 @@
 ﻿using Package.Builder;
 using Package.Domain.Exceptions;
+using Package.Domain.Models;
 
 namespace Package.Domain.Services
 {
@@ -21,5 +22,6 @@ namespace Package.Domain.Services
         void PresentUnsupportedSolutionType();
         void PresentCouldNotFetchTheDeployedPackage();
         void PresentStartingPackageDeploymentFailed(DeployPackageException e);
+        void PresentPackageDeploymentFailed(DeployedPackage deployedPackage);
     }
 }

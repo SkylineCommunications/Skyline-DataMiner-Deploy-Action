@@ -16,9 +16,6 @@ public class Inputs
     public string? PackageName { get; init; }
     public string? Version { get; init; }
 
-    public string? PackagePath { get; init; }
-    public string? PackageType { get; init; }
-
     public string? ArtifactId { get; init; }
 
 
@@ -67,10 +64,11 @@ public class Inputs
                 {
                     ApiKey = apiKey,
                     ArtifactId = artifactId,
-                    TimeOut = TimeSpan.Parse(timeOut)
+                    TimeOut = TimeSpan.Parse(timeOut),
+                    Stage = stage
                 };
             default:
-                Log.Error("Invalid stage argument. Valid values are: BuildAndPublish, Publish, Deploy or All");
+                Log.Error("Invalid stage argument. Valid values are: BuildAndPublish, Deploy or All");
                 return null;
         }
     }

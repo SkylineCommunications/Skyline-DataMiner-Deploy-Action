@@ -1,6 +1,8 @@
 ﻿using GitHubAction.Domain.Entities;
+using GitHubAction.Domain.Presenters;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.VisualStudio.TestPlatform.PlatformAbstractions.Interfaces;
 using Package.Builder;
 using Package.Builder.Exceptions;
 using Package.Domain.Enums;
@@ -16,20 +18,28 @@ namespace GitHubAction
     {
         private readonly IPackageService _packageService;
         private readonly IPackagePresenter _packagePresenter;
+        private readonly IGithubPresenter _githubPresenter;
         private readonly ILogger _logger;
         private readonly TimeSpan _deploymentBackOff;
         private readonly TimeSpan _deploymentMaxBackOff;
 
-        public GitHubAction(
-            IPackageService packageService,
-            IPackagePresenter packagePresenter,
-            ILogger<GitHubAction> logger)
+        public GitHubAction(IPackageService packageService, IPackagePresenter packagePresenter,
+            IGithubPresenter githubPresenter, ILogger<GitHubAction> logger) 
+            : this(packageService, packagePresenter, githubPresenter, logger, TimeSpan.FromSeconds(3), TimeSpan.FromMinutes(2))
+        {
+
+        }
+
+        public GitHubAction(IPackageService packageService, IPackagePresenter packagePresenter,
+            IGithubPresenter githubPresenter, ILogger<GitHubAction> logger,
+            TimeSpan minimumBackOff, TimeSpan maximumBackOff)
         {
             _packageService = packageService;
             _packagePresenter = packagePresenter;
+            _githubPresenter = githubPresenter;
             _logger = logger;
-            _deploymentBackOff = TimeSpan.FromSeconds(3);
-            _deploymentMaxBackOff = TimeSpan.FromMinutes(2);
+            _deploymentBackOff = minimumBackOff;
+            _deploymentMaxBackOff = maximumBackOff;
         }
 
         public async Task RunAsync(string[] args, CancellationToken cancellationToken)
@@ -37,8 +47,7 @@ namespace GitHubAction
             var inputs = ParseInputs.ParseAndValidateInputs(args, _logger);
             if (inputs == null)
             {
-                _logger.LogError("There was a problem with the provided arguments...");
-                Environment.Exit(400); // Bad Request
+                _githubPresenter.PresentInvalidArguments();
                 return;
             }
 
@@ -47,7 +56,7 @@ namespace GitHubAction
             try
             { 
                 // BuildAndPublish
-                if (inputs.Stage == Stages.All || inputs.Stage == Stages.BuildAndPublish)
+                if (inputs is { Stage: Stages.All or Stages.BuildAndPublish })
                 {
                     var workingDirectory = new DirectoryInfo(Environment.CurrentDirectory == "/github/workspace" ? Environment.CurrentDirectory : Path.Join(Environment.CurrentDirectory, "../../../../../"));
 
@@ -63,11 +72,12 @@ namespace GitHubAction
 
                     uploadedPackage = await UploadPackage(inputs.ApiKey, createdPackage);
                     if(uploadedPackage == null) return;
-                    Log.ForContext("type", "githubCommand").Information("::set-output name=artifact-id::{0}", uploadedPackage.ArtifactId);
+                    _githubPresenter.PresentOutputVariable("artifact-id", uploadedPackage.ArtifactId);
+                    
                 }
 
                 // Deploy
-                if (inputs.Stage == Stages.All || inputs.Stage == Stages.Deploy)
+                if (inputs is {Stage: Stages.All or Stages.Deploy})
                 {
                     if (uploadedPackage == null)
                     {
@@ -110,7 +120,7 @@ namespace GitHubAction
                             return null;
                         }
                     },
-                    (output) => output is {Status: "Succeeded"},
+                    (output) => output is {Status: "Succeeded" or "Timeout" or "Error" },
                     (backOffDelaySeconds) =>
                         _packagePresenter.PresentWaitingMoreForFinishedPackageDeployment(backOffDelaySeconds),
                     deploymentBackOff,
@@ -120,6 +130,12 @@ namespace GitHubAction
             catch (TimeoutException)
             {
                 _packagePresenter.PresentPackageDeploymentTimeout();
+                return null;
+            }
+
+            if (deployedPackage is {Status: "Timeout" or "Error"})
+            {
+                _packagePresenter.PresentPackageDeploymentFailed(deployedPackage);
                 return null;
             }
 
