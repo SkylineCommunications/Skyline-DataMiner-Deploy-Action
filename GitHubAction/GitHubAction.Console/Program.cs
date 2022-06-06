@@ -44,7 +44,7 @@ try
         .AddScoped<IArtifactUploadApi>(s =>
         {
             var httpClient = s.GetRequiredService<IHttpClientFactory>().CreateClient(nameof(HttpArtifactUploadApi));
-            httpClient.BaseAddress = new Uri(apiBaseUrl);
+            httpClient.BaseAddress = new Uri($"{apiBaseUrl}/");
             return new HttpArtifactUploadApi(httpClient);
         })
         .AddScoped<IArtifactDeploymentInfoAPI>(s =>
