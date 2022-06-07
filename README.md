@@ -8,7 +8,7 @@ The action exists of 2 stages `Build and Publish` and `Deploy`
 
 ### Build and Publish
 
-This stage builds the DataMiner Application Package and then publishes it to our private artifact storage. This stage will then return then Id of this artifact in the output.
+This stage builds a package and publishes it to a dedicated storage in the cloud. The output of this stage will be the id of the artifact that can be used in the deploy stage.
 
 ### Deploy
 
@@ -42,7 +42,7 @@ The version number for the package (format A.B.C). E.g. `'1.0.1'`. Required for 
 
 ### `artifact-id`
 
-**Optional** The private artifact to deploy. This is only needed when 'stage' is `'Deploy'`
+**Optional** The private artifact to deploy. This is only needed when 'stage' is `'Deploy'`.
 
 
 ## Outputs
