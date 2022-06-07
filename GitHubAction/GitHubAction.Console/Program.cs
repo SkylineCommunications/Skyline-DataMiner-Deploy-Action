@@ -108,7 +108,6 @@ try
 }
 catch (Exception e)
 {
-    await Task.Delay(-1);
     logger.LogError("Something went wrong. {exception}", e.ToString());
     Environment.Exit(500); // Internal Server Error
     return;
