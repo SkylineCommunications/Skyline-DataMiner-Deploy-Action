@@ -11,7 +11,6 @@ using Package.Builder;
 using Serilog;
 using Serilog.Filters;
 
-
 namespace GitHubAction.Console;
 
 public class Program
