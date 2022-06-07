@@ -21,7 +21,7 @@ public static class ApiExtensions
         {
             var options = s.GetService<ApiOptions>();
             return new ArtifactDeploymentInfoAPI(
-                new Uri($"{options.ApiBaseUrl}api"),
+                new Uri($"{options.ApiBaseUrl}/api"),
                 new BasicAuthenticationCredentials());
         });
 
@@ -29,7 +29,7 @@ public static class ApiExtensions
         {
             var options = s.GetService<ApiOptions>();
             return new DeployArtifactAPI(
-                new Uri($"{options.ApiBaseUrl}api"),
+                new Uri($"{options.ApiBaseUrl}/api"),
                 new BasicAuthenticationCredentials());
         });
 
@@ -37,7 +37,7 @@ public static class ApiExtensions
         {
             var httpClient = s.GetRequiredService<IHttpClientFactory>().CreateClient(nameof(HttpArtifactUploadApi));
             var options = s.GetService<ApiOptions>();
-            httpClient.BaseAddress = new Uri($"{options.ApiBaseUrl}");
+            httpClient.BaseAddress = new Uri($"{options.ApiBaseUrl}/");
             return new HttpArtifactUploadApi(httpClient);
         });
     }

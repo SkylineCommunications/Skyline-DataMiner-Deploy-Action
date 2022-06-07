@@ -50,13 +50,13 @@ public class Program
                     string apiBaseUrl;
                     if (environment != null)
                     {
-                        apiBaseUrl = $"https://api-{environment}.dataminer.services/{environment}/";
+                        apiBaseUrl = $"https://api-{environment}.dataminer.services/{environment}";
                         Log.Information("Found the \"Skyline-deploy-action-namespace\" environment variable");
                         Log.Information("Setting the base url for the api to: {0}", apiBaseUrl);
                     }
                     else
                     {
-                        apiBaseUrl = "https://api.dataminer.services/";
+                        apiBaseUrl = "https://api.dataminer.services";
                     }
 
                     //return
