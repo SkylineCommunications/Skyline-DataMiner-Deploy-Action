@@ -6,9 +6,9 @@ The action exists of 2 stages `Build and Publish` and `Deploy`
 
 ## Stages
 
-### Build and Publish
+### Upload
 
-This stage builds a package and publishes it to a dedicated storage in the cloud. The output of this stage will be the id of the artifact that can be used in the deploy stage.
+This stage creates a package and uploads it to a dedicated storage in the cloud. The output of this stage will be the id of the artifact that can be used in the deploy stage.
 
 ### Deploy
 
