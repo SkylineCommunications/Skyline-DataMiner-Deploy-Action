@@ -18,7 +18,6 @@ public class ConsolePackagePresenter : IPackagePresenter
     public void PresentUnauthorizedKey()
     {
         _logger.LogError("The provided key was not valid or authorized.");
-        Environment.Exit(403); // Forbidden
     }
 
     public void PresentPackageDeploymentFinished(string deploymentStatus)
@@ -29,19 +28,16 @@ public class ConsolePackagePresenter : IPackagePresenter
     public void PresentPackageDeploymentTimeout()
     {
         _logger.LogError("Timed out waiting for the package deployment to finish!");
-        Environment.Exit(504); // Gateway Timeout
     }
 
     public void PresentDataMinerSystemUnavailable()
     {
         _logger.LogError("The DataMiner System was not available.");
-        Environment.Exit(502); // Bad Gateway
     }
 
     public void PresentPackageUploadFailed(UploadPackageException e)
     {
         _logger.LogError("The package could not be uploaded.");
-        Environment.Exit(500); // Internal Server Error
     }
 
     public void PresentStartingPackageUpload()
@@ -77,7 +73,6 @@ public class ConsolePackagePresenter : IPackagePresenter
     public void PresentPackageCreationFailed(CreatePackageException e)
     {
         _logger.LogError("An exception occurred during creation of the package: {exception}.", e.ToString());
-        Environment.Exit(500); // Internal Server Error
     }
 
     public void PresentPackageCreationSucceeded()
@@ -88,24 +83,20 @@ public class ConsolePackagePresenter : IPackagePresenter
     public void PresentUnsupportedSolutionType()
     {
         _logger.LogError("The solution type is not supported.");
-        Environment.Exit(403); // Bad Request
     }
 
     public void PresentCouldNotFetchTheDeployedPackage()
     {
         _logger.LogInformation("Couldn't fetch the deployed package right now...");
-        Environment.Exit(500); // Internal Server Error
     }
 
     public void PresentStartingPackageDeploymentFailed(DeployPackageException e)
     {
         _logger.LogError("The package deployment couldn't be started. Error message: {0}", e.Message);
-        Environment.Exit(500); // Internal Server Error
     }
 
     public void PresentPackageDeploymentFailed(DeployedPackage deployedPackage)
     {
         _logger.LogError("Package deployment failed with the following status: {0}", deployedPackage.Status);
-        Environment.Exit(500);
     }
 }

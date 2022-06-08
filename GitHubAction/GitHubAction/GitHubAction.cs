@@ -1,14 +1,12 @@
 ﻿using GitHubAction.Domain.Entities;
-using GitHubAction.Domain.Presenters;
-using Microsoft.Extensions.Logging;
+using GitHubAction.Services;
 using Package.Builder;
 using Package.Builder.Exceptions;
 using Package.Domain.Enums;
 using Package.Domain.Exceptions;
 using Package.Domain.Models;
 using Package.Domain.Services;
-using Serilog;
-using ILogger = Microsoft.Extensions.Logging.ILogger;
+using IGithubPresenter = GitHubAction.Presenters.IGithubPresenter;
 
 namespace GitHubAction
 {
@@ -17,36 +15,34 @@ namespace GitHubAction
         private readonly IPackageService _packageService;
         private readonly IPackagePresenter _packagePresenter;
         private readonly IGithubPresenter _githubPresenter;
-        private readonly ILogger _logger;
+        private readonly IInputParserService _inputParserSerivce;
         private readonly TimeSpan _deploymentBackOff;
         private readonly TimeSpan _deploymentMaxBackOff;
 
-        public GitHubAction(IPackageService packageService, IPackagePresenter packagePresenter,
-            IGithubPresenter githubPresenter, ILogger<GitHubAction> logger) 
-            : this(packageService, packagePresenter, githubPresenter, logger, TimeSpan.FromSeconds(3), TimeSpan.FromMinutes(2))
+        public GitHubAction(IPackageService packageService, IInputParserService inputParser, IPackagePresenter packagePresenter, IGithubPresenter githubPresenter) 
+            : this(packageService, inputParser, packagePresenter, githubPresenter, TimeSpan.FromSeconds(3), TimeSpan.FromMinutes(2))
         {
 
         }
 
-        public GitHubAction(IPackageService packageService, IPackagePresenter packagePresenter,
-            IGithubPresenter githubPresenter, ILogger<GitHubAction> logger,
-            TimeSpan minimumBackOff, TimeSpan maximumBackOff)
+        public GitHubAction(IPackageService packageService, IInputParserService inputParser, IPackagePresenter packagePresenter,
+            IGithubPresenter githubPresenter, TimeSpan minimumBackOff, TimeSpan maximumBackOff)
         {
             _packageService = packageService;
+            _inputParserSerivce = inputParser;
             _packagePresenter = packagePresenter;
             _githubPresenter = githubPresenter;
-            _logger = logger;
             _deploymentBackOff = minimumBackOff;
             _deploymentMaxBackOff = maximumBackOff;
         }
 
-        public async Task RunAsync(string[] args, CancellationToken cancellationToken)
+        public async Task<int> RunAsync(string[] args, CancellationToken cancellationToken)
         {
-            var inputs = ParseInputs.ParseAndValidateInputs(args, _logger);
+            var inputs = _inputParserSerivce.ParseAndValidateInputs(args);
             if (inputs == null)
             {
                 _githubPresenter.PresentInvalidArguments();
-                return;
+                return 3;
             }
 
             UploadedPackage? uploadedPackage = null;
@@ -54,7 +50,7 @@ namespace GitHubAction
             try
             { 
                 // BuildAndPublish
-                if (inputs is { Stage: Stages.All or Stages.BuildAndPublish })
+                if (inputs is { Stage: Stage.All or Stage.BuildAndPublish })
                 {
                     var workingDirectory = new DirectoryInfo(Environment.CurrentDirectory == "/github/workspace" ? Environment.CurrentDirectory : Path.Join(Environment.CurrentDirectory, "../../../../../"));
 
@@ -65,27 +61,27 @@ namespace GitHubAction
                         inputs.Version!,
                         SolutionType.DmScript);
 
-                    var createdPackage = await CreatePackage(localPackageConfig);
-                    if (createdPackage == null) return;
+                    var createdPackage = await CreatePackageAsync(localPackageConfig);
+                    if (createdPackage == null) return 4;
 
-                    uploadedPackage = await UploadPackage(inputs.ApiKey, createdPackage);
-                    if(uploadedPackage == null) return;
+                    uploadedPackage = await UploadPackageAsync(inputs.ApiKey, createdPackage);
+                    if(uploadedPackage == null) return 5;
                     _githubPresenter.PresentOutputVariable("artifact-id", uploadedPackage.ArtifactId);
                     
                 }
 
                 // Deploy
-                if (inputs is {Stage: Stages.All or Stages.Deploy})
+                if (inputs is {Stage: Stage.All or Stage.Deploy})
                 {
                     if (uploadedPackage == null)
                     {
                         uploadedPackage = new UploadedPackage(inputs.ArtifactId!);
                     }
-                    var deployingPackage = await DeployPackage(inputs.ApiKey, uploadedPackage);
-                    if (deployingPackage == null) return;
+                    var deployingPackage = await DeployPackageAsync(inputs.ApiKey, uploadedPackage);
+                    if (deployingPackage == null) return 6;
 
-                    var deployedPackage = await ConfirmSuccesfullDeployment(inputs.ApiKey, _deploymentBackOff, _deploymentMaxBackOff, inputs.TimeOut, deployingPackage);
-                    if(deployedPackage == null)  return;
+                    var deployedPackage = await ConfirmSuccesfullDeploymentAsync(inputs.ApiKey, _deploymentBackOff, _deploymentMaxBackOff, inputs.TimeOut, deployingPackage);
+                    if(deployedPackage == null)  return 7;
                     _packagePresenter.PresentPackageDeploymentFinished(deployedPackage.Status);
                 }
                 
@@ -93,10 +89,13 @@ namespace GitHubAction
             catch (KeyException)
             {
                 _packagePresenter.PresentUnauthorizedKey();
+                return 8;
             }
+
+            return 0;
         }
 
-        private async Task<DeployedPackage?> ConfirmSuccesfullDeployment(string key, TimeSpan deploymentBackOff, TimeSpan deploymentMaxBackOff,
+        private async Task<DeployedPackage?> ConfirmSuccesfullDeploymentAsync(string key, TimeSpan deploymentBackOff, TimeSpan deploymentMaxBackOff,
             TimeSpan deploymentTimeout, DeployingPackage deployingPackage)
         {
             DeployedPackage deployedPackage;
@@ -140,7 +139,7 @@ namespace GitHubAction
             return deployedPackage;
         }
 
-        private async Task<DeployingPackage?> DeployPackage(string key, UploadedPackage uploadedPackage)
+        private async Task<DeployingPackage?> DeployPackageAsync(string key, UploadedPackage uploadedPackage)
         {
             _packagePresenter.PresentStartingPackageDeployment();
 
@@ -163,7 +162,7 @@ namespace GitHubAction
             return deployingPackage;
         }
 
-        private async Task<UploadedPackage?> UploadPackage(string key, CreatedPackage createdPackage)
+        private async Task<UploadedPackage?> UploadPackageAsync(string key, CreatedPackage createdPackage)
         {
             _packagePresenter.PresentStartingPackageUpload();
 
@@ -182,7 +181,7 @@ namespace GitHubAction
             return uploadedPackage;
         }
 
-        private async Task<CreatedPackage?> CreatePackage(LocalPackageConfig localPackageConfig)
+        private async Task<CreatedPackage?> CreatePackageAsync(LocalPackageConfig localPackageConfig)
         {
             _packagePresenter.PresentStartCreatingPackage();
             CreatedPackage createdPackage;

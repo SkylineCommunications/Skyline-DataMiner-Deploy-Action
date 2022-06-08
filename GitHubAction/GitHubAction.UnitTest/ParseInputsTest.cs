@@ -1,27 +1,29 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
+using GitHubAction.Domain.Entities;
+using GitHubAction.Presenters;
+using GitHubAction.Services;
+using GitHubAction.Services.Impl;
 using Moq;
 using NUnit.Framework;
-using NUnit.Framework.Constraints;
 
 namespace GitHubAction.UnitTest;
 
 public class ParseInputsTest
 {
-    private Mock<ILogger> _loggerMock = null!;
+    private Mock<IInputParserPresenter> _inputParserPresenterMock = null!;
+    private IInputParserService _inputParserService = null!;
 
     [SetUp]
     public void Setup()
     {
-        _loggerMock = new Mock<ILogger>();
+        _inputParserPresenterMock = new Mock<IInputParserPresenter>();
+
+        _inputParserService = new InputParserService(_inputParserPresenterMock.Object);
+
     }
 
     [Test]
-    public void ParseAndValidateInputs_HappyFlow()
+    public void ParseAndValidateInputs_HappyFlow_All()
     {
         // Given
         var key = "some key";
@@ -30,6 +32,7 @@ public class ParseInputsTest
         var version = "1.0.2";
         var timeOut = "12:00";
         var stage = "All";
+        var artifactId = "some string";
 
         var args = new string[]
         {
@@ -46,14 +49,115 @@ public class ParseInputsTest
             "--stage",
             stage,
             "--artifact-id",
-            ""
+            artifactId
         };
 
         // When
-        var inputs = ParseInputs.ParseAndValidateInputs(args, _loggerMock.Object);
+        var inputs = _inputParserService.ParseAndValidateInputs(args)!;
 
         // Then
+        _inputParserPresenterMock.VerifyNoOtherCalls();
+
         Assert.IsNotNull(inputs);
+        Assert.AreEqual(key, inputs.ApiKey);
+        Assert.AreEqual(solutionFile, inputs.SolutionPath);
+        Assert.AreEqual(packageName, inputs.PackageName);
+        Assert.AreEqual(version, inputs.Version);
+        Assert.AreEqual(TimeSpan.Parse(timeOut), inputs.TimeOut);
+        Assert.AreEqual(Enum.Parse<Stage>(stage), inputs.Stage);
+        Assert.IsNull(inputs.ArtifactId);
+    }
+
+    [Test]
+    public void ParseAndValidateInputs_HappyFlow_BuildAndPublish()
+    {
+        // Given
+        var key = "some key";
+        var solutionFile = "some file";
+        var packageName = "TestPackage";
+        var version = "1.0.2";
+        var timeOut = "12:00";
+        var stage = "BuildAndPublish";
+        var artifactId = "some string";
+
+        var args = new string[]
+        {
+            "--api-key",
+            key,
+            "--solution-path",
+            solutionFile,
+            "--package-name",
+            packageName,
+            "--version",
+            version,
+            "--timeout",
+            timeOut,
+            "--stage",
+            stage,
+            "--artifact-id",
+            artifactId
+        };
+
+        // When
+        var inputs = _inputParserService.ParseAndValidateInputs(args)!;
+
+        // Then
+        _inputParserPresenterMock.VerifyNoOtherCalls();
+
+        Assert.IsNotNull(inputs);
+        Assert.AreEqual(key, inputs.ApiKey);
+        Assert.AreEqual(solutionFile, inputs.SolutionPath);
+        Assert.AreEqual(packageName, inputs.PackageName);
+        Assert.AreEqual(version, inputs.Version);
+        Assert.AreEqual(TimeSpan.Parse(timeOut), inputs.TimeOut);
+        Assert.AreEqual(Enum.Parse<Stage>(stage), inputs.Stage);
+        Assert.IsNull(inputs.ArtifactId);
+    }
+
+    [Test]
+    public void ParseAndValidateInputs_HappyFlow_Deploy()
+    {
+        // Given
+        var key = "some key";
+        var solutionFile = "some file";
+        var packageName = "TestPackage";
+        var version = "1.0.2";
+        var timeOut = "12:00";
+        var stage = "Deploy";
+        var artifactId = "some string";
+
+        var args = new string[]
+        {
+            "--api-key",
+            key,
+            "--solution-path",
+            solutionFile,
+            "--package-name",
+            packageName,
+            "--version",
+            version,
+            "--timeout",
+            timeOut,
+            "--stage",
+            stage,
+            "--artifact-id",
+            artifactId
+        };
+
+        // When
+        var inputs = _inputParserService.ParseAndValidateInputs(args)!;
+
+        // Then
+        _inputParserPresenterMock.VerifyNoOtherCalls();
+
+        Assert.IsNotNull(inputs);
+        Assert.AreEqual(key, inputs.ApiKey);
+        Assert.IsNull(inputs.SolutionPath);
+        Assert.IsNull(inputs.PackageName);
+        Assert.IsNull(inputs.Version);
+        Assert.AreEqual(TimeSpan.Parse(timeOut), inputs.TimeOut);
+        Assert.AreEqual(Enum.Parse<Stage>(stage), inputs.Stage);
+        Assert.AreEqual(artifactId, inputs.ArtifactId);
     }
 
     [Test]
@@ -62,13 +166,503 @@ public class ParseInputsTest
         // Given
         string[] args = null!;
 
-
-        Assert.Throws<ArgumentNullException>(delegate { ParseInputs.ParseAndValidateInputs(args, _loggerMock.Object); });
+        Assert.Throws<ArgumentNullException>(delegate { _inputParserService.ParseAndValidateInputs(args); });
     }
 
+    [Test]
+    public void ParseAndValidateInputs_EmptyStage()
+    {
+        // Given
+        var key = "some key";
+        var solutionFile = "some file";
+        var packageName = "TestPackage";
+        var version = "1.0.2";
+        var timeOut = "12:00";
+        var stage = "";
+        var artifactId = "some string";
+
+        var args = new string[]
+        {
+            "--api-key",
+            key,
+            "--solution-path",
+            solutionFile,
+            "--package-name",
+            packageName,
+            "--version",
+            version,
+            "--timeout",
+            timeOut,
+            "--stage",
+            stage,
+            "--artifact-id",
+            artifactId
+        };
+
+        // When
+        var inputs = _inputParserService.ParseAndValidateInputs(args)!;
+
+        // Then
+        _inputParserPresenterMock.Verify(p => p.PresentMissingArgument(InputArgurments.Stage), Times.Once);
+        _inputParserPresenterMock.VerifyNoOtherCalls();
+
+        Assert.IsNull(inputs);
+    }
 
     [Test]
-    public void ParseAndValidateInputs_GivesWarning()
+    [TestCase("All")]
+    [TestCase("BuildAndPublish")]
+    [TestCase("Deploy")]
+    public void ParseAndValidateInputs_EmptyApiKey(string stage)
+    {
+        // Given
+        var key = "";
+        var solutionFile = "some file";
+        var packageName = "TestPackage";
+        var version = "1.0.2";
+        var timeOut = "12:00";
+        var artifactId = "some string";
+
+        var args = new string[]
+        {
+            "--api-key",
+            key,
+            "--solution-path",
+            solutionFile,
+            "--package-name",
+            packageName,
+            "--version",
+            version,
+            "--timeout",
+            timeOut,
+            "--stage",
+            stage,
+            "--artifact-id",
+            artifactId
+        };
+
+        // When
+        var inputs = _inputParserService.ParseAndValidateInputs(args)!;
+
+        // Then
+        _inputParserPresenterMock.Verify(p => p.PresentMissingArgument(InputArgurments.ApiKey), Times.Once);
+        _inputParserPresenterMock.VerifyNoOtherCalls();
+
+        Assert.IsNull(inputs);
+    }
+
+    [Test]
+    [TestCase("All")]
+    [TestCase("BuildAndPublish")]
+    [TestCase("Deploy")]
+    public void ParseAndValidateInputs_EmptyTimeOut(string stage)
+    {
+        // Given
+        var key = "some key";
+        var solutionFile = "some file";
+        var packageName = "TestPackage";
+        var version = "1.0.2";
+        var timeOut = "";
+        var artifactId = "some string";
+
+        var args = new string[]
+        {
+            "--api-key",
+            key,
+            "--solution-path",
+            solutionFile,
+            "--package-name",
+            packageName,
+            "--version",
+            version,
+            "--timeout",
+            timeOut,
+            "--stage",
+            stage,
+            "--artifact-id",
+            artifactId
+        };
+
+        // When
+        var inputs = _inputParserService.ParseAndValidateInputs(args)!;
+
+        // Then
+        _inputParserPresenterMock.Verify(p => p.PresentMissingArgument(InputArgurments.Timeout), Times.Once);
+        _inputParserPresenterMock.VerifyNoOtherCalls();
+
+        Assert.IsNull(inputs);
+    }
+
+    [Test]
+    [TestCase("All", true)]
+    [TestCase("BuildAndPublish", true)]
+    [TestCase("Deploy", false)]
+    public void ParseAndValidateInputs_EmptySolutionFile(string stage, bool required)
+    {
+        // Given
+        var key = "some key";
+        var solutionFile = "";
+        var packageName = "TestPackage";
+        var version = "1.0.2";
+        var timeOut = "12:00";
+        var artifactId = "some string";
+
+        var args = new string[]
+        {
+            "--api-key",
+            key,
+            "--solution-path",
+            solutionFile,
+            "--package-name",
+            packageName,
+            "--version",
+            version,
+            "--timeout",
+            timeOut,
+            "--stage",
+            stage,
+            "--artifact-id",
+            artifactId
+        };
+
+        // When
+        var inputs = _inputParserService.ParseAndValidateInputs(args)!;
+
+        // Then
+        if (required) _inputParserPresenterMock.Verify(p => p.PresentMissingArgument(InputArgurments.SolutionPath), Times.Once);
+        _inputParserPresenterMock.VerifyNoOtherCalls();
+
+        if (required)
+        {
+            Assert.IsNull(inputs);
+        }
+        else
+        {
+            Assert.IsNotNull(inputs);
+        }
+    }
+
+    [Test]
+    [TestCase("All", true)]
+    [TestCase("BuildAndPublish", true)]
+    [TestCase("Deploy", false)]
+    public void ParseAndValidateInputs_EmptyPackageName(string stage, bool required)
+    {
+        // Given
+        var key = "some key";
+        var solutionFile = "some file";
+        var packageName = "";
+        var version = "1.0.2";
+        var timeOut = "12:00";
+        var artifactId = "some string";
+
+        var args = new string[]
+        {
+            "--api-key",
+            key,
+            "--solution-path",
+            solutionFile,
+            "--package-name",
+            packageName,
+            "--version",
+            version,
+            "--timeout",
+            timeOut,
+            "--stage",
+            stage,
+            "--artifact-id",
+            artifactId
+        };
+
+        // When
+        var inputs = _inputParserService.ParseAndValidateInputs(args)!;
+
+        // Then
+        if (required) _inputParserPresenterMock.Verify(p => p.PresentMissingArgument(InputArgurments.PackageName), Times.Once);
+        _inputParserPresenterMock.VerifyNoOtherCalls();
+
+        if (required)
+        {
+            Assert.IsNull(inputs);
+        }
+        else
+        {
+            Assert.IsNotNull(inputs);
+        }
+    }
+
+    [Test]
+    [TestCase("All", true)]
+    [TestCase("BuildAndPublish", true)]
+    [TestCase("Deploy", false)]
+    public void ParseAndValidateInputs_EmptyVersion(string stage, bool required)
+    {
+        // Given
+        var key = "some key";
+        var solutionFile = "some file";
+        var packageName = "TestPackage";
+        var version = "";
+        var timeOut = "12:00";
+        var artifactId = "some string";
+
+        var args = new string[]
+        {
+            "--api-key",
+            key,
+            "--solution-path",
+            solutionFile,
+            "--package-name",
+            packageName,
+            "--version",
+            version,
+            "--timeout",
+            timeOut,
+            "--stage",
+            stage,
+            "--artifact-id",
+            artifactId
+        };
+
+        // When
+        var inputs = _inputParserService.ParseAndValidateInputs(args)!;
+
+        // Then
+        if (required) _inputParserPresenterMock.Verify(p => p.PresentMissingArgument(InputArgurments.Version), Times.Once);
+        _inputParserPresenterMock.VerifyNoOtherCalls();
+
+        if (required)
+        {
+            Assert.IsNull(inputs);
+        }
+        else
+        {
+            Assert.IsNotNull(inputs);
+        }
+    }
+
+    [Test]
+    [TestCase("All", true)]
+    [TestCase("BuildAndPublish", true)]
+    [TestCase("Deploy", false)]
+    public void ParseAndValidateInputs_InvalidVersion(string stage, bool required)
+    {
+        // Given
+        var key = "some key";
+        var solutionFile = "some file";
+        var packageName = "TestPackage";
+        var version = "sqdfsdg";
+        var timeOut = "12:00";
+        var artifactId = "some string";
+
+        var args = new string[]
+        {
+            "--api-key",
+            key,
+            "--solution-path",
+            solutionFile,
+            "--package-name",
+            packageName,
+            "--version",
+            version,
+            "--timeout",
+            timeOut,
+            "--stage",
+            stage,
+            "--artifact-id",
+            artifactId
+        };
+
+        // When
+        var inputs = _inputParserService.ParseAndValidateInputs(args)!;
+
+        // Then
+        if (required) _inputParserPresenterMock.Verify(p => p.PresentInvalidVersionFormat(), Times.Once);
+        _inputParserPresenterMock.VerifyNoOtherCalls();
+
+        if (required)
+        {
+            Assert.IsNull(inputs);
+        }
+        else
+        {
+            Assert.IsNotNull(inputs);
+        }
+    }
+
+    [Test]
+    public void ParseAndValidateInputs_InvalidTimeOut_ToLow()
+    {
+        // Given
+        var key = "some key";
+        var solutionFile = "some file";
+        var packageName = "TestPackage";
+        var version = "sqdfsdg";
+        var timeOut = "00:00";
+        var stage = "All";
+        var artifactId = "some string";
+
+        var args = new string[]
+        {
+            "--api-key",
+            key,
+            "--solution-path",
+            solutionFile,
+            "--package-name",
+            packageName,
+            "--version",
+            version,
+            "--timeout",
+            timeOut,
+            "--stage",
+            stage,
+            "--artifact-id",
+            artifactId
+        };
+
+        // When
+        var inputs = _inputParserService.ParseAndValidateInputs(args)!;
+
+        // Then
+        _inputParserPresenterMock.Verify(p => p.PresentTimeOutToLow(), Times.Once);
+        _inputParserPresenterMock.VerifyNoOtherCalls();
+
+        Assert.IsNull(inputs);
+    }
+
+    [Test]
+    public void ParseAndValidateInputs_InvalidTimeOut_ToHigh()
+    {
+        // Given
+        var key = "some key";
+        var solutionFile = "some file";
+        var packageName = "TestPackage";
+        var version = "sqdfsdg";
+        var timeOut = "15:00";
+        var stage = "All";
+        var artifactId = "some string";
+
+        var args = new string[]
+        {
+            "--api-key",
+            key,
+            "--solution-path",
+            solutionFile,
+            "--package-name",
+            packageName,
+            "--version",
+            version,
+            "--timeout",
+            timeOut,
+            "--stage",
+            stage,
+            "--artifact-id",
+            artifactId
+        };
+
+        // When
+        var inputs = _inputParserService.ParseAndValidateInputs(args)!;
+
+        // Then
+        _inputParserPresenterMock.Verify(p => p.PresentTimeOutToHigh(), Times.Once);
+        _inputParserPresenterMock.VerifyNoOtherCalls();
+
+        Assert.IsNull(inputs);
+    }
+
+    [Test]
+    [TestCase("All", false)]
+    [TestCase("BuildAndPublish", false)]
+    [TestCase("Deploy", true)]
+    public void ParseAndValidateInputs_EmptyArtifactId(string stage, bool required)
+    {
+        // Given
+        var key = "some key";
+        var solutionFile = "some file";
+        var packageName = "TestPackage";
+        var version = "1.0.2";
+        var timeOut = "12:00";
+        var artifactId = "";
+
+        var args = new string[]
+        {
+            "--api-key",
+            key,
+            "--solution-path",
+            solutionFile,
+            "--package-name",
+            packageName,
+            "--version",
+            version,
+            "--timeout",
+            timeOut,
+            "--stage",
+            stage,
+            "--artifact-id",
+            artifactId
+        };
+
+        // When
+        var inputs = _inputParserService.ParseAndValidateInputs(args)!;
+
+        // Then
+        if (required) _inputParserPresenterMock.Verify(p => p.PresentMissingArgument(InputArgurments.ArtifactId), Times.Once);
+        _inputParserPresenterMock.VerifyNoOtherCalls();
+
+        if (required)
+        {
+            Assert.IsNull(inputs);
+        }
+        else
+        {
+            Assert.IsNotNull(inputs);
+        }
+    }
+
+    [Test]
+    public void ParseAndValidateInputs_InvalidArgument()
+    {
+        // Given
+        var key = "some key";
+        var solutionFile = "some file";
+        var packageName = "TestPackage";
+        var version = "1.0.2";
+        var timeOut = "12:00";
+        var stage = "All";
+        var artifactId = "";
+
+        var args = new string[]
+        {
+            "--api-key",
+            key,
+            "--solution-path",
+            solutionFile,
+            "--package-name",
+            packageName,
+            "--version",
+            version,
+            "--timeout",
+            timeOut,
+            "--stage",
+            stage,
+            "--artifact-id",
+            artifactId,
+            "--some-unknown-key",
+            ""
+        };
+
+        // When
+        var inputs = _inputParserService.ParseAndValidateInputs(args)!;
+
+        // Then
+        _inputParserPresenterMock.Verify(p => p.PresentUnkownArgument("some-unknown-key"), Times.Once);
+        _inputParserPresenterMock.VerifyNoOtherCalls();
+
+        Assert.IsNotNull(inputs);
+
+    }
+
+    [Test]
+    public void ParseAndValidateInputs_MissingArgument()
     {
         // Given
         var key = "some key";
@@ -91,23 +685,56 @@ public class ParseInputsTest
             "--timeout",
             timeOut,
             "--stage",
+            stage
+        };
+
+        // When
+        var inputs = _inputParserService.ParseAndValidateInputs(args)!;
+
+        // Then
+        _inputParserPresenterMock.Verify(p => p.PresentKeyNotFound(It.Is<string>(s => s.Contains(InputArgurments.ArtifactId))), Times.Once);
+        _inputParserPresenterMock.VerifyNoOtherCalls();
+
+        Assert.IsNotNull(inputs);
+
+    }
+
+    [Test]
+    public void ParseAndValidateInputs_InvalidStage()
+    {
+        // Given
+        var key = "some key";
+        var solutionFile = "some file";
+        var packageName = "TestPackage";
+        var version = "1.0.2";
+        var timeOut = "12:00";
+        var stage = "doesn't exist";
+
+        var args = new string[]
+        {
+            "--api-key",
+            key,
+            "--solution-path",
+            solutionFile,
+            "--package-name",
+            packageName,
+            "--version",
+            version,
+            "--timeout",
+            timeOut,
+            "--stage",
             stage,
             "--artifact-id",
-            "",
-            "--Some-unknown-key",
             ""
         };
 
         // When
-        var inputs = ParseInputs.ParseAndValidateInputs(args, _loggerMock.Object);
+        var inputs = _inputParserService.ParseAndValidateInputs(args)!;
 
         // Then
-        _loggerMock.Verify(logger => logger.Log(
-                It.Is<LogLevel>(logLevel => logLevel == LogLevel.Warning),
-                It.Is<EventId>(eventId => eventId.Id == 0),
-                It.Is<It.IsAnyType>((@object, @type) => @object.ToString() == "Unknown argument \"Some-unknown-key\"" && @type.Name == "FormattedLogValues"),
-                It.IsAny<Exception>(),
-                It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
-            Times.Once);
+        _inputParserPresenterMock.Verify(p => p.PresentInvalidStage(), Times.Once);
+        _inputParserPresenterMock.VerifyNoOtherCalls();
+
+        Assert.IsNull(inputs);
     }
 }

@@ -1,8 +1,7 @@
-﻿using GitHubAction.Domain.Presenters;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Serilog;
 
-namespace GitHubAction;
+namespace GitHubAction.Presenters.Impl;
 
 public class GithubPresenter : IGithubPresenter
 {

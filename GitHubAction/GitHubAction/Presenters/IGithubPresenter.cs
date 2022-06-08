@@ -1,4 +1,4 @@
-﻿namespace GitHubAction.Domain.Presenters;
+﻿namespace GitHubAction.Presenters;
 
 public interface IGithubPresenter
 {

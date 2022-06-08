@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ArtifactDeploymentInfoApi.Generated;
+﻿using ArtifactDeploymentInfoApi.Generated;
 using DeployArtifactApi.Generated;
 using GitHubAction.Console.Options;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Rest;
-using Serilog.Core;
 using UploadArtifactApi;
 
 namespace GitHubAction.Console.Extensions;

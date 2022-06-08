@@ -1,7 +1,6 @@
 ﻿
-using System.Runtime.CompilerServices;
+using System.Globalization;
 using System.Text.RegularExpressions;
-using Package.Domain.Enums;
 using Serilog;
 
 namespace GitHubAction.Domain.Entities;
@@ -10,7 +9,7 @@ public class Inputs
     // always required
     public string ApiKey { get; init; }
     public TimeSpan TimeOut { get; init; }
-    public string Stage { get; init; }
+    public Stage Stage { get; init; }
 
     public string? SolutionPath { get; init; } 
     public string? PackageName { get; init; }
@@ -23,25 +22,34 @@ public class Inputs
     {
         var argumentsAreValid = true;
         var apiKey = givenArgs[InputArgurments.ApiKey];
-        var stage = givenArgs[InputArgurments.Stage];
-        var timeOut = givenArgs[InputArgurments.Timeout];
+        var stageString = givenArgs[InputArgurments.Stage];
+        var timeOutString = givenArgs[InputArgurments.Timeout];
         var solutionPath = givenArgs[InputArgurments.SolutionPath];
         var packageName = givenArgs[InputArgurments.PackageName];
         var version = givenArgs[InputArgurments.Version];
         var artifactId = givenArgs[InputArgurments.ArtifactId];
 
-        if (!ValidateArgument(InputArgurments.Stage, stage, stage)) return null;
-        if (!ValidateArgument(InputArgurments.ApiKey, apiKey, stage)) return null;
-        if (!ValidateArgument(InputArgurments.Timeout, timeOut, stage)) return null;
+        if (!ValidateArgumentNotEmpty(InputArgurments.Stage, stageString)) return null;
+        if (!ValidateArgumentNotEmpty(InputArgurments.ApiKey, apiKey)) return null;
+        if (!ValidateArgumentNotEmpty(InputArgurments.Timeout, timeOutString)) return null;
+        if (!ValidateTimeout(timeOutString, out TimeSpan timeOut)) return null;
+
+        if (!Enum.TryParse(stageString, out Stage stage))
+        {
+            Log.Error("Invalid stage argument. Valid values are: {0}", string.Join(", ", Enum.GetNames<Stage>()));
+            return null;
+        }
+
+        
 
         switch (stage)
         {
-            case Stages.All:
-            case Stages.BuildAndPublish:
-                // validate solution path
-                argumentsAreValid &= ValidateArgument(InputArgurments.SolutionPath, solutionPath, stage);
-                argumentsAreValid &= ValidateArgument(InputArgurments.PackageName, packageName, stage);
-                argumentsAreValid &= ValidateArgument(InputArgurments.Version, version, stage);
+            case Stage.All:
+            case Stage.BuildAndPublish:
+                argumentsAreValid &= ValidateArgumentNotEmpty(InputArgurments.SolutionPath, solutionPath);
+                argumentsAreValid &= ValidateArgumentNotEmpty(InputArgurments.PackageName, packageName);
+                argumentsAreValid &= ValidateArgumentNotEmpty(InputArgurments.Version, version);
+                argumentsAreValid &= ValidateVersion(InputArgurments.Version, version);
 
                 if (!argumentsAreValid) return null;
 
@@ -51,12 +59,11 @@ public class Inputs
                     PackageName = packageName,
                     SolutionPath = solutionPath,
                     Stage = stage,
-                    TimeOut = TimeSpan.Parse(timeOut),
+                    TimeOut = timeOut,
                     Version = version
                 };
-            case Stages.Deploy:
-                // validate package name
-                argumentsAreValid &= ValidateArgument(InputArgurments.ArtifactId, artifactId, stage);
+            case Stage.Deploy:
+                argumentsAreValid &= ValidateArgumentNotEmpty(InputArgurments.ArtifactId, artifactId);
 
                 if (!argumentsAreValid) return null;
 
@@ -64,60 +71,60 @@ public class Inputs
                 {
                     ApiKey = apiKey,
                     ArtifactId = artifactId,
-                    TimeOut = TimeSpan.Parse(timeOut),
+                    TimeOut = timeOut,
                     Stage = stage
                 };
             default:
-                Log.Error("Invalid stage argument. Valid values are: BuildAndPublish, Deploy or All");
+                Log.Error("Could not validate stage: {0}", stage.ToString());
                 return null;
         }
     }
 
 
-    private static bool ValidateArgument(string key, string value, string stage)
+    private static bool ValidateArgumentNotEmpty(string key, string value)
     {
         if (string.IsNullOrWhiteSpace(value))
         {
-            Log.Error("Missing argument \"{argument}\" for stage {0}", key, stage);
+            Log.Error("Missing argument \"{argument}\"", key);
             return false;
         }
 
-        switch (key)
+        return true;
+    }
+
+    private static bool ValidateVersion(string key, string version)
+    {
+        var versionRegex = new Regex("^\\d+\\.\\d+\\.\\d+$"); //validate format
+        if (!versionRegex.IsMatch(version))
         {
-            case InputArgurments.Version:
-                var versionRegex = new Regex("^\\d+\\.\\d+\\.\\d+$"); //validate format
-                if (!versionRegex.IsMatch(value))
-                {
-                    Log.Error(
-                        "Invalid format for argument {argument}. The provided value {value} does not match the format \"x.x.x\"",
-                        key, value);
-                    return false;
-                }
-
-                break;
-
-            case InputArgurments.Timeout:
-                if (!TimeSpan.TryParse(value, out var timeout))
-                {
-                    Log.Error("Invalid time format. The valid format is: HH:MM");
-                    return false;
-                }
-
-                if (timeout < TimeSpan.FromMinutes(1))
-                {
-                    Log.Error("The time until timeout has to be at least 1 minute.");
-                    return false;
-                }
-
-                if (timeout > TimeSpan.FromHours(12))
-                {
-                    Log.Error("The time until timeout has to be at most 12 hours.");
-                    return false;
-                }
-
-                break;
+            Log.Error(
+                "Invalid format for argument {argument}. The provided value {value} does not match the format \"x.x.x\"",
+                key, version);
+            return false;
         }
 
+        return true;
+    }
+
+    private static bool ValidateTimeout(string timeOutString, out TimeSpan timeout)
+    {
+        if (!TimeSpan.TryParseExact(timeOutString, "HH:MM", CultureInfo.CurrentCulture, out timeout))
+        {
+            Log.Error("Invalid time format. The valid format is: HH:MM");
+            return false;
+        }
+
+        if (timeout < TimeSpan.FromMinutes(1))
+        {
+            Log.Error("The time until timeout has to be at least 1 minute.");
+            return false;
+        }
+
+        if (timeout > TimeSpan.FromHours(12))
+        {
+            Log.Error("The time until timeout has to be at most 12 hours.");
+            return false;
+        }
 
         return true;
     }
