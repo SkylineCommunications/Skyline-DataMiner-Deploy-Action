@@ -69,7 +69,7 @@ public class ParseInputsTest
     }
 
     [Test]
-    public void ParseAndValidateInputs_HappyFlow_BuildAndPublish()
+    public void ParseAndValidateInputs_HappyFlow_Upload()
     {
         // Given
         var key = "some key";
@@ -77,7 +77,7 @@ public class ParseInputsTest
         var packageName = "TestPackage";
         var version = "1.0.2";
         var timeOut = "12:00";
-        var stage = "BuildAndPublish";
+        var stage = "Upload";
         var artifactId = "some string";
 
         var args = new string[]
@@ -211,7 +211,7 @@ public class ParseInputsTest
 
     [Test]
     [TestCase("All")]
-    [TestCase("BuildAndPublish")]
+    [TestCase("Upload")]
     [TestCase("Deploy")]
     public void ParseAndValidateInputs_EmptyApiKey(string stage)
     {
@@ -253,7 +253,7 @@ public class ParseInputsTest
 
     [Test]
     [TestCase("All")]
-    [TestCase("BuildAndPublish")]
+    [TestCase("Upload")]
     [TestCase("Deploy")]
     public void ParseAndValidateInputs_EmptyTimeOut(string stage)
     {
@@ -295,7 +295,7 @@ public class ParseInputsTest
 
     [Test]
     [TestCase("All", true)]
-    [TestCase("BuildAndPublish", true)]
+    [TestCase("Upload", true)]
     [TestCase("Deploy", false)]
     public void ParseAndValidateInputs_EmptySolutionFile(string stage, bool required)
     {
@@ -344,7 +344,7 @@ public class ParseInputsTest
 
     [Test]
     [TestCase("All", true)]
-    [TestCase("BuildAndPublish", true)]
+    [TestCase("Upload", true)]
     [TestCase("Deploy", false)]
     public void ParseAndValidateInputs_EmptyPackageName(string stage, bool required)
     {
@@ -393,7 +393,7 @@ public class ParseInputsTest
 
     [Test]
     [TestCase("All", true)]
-    [TestCase("BuildAndPublish", true)]
+    [TestCase("Upload", true)]
     [TestCase("Deploy", false)]
     public void ParseAndValidateInputs_EmptyVersion(string stage, bool required)
     {
@@ -442,7 +442,7 @@ public class ParseInputsTest
 
     [Test]
     [TestCase("All", true)]
-    [TestCase("BuildAndPublish", true)]
+    [TestCase("Upload", true)]
     [TestCase("Deploy", false)]
     public void ParseAndValidateInputs_InvalidVersion(string stage, bool required)
     {
@@ -571,7 +571,7 @@ public class ParseInputsTest
 
     [Test]
     [TestCase("All", false)]
-    [TestCase("BuildAndPublish", false)]
+    [TestCase("Upload", false)]
     [TestCase("Deploy", true)]
     public void ParseAndValidateInputs_EmptyArtifactId(string stage, bool required)
     {

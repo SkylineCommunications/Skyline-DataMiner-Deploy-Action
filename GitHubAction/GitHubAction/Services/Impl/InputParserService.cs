@@ -83,7 +83,7 @@ public class InputParserService : IInputParserService
         switch (stage)
         {
             case Stage.All:
-            case Stage.BuildAndPublish:
+            case Stage.Upload:
                 argumentsAreValid &= ValidateArgumentNotEmpty(InputArgurments.SolutionPath, solutionPath);
                 argumentsAreValid &= ValidateArgumentNotEmpty(InputArgurments.PackageName, packageName);
                 argumentsAreValid &= ValidateArgumentNotEmpty(InputArgurments.Version, version);

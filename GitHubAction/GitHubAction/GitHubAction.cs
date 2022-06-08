@@ -49,8 +49,8 @@ namespace GitHubAction
 
             try
             { 
-                // BuildAndPublish
-                if (inputs is { Stage: Stage.All or Stage.BuildAndPublish })
+                // Upload
+                if (inputs is { Stage: Stage.All or Stage.Upload })
                 {
                     var workingDirectory = new DirectoryInfo(Environment.CurrentDirectory == "/github/workspace" ? Environment.CurrentDirectory : Path.Join(Environment.CurrentDirectory, "../../../../../"));
 

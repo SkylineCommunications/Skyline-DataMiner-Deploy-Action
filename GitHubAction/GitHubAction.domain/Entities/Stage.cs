@@ -2,7 +2,7 @@
 
 public enum Stage
 {
-    BuildAndPublish,
+    Upload,
     Deploy ,
     All
 }

@@ -21,16 +21,16 @@ This stage Deploys the DataMiner Application Package from the Artifact storage t
 
 ### `solution-path`
 
-**Optional** The path to the .sln file of the solution. Atm only DataMiner Automation Script solutions are supported. E.g. `'./Example/Script.sln'`. Required for stages `'BuildAndPublish'` and `'All'`.
+**Optional** The path to the .sln file of the solution. Atm only DataMiner Automation Script solutions are supported. E.g. `'./Example/Script.sln'`. Required for stages `'Upload'` and `'All'`.
 
 ### `package-name`
 
-**Optional** The chosen name for the package. E.g. `'MyPackageName'`. Required for stages `'BuildAndPublish'` and `'All'`.
+**Optional** The chosen name for the package. E.g. `'MyPackageName'`. Required for stages `'Upload'` and `'All'`.
 
 ### `version`
 
 **Optional** 
-The version number for the package (format A.B.C). E.g. `'1.0.1'`. Required for stages `'BuildAndPublish'` and `'All'`.
+The version number for the package (format A.B.C). E.g. `'1.0.1'`. Required for stages `'Upload'` and `'All'`.
 
 ### `timeout`
 
@@ -38,7 +38,7 @@ The version number for the package (format A.B.C). E.g. `'1.0.1'`. Required for 
 
 ### `stage`
 
-**Optional** The stage off the action to run. Options are: `'BuildAndPublish'`, `'Deploy'` and `'All'`. Default: 'All'
+**Optional** The stage off the action to run. Options are: `'Upload'`, `'Deploy'` and `'All'`. Default: 'All'
 
 ### `artifact-id`
 
@@ -49,7 +49,7 @@ The version number for the package (format A.B.C). E.g. `'1.0.1'`. Required for 
 
 ### `artifact-id`
 
-The Id of the private artifact that has been deployed. This is only filled in for stages `'BuildAndPublish'` and `'All'`.
+The Id of the private artifact that has been deployed. This is only filled in for stages `'Upload'` and `'All'`.
 
 ## Example usage
 
@@ -99,7 +99,7 @@ jobs:
           package-name: 'MyPackageName'
           version: '1.0.1'
           timeout: '5:00'
-          stage: BuildAndPublish
+          stage: Upload
 
   deploy:
     name: deploy

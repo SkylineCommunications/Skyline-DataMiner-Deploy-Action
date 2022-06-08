@@ -157,7 +157,7 @@ namespace GitHubAction.UnitTest
         }
 
         [Test]
-        public async Task RunAsync_HappyFlow_BuildAndPublish()
+        public async Task RunAsync_HappyFlow_Upload()
         {
             // Given
             var key = Guid.NewGuid().ToString();
@@ -166,7 +166,7 @@ namespace GitHubAction.UnitTest
             var packageName = "TestPackage";
             var version = "1.0.2";
             var timeOut = "12:00";
-            var stage = "BuildAndPublish";
+            var stage = "Upload";
             var id = Guid.NewGuid().ToString();
 
             var localPackageConfig = new LocalPackageConfig(
