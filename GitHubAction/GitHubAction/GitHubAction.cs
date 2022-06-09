@@ -1,5 +1,5 @@
 ﻿using GitHubAction.Domain.Entities;
-using GitHubAction.Services;
+using GitHubAction.Factories;
 using Package.Builder;
 using Package.Builder.Exceptions;
 using Package.Domain.Enums;
@@ -15,17 +15,17 @@ namespace GitHubAction
         private readonly IPackageService _packageService;
         private readonly IPackagePresenter _packagePresenter;
         private readonly IGithubPresenter _githubPresenter;
-        private readonly IInputParserService _inputParserSerivce;
+        private readonly IInputFactory _inputParserSerivce;
         private readonly TimeSpan _deploymentBackOff;
         private readonly TimeSpan _deploymentMaxBackOff;
 
-        public GitHubAction(IPackageService packageService, IInputParserService inputParser, IPackagePresenter packagePresenter, IGithubPresenter githubPresenter) 
+        public GitHubAction(IPackageService packageService, IInputFactory inputParser, IPackagePresenter packagePresenter, IGithubPresenter githubPresenter) 
             : this(packageService, inputParser, packagePresenter, githubPresenter, TimeSpan.FromSeconds(3), TimeSpan.FromMinutes(2))
         {
 
         }
 
-        public GitHubAction(IPackageService packageService, IInputParserService inputParser, IPackagePresenter packagePresenter,
+        public GitHubAction(IPackageService packageService, IInputFactory inputParser, IPackagePresenter packagePresenter,
             IGithubPresenter githubPresenter, TimeSpan minimumBackOff, TimeSpan maximumBackOff)
         {
             _packageService = packageService;

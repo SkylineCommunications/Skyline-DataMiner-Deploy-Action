@@ -4,10 +4,10 @@ using Package.Domain.Services;
 using Package.Gateway;
 using GitHubAction.Console.Extensions;
 using GitHubAction.Console.Options;
+using GitHubAction.Factories;
+using GitHubAction.Factories.Impl;
 using GitHubAction.Presenters;
 using GitHubAction.Presenters.Impl;
-using GitHubAction.Services;
-using GitHubAction.Services.Impl;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Package.Builder;
@@ -73,8 +73,8 @@ public class Program
                 services.AddScoped<IPackageGateway, HttpPackageGateway>();
                 services.AddScoped<IPackageBuilder, PackageBuilder>();
                 services.AddScoped<IGithubPresenter, GithubPresenter>();
-                services.AddScoped<IInputParserService, InputParserService>();
-                services.AddScoped<IInputParserPresenter, InputParserPresenter>();
+                services.AddScoped<IInputFactory, InputFactory>();
+                services.AddScoped<IInputFactoryPresenter, InputFactoryPresenter>();
                 services.BuildServiceProvider();
             })
             .UseSerilog((context, services, loggerConfiguration) =>

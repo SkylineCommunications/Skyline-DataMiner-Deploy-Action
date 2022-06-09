@@ -4,8 +4,8 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using GitHubAction.Domain.Entities;
+using GitHubAction.Factories;
 using GitHubAction.Presenters;
-using GitHubAction.Services;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
@@ -22,7 +22,7 @@ namespace GitHubAction.UnitTest
         private Mock<IPackageService> _packageServiceMock = null!;
         private Mock<IPackagePresenter> _packagePresenterMock = null!;
         private Mock<IGithubPresenter> _githubPresenterMock = null!;
-        private Mock<IInputParserService> _inputParserMock = null!;
+        private Mock<IInputFactory> _inputParserMock = null!;
         private Mock<ILogger<GitHubAction>> _loggerMock = null!;
         private GitHubAction _gitHubAction = null!;
 
@@ -32,7 +32,7 @@ namespace GitHubAction.UnitTest
             _packageServiceMock = new Mock<IPackageService>();
             _packagePresenterMock = new Mock<IPackagePresenter>();
             _githubPresenterMock = new Mock<IGithubPresenter>();
-            _inputParserMock = new Mock<IInputParserService>();
+            _inputParserMock = new Mock<IInputFactory>();
             _loggerMock = new Mock<ILogger<GitHubAction>>();
 
             _gitHubAction = new GitHubAction(_packageServiceMock.Object, _inputParserMock.Object, _packagePresenterMock.Object, _githubPresenterMock.Object, TimeSpan.Zero, TimeSpan.Zero);
@@ -77,7 +77,7 @@ namespace GitHubAction.UnitTest
             };
 
 
-            Expression<Func<IInputParserService, Inputs?>> parseInputs = s =>
+            Expression<Func<IInputFactory, Inputs?>> parseInputs = s =>
                 s.ParseAndValidateInputs(args);
 
             var inputs = new Inputs
@@ -195,7 +195,7 @@ namespace GitHubAction.UnitTest
             };
 
 
-            Expression<Func<IInputParserService, Inputs?>> parseInputs = s =>
+            Expression<Func<IInputFactory, Inputs?>> parseInputs = s =>
                 s.ParseAndValidateInputs(args);
 
             var inputs = new Inputs
@@ -299,7 +299,7 @@ namespace GitHubAction.UnitTest
             };
 
 
-            Expression<Func<IInputParserService, Inputs?>> parseInputs = s =>
+            Expression<Func<IInputFactory, Inputs?>> parseInputs = s =>
                 s.ParseAndValidateInputs(args);
 
             var inputs = new Inputs
@@ -389,7 +389,7 @@ namespace GitHubAction.UnitTest
             };
 
 
-            Expression<Func<IInputParserService, Inputs?>> parseInputs = s =>
+            Expression<Func<IInputFactory, Inputs?>> parseInputs = s =>
                 s.ParseAndValidateInputs(args);
 
             var inputs = new Inputs
@@ -506,7 +506,7 @@ namespace GitHubAction.UnitTest
             };
 
 
-            Expression<Func<IInputParserService, Inputs?>> parseInputs = s =>
+            Expression<Func<IInputFactory, Inputs?>> parseInputs = s =>
                 s.ParseAndValidateInputs(args);
 
             var inputs = new Inputs
@@ -632,7 +632,7 @@ namespace GitHubAction.UnitTest
             };
 
 
-            Expression<Func<IInputParserService, Inputs?>> parseInputs = s =>
+            Expression<Func<IInputFactory, Inputs?>> parseInputs = s =>
                 s.ParseAndValidateInputs(args);
 
             var inputs = new Inputs
@@ -757,7 +757,7 @@ namespace GitHubAction.UnitTest
             };
 
 
-            Expression<Func<IInputParserService, Inputs?>> parseInputs = s =>
+            Expression<Func<IInputFactory, Inputs?>> parseInputs = s =>
                 s.ParseAndValidateInputs(args);
 
             var inputs = new Inputs
@@ -883,7 +883,7 @@ namespace GitHubAction.UnitTest
             };
 
 
-            Expression<Func<IInputParserService, Inputs?>> parseInputs = s =>
+            Expression<Func<IInputFactory, Inputs?>> parseInputs = s =>
                 s.ParseAndValidateInputs(args);
 
             var inputs = new Inputs
@@ -988,7 +988,7 @@ namespace GitHubAction.UnitTest
             };
 
 
-            Expression<Func<IInputParserService, Inputs?>> parseInputs = s =>
+            Expression<Func<IInputFactory, Inputs?>> parseInputs = s =>
                 s.ParseAndValidateInputs(args);
 
             var inputs = new Inputs
@@ -1092,7 +1092,7 @@ namespace GitHubAction.UnitTest
             };
 
 
-            Expression<Func<IInputParserService, Inputs?>> parseInputs = s =>
+            Expression<Func<IInputFactory, Inputs?>> parseInputs = s =>
                 s.ParseAndValidateInputs(args);
 
             var inputs = new Inputs
@@ -1198,7 +1198,7 @@ namespace GitHubAction.UnitTest
             };
 
 
-            Expression<Func<IInputParserService, Inputs?>> parseInputs = s =>
+            Expression<Func<IInputFactory, Inputs?>> parseInputs = s =>
                 s.ParseAndValidateInputs(args);
 
             var inputs = new Inputs
@@ -1289,7 +1289,7 @@ namespace GitHubAction.UnitTest
             };
 
 
-            Expression<Func<IInputParserService, Inputs?>> parseInputs = s =>
+            Expression<Func<IInputFactory, Inputs?>> parseInputs = s =>
                 s.ParseAndValidateInputs(args);
 
             var inputs = new Inputs
@@ -1378,7 +1378,7 @@ namespace GitHubAction.UnitTest
             };
 
 
-            Expression<Func<IInputParserService, Inputs?>> parseInputs = s =>
+            Expression<Func<IInputFactory, Inputs?>> parseInputs = s =>
                 s.ParseAndValidateInputs(args);
 
             var inputs = new Inputs
@@ -1438,7 +1438,7 @@ namespace GitHubAction.UnitTest
                 ""
             };
 
-            Expression<Func<IInputParserService, Inputs?>> parseInputs = s =>
+            Expression<Func<IInputFactory, Inputs?>> parseInputs = s =>
                 s.ParseAndValidateInputs(args);
 
             _inputParserMock.Setup(parseInputs).Returns((Inputs)null!);

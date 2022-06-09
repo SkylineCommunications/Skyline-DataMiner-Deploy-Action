@@ -1,16 +1,14 @@
-﻿
-
-using System.Globalization;
+﻿using System.Globalization;
 using System.Text.RegularExpressions;
 using GitHubAction.Domain.Entities;
 using GitHubAction.Presenters;
 
-namespace GitHubAction.Services.Impl;
-public class InputParserService : IInputParserService
+namespace GitHubAction.Factories.Impl;
+public class InputFactory : IInputFactory
 {
     internal static List<string> ValidArgs = new() { InputArgurments.ApiKey, InputArgurments.PackageName, InputArgurments.SolutionPath, InputArgurments.Version, InputArgurments.Timeout, InputArgurments.Stage, InputArgurments.ArtifactId };
-    private readonly IInputParserPresenter _presenter;
-    public InputParserService( IInputParserPresenter presenter)
+    private readonly IInputFactoryPresenter _presenter;
+    public InputFactory( IInputFactoryPresenter presenter)
     {
         _presenter = presenter;
     }

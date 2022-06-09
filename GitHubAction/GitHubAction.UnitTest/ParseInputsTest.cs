@@ -1,8 +1,8 @@
 ﻿using System;
 using GitHubAction.Domain.Entities;
+using GitHubAction.Factories;
+using GitHubAction.Factories.Impl;
 using GitHubAction.Presenters;
-using GitHubAction.Services;
-using GitHubAction.Services.Impl;
 using Moq;
 using NUnit.Framework;
 
@@ -10,15 +10,15 @@ namespace GitHubAction.UnitTest;
 
 public class ParseInputsTest
 {
-    private Mock<IInputParserPresenter> _inputParserPresenterMock = null!;
-    private IInputParserService _inputParserService = null!;
+    private Mock<IInputFactoryPresenter> _inputParserPresenterMock = null!;
+    private IInputFactory _inputParserService = null!;
 
     [SetUp]
     public void Setup()
     {
-        _inputParserPresenterMock = new Mock<IInputParserPresenter>();
+        _inputParserPresenterMock = new Mock<IInputFactoryPresenter>();
 
-        _inputParserService = new InputParserService(_inputParserPresenterMock.Object);
+        _inputParserService = new InputFactory(_inputParserPresenterMock.Object);
 
     }
 

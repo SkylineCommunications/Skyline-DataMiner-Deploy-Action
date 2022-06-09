@@ -1,7 +1,7 @@
 ﻿using GitHubAction.Domain.Entities;
 
-namespace GitHubAction.Services;
-public interface IInputParserService
+namespace GitHubAction.Factories;
+public interface IInputFactory
 {
     Inputs? ParseAndValidateInputs(string[] args);
 }

@@ -2,11 +2,11 @@
 using Microsoft.Extensions.Logging;
 
 namespace GitHubAction.Presenters.Impl;
-public class InputParserPresenter : IInputParserPresenter
+public class InputFactoryPresenter : IInputFactoryPresenter
 {
-    private readonly ILogger<InputParserPresenter> _logger;
+    private readonly ILogger<InputFactoryPresenter> _logger;
 
-    public InputParserPresenter(ILogger<InputParserPresenter> logger)
+    public InputFactoryPresenter(ILogger<InputFactoryPresenter> logger)
     {
         _logger = logger;
     }

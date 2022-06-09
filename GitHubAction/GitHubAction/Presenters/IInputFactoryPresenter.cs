@@ -1,6 +1,6 @@
 ﻿namespace GitHubAction.Presenters;
 
-public interface IInputParserPresenter
+public interface IInputFactoryPresenter
 {
     void PresentInvalidStage();
     void PresentTimeOutToHigh();
