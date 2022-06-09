@@ -1,114 +1,96 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Rest;
 using Package.Application;
 using Package.Domain.Services;
 using Package.Gateway;
-using ArtifactDeploymentInfoApi.Generated;
-using DeployArtifactApi.Generated;
-using GitHubAction.Console;
-using GitHubAction.ConsolePackagePresenter;
-using Microsoft.Extensions.Logging;
+using GitHubAction.Console.Extensions;
+using GitHubAction.Console.Options;
+using GitHubAction.Factories;
+using GitHubAction.Factories.Impl;
+using GitHubAction.Presenters;
+using GitHubAction.Presenters.Impl;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using Package.Builder;
-using Package.Domain.Enums;
-using Package.Domain.Models;
-using UploadArtifactApi;
 using Serilog;
+using Serilog.Filters;
 
-GitHubAction.GitHubAction gitHubAction;
-ILogger<Program> logger;
-try
+namespace GitHubAction.Console;
+
+public class Program
 {
-    Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateLogger();
-
-    // Get Environment
-    var environment = Environment.GetEnvironmentVariable("Skyline-deploy-action-namespace");
-
-    string apiBaseUrl;
-    if (environment != null)
+    public static async Task Main(string[] args)
     {
-        apiBaseUrl = $"https://api-{environment}.dataminer.services/{environment}";
-        Log.Information("Found the \"Skyline-deploy-action-namespace\" environment variable");
-        Log.Information("Setting the base url for the api to: {0}", apiBaseUrl);
-    } 
-    else 
-    {
-        apiBaseUrl = "https://api.dataminer.services/";
-    }
-
-
-    // Setup DI
-    var serviceProvider = new ServiceCollection()
-        .AddScoped<GitHubAction.GitHubAction>()
-        .AddHttpClient()
-        .AddScoped<IPackagePresenter, ConsolePackagePresenter>()
-        .AddScoped<IArtifactUploadApi>(s =>
+        Log.Logger = new LoggerConfiguration()
+            .WriteTo.Console().CreateLogger();
+        try
         {
-            var httpClient = s.GetRequiredService<IHttpClientFactory>().CreateClient(nameof(HttpArtifactUploadApi));
-            httpClient.BaseAddress = new Uri($"{apiBaseUrl}/");
-            return new HttpArtifactUploadApi(httpClient);
-        })
-        .AddScoped<IArtifactDeploymentInfoAPI>(s =>
-            new ArtifactDeploymentInfoAPI(
-                new Uri($"{apiBaseUrl}/api"),
-                new BasicAuthenticationCredentials()))
-        .AddScoped<IDeployArtifactAPI>(s =>
-            new DeployArtifactAPI(
-                new Uri($"{apiBaseUrl}/api"),
-                new BasicAuthenticationCredentials()))
-        .AddScoped<IPackageService, PackageService>()
-        .AddScoped<IPackageGateway, HttpPackageGateway>()
-        .AddScoped<IPackageBuilder, PackageBuilder>()
-        .AddLogging(builder => {
-            builder.ClearProviders();
-            builder.AddConsole();
-        })
-        .BuildServiceProvider();
-
-    gitHubAction = serviceProvider.GetRequiredService<GitHubAction.GitHubAction>() ?? throw new ArgumentException(nameof(GitHubAction.GitHubAction));
-    logger = serviceProvider.GetRequiredService<ILoggerFactory>().CreateLogger<Program>() ?? throw new ArgumentException(nameof(ILogger<Program>));
-}
-catch (Exception e)
-{
-    Console.WriteLine("Something went wrong while starting. " + e);
-    Environment.Exit(500); // Internal Server Error
-    return;
-}
-
-try
-{
-    // Parse & validate inputs
-    var inputs = ParseInputs.ParseAndValidateInputs(args, logger);
-    if (inputs == null)
-    {
-        logger.LogError("There was a problem with the provided arguments...");
-        Environment.Exit(400); // Bad Request
-        return;
+            var host = CreateHostBuilder(args).Build();
+            var gitHubAction = host.Services.GetRequiredService<GitHubAction>();
+            await gitHubAction.RunAsync(args, new CancellationToken());
+        }
+        catch (Exception ex)
+        {
+            Log.Fatal(ex, "An unhandled exception occurred");
+            Environment.Exit(1);
+        }
+        finally
+        {
+            Log.CloseAndFlush();
+        }
     }
 
-    // Do the work
-    var packageName =inputs[Input.PackageName];
-    var version = inputs[Input.Version];
-    var solutionFile = new FileInfo(inputs[Input.SolutionPath]);
-    var workingDirectory = new DirectoryInfo(Environment.CurrentDirectory == "/github/workspace" ? Environment.CurrentDirectory : Path.Join(Environment.CurrentDirectory, "../../../../../"));
-    
+    public static IHostBuilder CreateHostBuilder(string[] args) =>
+        Host.CreateDefaultBuilder(args)
+            .ConfigureServices((hostContext, services) =>
+            {
+                services.AddScoped<GitHubAction>();
+                services.AddHttpClient();
+                services.AddScoped<IPackagePresenter, ConsolePackagePresenter>();
+                services.AddSingleton<ApiOptions>(sp =>
+                {
+                    var environment = Environment.GetEnvironmentVariable("Skyline-deploy-action-namespace");
 
-    var localPackageConfig = new LocalPackageConfig(
-        solutionFile,
-        workingDirectory,
-        packageName,
-        version,
-        SolutionType.DmScript);
+                    string apiBaseUrl;
+                    if (environment != null)
+                    {
+                        apiBaseUrl = $"https://api-{environment}.dataminer.services/{environment}";
+                        Log.Information("Found the \"Skyline-deploy-action-namespace\" environment variable");
+                        Log.Information("Setting the base url for the api to: {0}", apiBaseUrl);
+                    }
+                    else
+                    {
+                        apiBaseUrl = "https://api.dataminer.services";
+                    }
 
-    await gitHubAction.RunAsync(
-        inputs[Input.ApiKey], 
-        localPackageConfig,
-        TimeSpan.FromSeconds(3), 
-        TimeSpan.FromMinutes(2),
-        TimeSpan.Parse(inputs[Input.Timeout]));
-}
-catch (Exception e)
-{
-    logger.LogError("Something went wrong. {exception}", e.ToString());
-    Environment.Exit(500); // Internal Server Error
-    return;
+                    //return
+                    return new ApiOptions()
+                    {
+                        ApiBaseUrl = apiBaseUrl
+                    };
+                });
+                services.AddApis();
+                services.AddScoped<IPackageService, PackageService>();
+                services.AddScoped<IPackageGateway, HttpPackageGateway>();
+                services.AddScoped<IPackageBuilder, PackageBuilder>();
+                services.AddScoped<IGithubPresenter, GithubPresenter>();
+                services.AddScoped<IInputFactory, InputFactory>();
+                services.AddScoped<IInputFactoryPresenter, InputFactoryPresenter>();
+                services.BuildServiceProvider();
+            })
+            .UseSerilog((context, services, loggerConfiguration) =>
+            {
+                var configuration = services.GetRequiredService<IConfiguration>();
+
+                loggerConfiguration
+                    .ReadFrom.Configuration(configuration)
+                    .Enrich.FromLogContext()
+                    .WriteTo.Logger(lc => lc
+                        .Filter.ByExcluding(Matching.WithProperty<string>("type", type => type == "githubCommand"))
+                        .WriteTo.Console(
+                            outputTemplate:
+                                "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff} {Level:u3}]{Message:lj}[{SourceContext}]{NewLine}{Exception}"))
+                    .WriteTo.Logger(lc => lc
+                        .Filter.ByIncludingOnly(Matching.WithProperty<string>("type", type => type == "githubCommand"))
+                        .WriteTo.Console(outputTemplate: "{Message:lj}{NewLine}"));
+            });
 }

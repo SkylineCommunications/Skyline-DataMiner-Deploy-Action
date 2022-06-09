@@ -1,5 +1,5 @@
 ﻿namespace Package.Domain.Exceptions;
-    
+
 public class GetDeploymentPackageException : Exception
 {
     public GetDeploymentPackageException(string message) : base(message)

@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "GitHubAction.Console": {
-      "commandName": "Project",
-      "commandLineArgs": "--api-key \"Some random Key\" --package-name \"Some Package Name\" --solution-path \"..\\..\\..\\..\\..\\AutomationCertification\\AutomationScript.sln\" --version \"10.2.7\" --timeout \"1:00\""
-    }
-  }
-}

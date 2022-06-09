@@ -10,18 +10,30 @@ inputs:
     description: 'The API-key generated in the DCP Admin app as authentication for a certain DataMiner System. E.g. g597e77412e34297b827c2570a8fa2bc'
     required: true
   solution-path:
-    description: 'The path to the .sln file of the solution. Atm only DataMiner Automation Script solutions are supported. E.g ./Example/Script.sln.' 
-    required: true
+    description: 'The path to the .sln file of the solution. Atm only DataMiner Automation Script solutions are supported. E.g ./Example/Script.sln. Required for stages: All and Build.' 
+    required: false
   package-name:
-    description: 'The chosen name of the package. E.g. MyPackageName.'
-    required: true
+    description: 'The chosen name of the package. E.g. MyPackageName.  Required for stages: All, Build and Publish.'
+    required: false
   version:
-    description: 'The version number for the package (format A.B.C). E.g. 1.0.1.'
-    required: true
+    description: 'The version number for the package (format A.B.C). E.g. 1.0.1.  Required for stages: All, Build and Publish.'
+    required: false
   timeout:
     description: 'The maximum time spend on waiting for the deployment to finish (format: HH:MM). E.g. 5:00.'
     required: false
     default: "12:00"
+  stage:
+    description: 'The specific stage to run in this action. Possible values are: Build, Publish and Deploy. All will run all 3 stages consecutively.'
+    required: false
+    default: "All"
+  artifact-id:
+    description: 'The artifact Id of the package that you would like to deploy'
+    required: false
+
+outputs:
+  artifact-id:
+    description: 'The artifact Id of the package has been published'
+  
 runs:
   using: 'docker'
   image: 'Dockerfile'
@@ -36,3 +48,7 @@ runs:
     - ${{ inputs.version }}
     - --timeout
     - ${{ inputs.timeout }}
+    - --stage
+    - ${{ inputs.stage }}
+    - --artifact-id
+    - ${{ inputs.artifact-id }}
