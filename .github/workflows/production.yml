@@ -3,7 +3,8 @@ name: Deploy Production
 
 on:
   push:
-    branches: ['feature/setup-docker-images']
+    branches: ['main']
+    tags: ['v*']
 
 env:
   REGISTRY: ghcr.io
@@ -29,12 +30,16 @@ jobs:
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
-        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+        uses: docker/metadata-action@v4
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            # set latest tag for default branch
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=semver,pattern={{raw}}
 
       - name: Build and push Docker image
-        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        uses: docker/build-push-action@v3
         with:
           context: .
           push: true
