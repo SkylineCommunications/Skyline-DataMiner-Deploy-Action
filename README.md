@@ -21,7 +21,7 @@ This action currently only supports the creation of DataMiner Application Packag
 ## Inputs
 
 ### `api-key`
-**Required** The API-key generated in the [DCP Admin app](https://admin.dataminer.services) as authentication for a certain DataMiner System. E.g. `'g597e77412e34297b827c2570a8fa2bc'`.
+**Required** The API-key generated in the [DCP Admin app](https://admin.dataminer.services) as authentication for a certain DataMiner System. E.g. `'g597e77412e34297b827c2570a8fa2bc'`. For more information about creating a key can be found in the [Help](https://docs.dataminer.services/user-guide/Cloud_Platform/CloudAdminApp/Managing_DCP_keys.html)
 
 ### `solution-path`
 
