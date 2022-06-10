@@ -2,7 +2,7 @@
 
 This action builds a DataMiner Application Package (.dmapp) from your solution and deploys it to your cloud connected DataMiner System. The action will wait until the deployment is finished, with a configurable timeout. At this moment only DataMiner Automation Script solutions are supported.
 
-The action exists of 2 stages `Build and Publish` and `Deploy`
+The action exists of 2 stages `Upload` and `Deploy`
 
 ## Stages
 
@@ -13,6 +13,10 @@ This stage creates a package and uploads it to a dedicated storage in the cloud.
 ### Deploy
 
 This stage Deploys the DataMiner Application Package from the Artifact storage to your cloud connected DataMiner System.
+
+## Limitations
+
+This action currently only supports the creation of DataMiner Application Packages with automation scripts
 
 ## Inputs
 
