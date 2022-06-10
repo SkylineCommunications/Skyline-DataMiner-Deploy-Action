@@ -22,20 +22,21 @@ public class Program
     {
         Log.Logger = new LoggerConfiguration()
             .WriteTo.Console().CreateLogger();
+        int exitCode = 1; //fail by default unless it ran succesfully
         try
         {
             var host = CreateHostBuilder(args).Build();
             var gitHubAction = host.Services.GetRequiredService<GitHubAction>();
-            await gitHubAction.RunAsync(args, new CancellationToken());
+            exitCode = await gitHubAction.RunAsync(args, new CancellationToken());
         }
         catch (Exception ex)
         {
             Log.Fatal(ex, "An unhandled exception occurred");
-            Environment.Exit(1);
         }
         finally
         {
             Log.CloseAndFlush();
+            Environment.Exit(exitCode);
         }
     }
 
