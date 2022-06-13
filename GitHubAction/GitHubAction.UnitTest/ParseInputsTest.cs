@@ -30,7 +30,7 @@ public class ParseInputsTest
         var solutionFile = "some file";
         var packageName = "TestPackage";
         var version = "1.0.2";
-        var timeOut = "12:00";
+        var timeOut = "900";
         var stage = "All";
         var artifactId = "some string";
 
@@ -63,7 +63,7 @@ public class ParseInputsTest
         Assert.AreEqual(solutionFile, inputs.SolutionPath);
         Assert.AreEqual(packageName, inputs.PackageName);
         Assert.AreEqual(version, inputs.Version);
-        Assert.AreEqual(TimeSpan.Parse(timeOut), inputs.TimeOut);
+        Assert.AreEqual(TimeSpan.FromSeconds(int.Parse(timeOut)), inputs.TimeOut);
         Assert.AreEqual(Enum.Parse<Stage>(stage), inputs.Stage);
         Assert.IsNull(inputs.ArtifactId);
     }
@@ -76,7 +76,7 @@ public class ParseInputsTest
         var solutionFile = "some file";
         var packageName = "TestPackage";
         var version = "1.0.2";
-        var timeOut = "12:00";
+        var timeOut = "900";
         var stage = "Upload";
         var artifactId = "some string";
 
@@ -109,7 +109,7 @@ public class ParseInputsTest
         Assert.AreEqual(solutionFile, inputs.SolutionPath);
         Assert.AreEqual(packageName, inputs.PackageName);
         Assert.AreEqual(version, inputs.Version);
-        Assert.AreEqual(TimeSpan.Parse(timeOut), inputs.TimeOut);
+        Assert.AreEqual(TimeSpan.FromSeconds(int.Parse(timeOut)), inputs.TimeOut);
         Assert.AreEqual(Enum.Parse<Stage>(stage), inputs.Stage);
         Assert.IsNull(inputs.ArtifactId);
     }
@@ -122,7 +122,7 @@ public class ParseInputsTest
         var solutionFile = "some file";
         var packageName = "TestPackage";
         var version = "1.0.2";
-        var timeOut = "12:00";
+        var timeOut = "900";
         var stage = "Deploy";
         var artifactId = "some string";
 
@@ -155,7 +155,7 @@ public class ParseInputsTest
         Assert.IsNull(inputs.SolutionPath);
         Assert.IsNull(inputs.PackageName);
         Assert.IsNull(inputs.Version);
-        Assert.AreEqual(TimeSpan.Parse(timeOut), inputs.TimeOut);
+        Assert.AreEqual(TimeSpan.FromSeconds(int.Parse(timeOut)), inputs.TimeOut);
         Assert.AreEqual(Enum.Parse<Stage>(stage), inputs.Stage);
         Assert.AreEqual(artifactId, inputs.ArtifactId);
     }
@@ -177,7 +177,7 @@ public class ParseInputsTest
         var solutionFile = "some file";
         var packageName = "TestPackage";
         var version = "1.0.2";
-        var timeOut = "12:00";
+        var timeOut = "900";
         var stage = "";
         var artifactId = "some string";
 
@@ -220,7 +220,7 @@ public class ParseInputsTest
         var solutionFile = "some file";
         var packageName = "TestPackage";
         var version = "1.0.2";
-        var timeOut = "12:00";
+        var timeOut = "900";
         var artifactId = "some string";
 
         var args = new string[]
@@ -304,7 +304,7 @@ public class ParseInputsTest
         var solutionFile = "";
         var packageName = "TestPackage";
         var version = "1.0.2";
-        var timeOut = "12:00";
+        var timeOut = "900";
         var artifactId = "some string";
 
         var args = new string[]
@@ -353,7 +353,7 @@ public class ParseInputsTest
         var solutionFile = "some file";
         var packageName = "";
         var version = "1.0.2";
-        var timeOut = "12:00";
+        var timeOut = "900";
         var artifactId = "some string";
 
         var args = new string[]
@@ -402,7 +402,7 @@ public class ParseInputsTest
         var solutionFile = "some file";
         var packageName = "TestPackage";
         var version = "";
-        var timeOut = "12:00";
+        var timeOut = "900";
         var artifactId = "some string";
 
         var args = new string[]
@@ -451,7 +451,7 @@ public class ParseInputsTest
         var solutionFile = "some file";
         var packageName = "TestPackage";
         var version = "sqdfsdg";
-        var timeOut = "12:00";
+        var timeOut = "900";
         var artifactId = "some string";
 
         var args = new string[]
@@ -490,14 +490,54 @@ public class ParseInputsTest
     }
 
     [Test]
+    public void ParseAndValidateInputs_InvalidTimeOut_NotAValidInt()
+    {
+        // Given
+        var key = "some key";
+        var solutionFile = "some file";
+        var packageName = "TestPackage";
+        var version = "1.0.2";
+        var timeOut = "this is not an int";
+        var stage = "All";
+        var artifactId = "some string";
+
+        var args = new string[]
+        {
+            "--api-key",
+            key,
+            "--solution-path",
+            solutionFile,
+            "--package-name",
+            packageName,
+            "--version",
+            version,
+            "--timeout",
+            timeOut,
+            "--stage",
+            stage,
+            "--artifact-id",
+            artifactId
+        };
+
+        // When
+        var inputs = _inputParserService.ParseAndValidateInputs(args)!;
+
+        // Then
+        _inputParserPresenterMock.Verify(p => p.PresentInvalidTimeFormat(), Times.Once);
+        _inputParserPresenterMock.VerifyNoOtherCalls();
+
+        Assert.IsNull(inputs);
+    }
+
+    [Test]
     public void ParseAndValidateInputs_InvalidTimeOut_ToLow()
     {
         // Given
         var key = "some key";
         var solutionFile = "some file";
         var packageName = "TestPackage";
-        var version = "sqdfsdg";
-        var timeOut = "00:00";
+        var version = "1.0.2";
+        var timeOut = "30";
         var stage = "All";
         var artifactId = "some string";
 
@@ -536,8 +576,8 @@ public class ParseInputsTest
         var key = "some key";
         var solutionFile = "some file";
         var packageName = "TestPackage";
-        var version = "sqdfsdg";
-        var timeOut = "15:00";
+        var version = "1.0.2";
+        var timeOut = "50000";
         var stage = "All";
         var artifactId = "some string";
 
@@ -580,7 +620,7 @@ public class ParseInputsTest
         var solutionFile = "some file";
         var packageName = "TestPackage";
         var version = "1.0.2";
-        var timeOut = "12:00";
+        var timeOut = "900";
         var artifactId = "";
 
         var args = new string[]
@@ -626,7 +666,7 @@ public class ParseInputsTest
         var solutionFile = "some file";
         var packageName = "TestPackage";
         var version = "1.0.2";
-        var timeOut = "12:00";
+        var timeOut = "900";
         var stage = "All";
         var artifactId = "";
 
@@ -669,7 +709,7 @@ public class ParseInputsTest
         var solutionFile = "some file";
         var packageName = "TestPackage";
         var version = "1.0.2";
-        var timeOut = "12:00";
+        var timeOut = "900";
         var stage = "All";
 
         var args = new string[]
@@ -707,7 +747,7 @@ public class ParseInputsTest
         var solutionFile = "some file";
         var packageName = "TestPackage";
         var version = "1.0.2";
-        var timeOut = "12:00";
+        var timeOut = "900";
         var stage = "doesn't exist";
 
         var args = new string[]

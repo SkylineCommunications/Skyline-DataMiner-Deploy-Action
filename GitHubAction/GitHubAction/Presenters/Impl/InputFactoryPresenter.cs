@@ -19,7 +19,7 @@ public class InputFactoryPresenter : IInputFactoryPresenter
 
     public void PresentInvalidTimeFormat()
     {
-        _logger.LogError("Invalid time format. The valid format is: HH:MM");
+        _logger.LogError("Timeout has to be a valid integer.");
     }
 
     public void PresentInvalidVersionFormat()
