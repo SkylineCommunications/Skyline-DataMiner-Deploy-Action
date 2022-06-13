@@ -3,6 +3,7 @@ using Package.Builder.Exceptions;
 using Package.Domain.Enums;
 using Package.Domain.Models;
 using Package.Domain.Services;
+using Serilog;
 
 namespace Package.Builder
 {
@@ -22,6 +23,12 @@ namespace Package.Builder
             try
             {
                 await ConvertAutomationScriptSolutionAsync(localPackageConfig.SolutionFile, convertedFilesDirectory);
+
+                var filesInConvertedDirectory = convertedFilesDirectory.GetFiles();
+                foreach (var file in filesInConvertedDirectory)
+                {
+                    Log.Information(file.Name);
+                }
 
                 var dmappPackage = await BuildDmappPackageForAutomationAsync(
                     localPackageConfig.ConvertedSolutionWorkingDirectory,
