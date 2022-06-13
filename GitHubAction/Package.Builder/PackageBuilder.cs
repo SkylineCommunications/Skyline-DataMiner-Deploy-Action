@@ -37,10 +37,9 @@ namespace Package.Builder
                     var doc = new XmlDocument();
                     doc.Load(file.FullName);
                     var root = doc.DocumentElement!;
-                    var folderNode = doc.SelectSingleNode("Folder");
                     var sourceUrlNode = doc.CreateElement("ExternalSourceUrl", root.NamespaceURI);
                     sourceUrlNode.InnerText = sourceUrl.AbsoluteUri;
-                    root.InsertAfter(sourceUrlNode, folderNode);
+                    root.AppendChild(sourceUrlNode);
                     doc.Save(file.FullName);
                 }
 
