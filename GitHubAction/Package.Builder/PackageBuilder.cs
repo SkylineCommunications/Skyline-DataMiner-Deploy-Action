@@ -4,7 +4,6 @@ using Package.Builder.Exceptions;
 using Package.Domain.Enums;
 using Package.Domain.Models;
 using Package.Domain.Services;
-using Serilog;
 
 namespace Package.Builder
 {
