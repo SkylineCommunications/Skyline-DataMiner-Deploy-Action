@@ -19,9 +19,9 @@ inputs:
     description: 'The version number for the package (format A.B.C). E.g. 1.0.1.  Required for stages: All, Build and Publish.'
     required: false
   timeout:
-    description: 'The maximum time spend on waiting for the deployment to finish (format: HH:MM). E.g. 5:00.'
+    description: 'The maximum time spend on waiting for the deployment to finish in seconds. E.g. 900.'
     required: false
-    default: "12:00"
+    default: "900"
   stage:
     description: 'The specific stage to run in this action. Possible values are: Build, Publish and Deploy. All will run all 3 stages consecutively.'
     required: false
