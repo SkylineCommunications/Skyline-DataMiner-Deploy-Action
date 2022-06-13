@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Xml;
 using Package.Builder.Exceptions;
 using Package.Domain.Enums;
 using Package.Domain.Models;
@@ -8,9 +9,14 @@ namespace Package.Builder
 {
     public class PackageBuilder : IPackageBuilder
     {
+
         public async Task<CreatedPackage> CreatePackageAsync(
             LocalPackageConfig localPackageConfig)
         {
+            var githubServerUrl = new Uri(Environment.GetEnvironmentVariable("GITHUB_SERVER_URL")!);
+            var repository = Environment.GetEnvironmentVariable("GITHUB_REPOSITORY")!;
+            var sourceUrl = new Uri(githubServerUrl, repository);
+
             var convertedFilesDirectory =
                 new DirectoryInfo(Path.Combine(localPackageConfig.ConvertedSolutionWorkingDirectory.FullName, "__SLC_CONVERTED__"));
 
@@ -22,6 +28,18 @@ namespace Package.Builder
             try
             {
                 await ConvertAutomationScriptSolutionAsync(localPackageConfig.SolutionFile, convertedFilesDirectory);
+
+                var filesInConvertedDirectory = convertedFilesDirectory.GetFiles();
+                foreach (var file in filesInConvertedDirectory)
+                {
+                    var doc = new XmlDocument();
+                    doc.Load(file.FullName);
+                    var root = doc.DocumentElement!;
+                    var sourceUrlNode = doc.CreateElement("ExternalSourceUrl", root.NamespaceURI);
+                    sourceUrlNode.InnerText = sourceUrl.AbsoluteUri;
+                    root.AppendChild(sourceUrlNode);
+                    doc.Save(file.FullName);
+                }
 
                 var dmappPackage = await BuildDmappPackageForAutomationAsync(
                     localPackageConfig.ConvertedSolutionWorkingDirectory,
