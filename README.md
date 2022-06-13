@@ -1,6 +1,6 @@
 # Skyline DataMiner Deploy Action
 
-This action builds a DataMiner Application Package (.dmapp) from your solution and deploys it to your cloud connected DataMiner System. The action will wait until the deployment is finished, with a configurable timeout. At this moment only DataMiner Automation Script solutions are supported.
+This action builds a DataMiner Application Package (.dmapp) from your Automation Script solution and deploys it to your cloud connected DataMiner System. The action will wait until the deployment is finished, with a configurable timeout. At this moment only DataMiner Automation Script solutions are supported.
 
 The action exists of 2 stages `Upload` and `Deploy`
 
