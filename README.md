@@ -38,7 +38,7 @@ The version number for the package (format A.B.C). E.g. `'1.0.1'`. Required for 
 
 ### `timeout`
 
-**Optional** The maximum time spend on waiting for the deployment to finish (format: HH:MM). Default '12:00' E.g. `'5:00'`.
+**Optional** The maximum time spend on waiting for the deployment to finish in seconds. Default '900' E.g. `'300'`.
 
 ### `stage`
 
@@ -78,7 +78,7 @@ jobs:
           solution-path: './Example/Script.sln'
           package-name: 'MyPackageName'
           version: '1.0.1'
-          timeout: '5:00'
+          timeout: '300'
 ```
 
 ```yaml
@@ -102,7 +102,6 @@ jobs:
           solution-path: './Example/Script.sln'
           package-name: 'MyPackageName'
           version: '1.0.1'
-          timeout: '5:00'
           stage: Upload
 
   deploy:
@@ -113,8 +112,9 @@ jobs:
       - name: Deploy
         uses: SkylineCommunications/Skyline-DataMiner-Deploy-Action@v1
         with:
-          api-key: d9d676acfbad463184534979cbad9fb2
+          api-key: ${{ secrets.NAME_OF_YOUR_APIKEY_SECRET }}
           stage: Deploy
+          timeout: '300'
           artifact-id: ${{ needs.build.outputs.artifact-id }}
 ```    
 
