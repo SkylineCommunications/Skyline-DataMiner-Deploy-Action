@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Xml;
 using Package.Builder.Exceptions;
 using Package.Domain.Enums;
 using Package.Domain.Models;
@@ -9,6 +10,7 @@ namespace Package.Builder
 {
     public class PackageBuilder : IPackageBuilder
     {
+
         public async Task<CreatedPackage> CreatePackageAsync(
             LocalPackageConfig localPackageConfig)
         {
@@ -32,7 +34,14 @@ namespace Package.Builder
                 var filesInConvertedDirectory = convertedFilesDirectory.GetFiles();
                 foreach (var file in filesInConvertedDirectory)
                 {
-                    Log.Information(file.Name);
+                    var doc = new XmlDocument();
+                    doc.Load(file.FullName);
+                    var root = doc.DocumentElement!;
+                    var folderNode = doc.SelectSingleNode("Folder");
+                    var sourceUrlNode = doc.CreateElement("ExternalSourceUrl", root.NamespaceURI);
+                    sourceUrlNode.InnerText = sourceUrl.AbsoluteUri;
+                    root.InsertAfter(sourceUrlNode, folderNode);
+                    doc.Save(file.FullName);
                 }
 
                 var dmappPackage = await BuildDmappPackageForAutomationAsync(
