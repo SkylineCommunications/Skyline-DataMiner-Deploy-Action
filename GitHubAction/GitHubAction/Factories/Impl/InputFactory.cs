@@ -143,14 +143,17 @@ public class InputFactory : IInputFactory
         return true;
     }
 
-    private bool ValidateTimeout(string timeOutString, out TimeSpan timeout)
+    private bool ValidateTimeout(string timeOutInSecondsString, out TimeSpan timeout)
     {
 
-        if (!TimeSpan.TryParseExact(timeOutString, "h\\:mm", CultureInfo.CurrentCulture, out timeout))
+        if (!int.TryParse(timeOutInSecondsString, out int timeOutInSeconds))
         {
+            timeout = TimeSpan.Zero;
             _presenter.PresentInvalidTimeFormat();
             return false;
         }
+
+        timeout = TimeSpan.FromSeconds(timeOutInSeconds);
 
         if (timeout < TimeSpan.FromMinutes(1))
         {
