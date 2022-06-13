@@ -12,6 +12,11 @@ namespace Package.Builder
         public async Task<CreatedPackage> CreatePackageAsync(
             LocalPackageConfig localPackageConfig)
         {
+            var githubServerUrl = new Uri(Environment.GetEnvironmentVariable("GITHUB_SERVER_URL")!);
+            var repository = Environment.GetEnvironmentVariable("GITHUB_REPOSITORY")!;
+            var sourceUrl = new Uri(githubServerUrl, repository);
+            Log.Information(sourceUrl.AbsoluteUri);
+
             var convertedFilesDirectory =
                 new DirectoryInfo(Path.Combine(localPackageConfig.ConvertedSolutionWorkingDirectory.FullName, "__SLC_CONVERTED__"));
 
