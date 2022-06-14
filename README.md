@@ -1,59 +1,59 @@
 # Skyline DataMiner Deploy Action
 
-This action builds a DataMiner Application Package (.dmapp) from your Automation Script solution and deploys it to your cloud connected DataMiner System. The action will wait until the deployment is finished, with a configurable timeout. At this moment only DataMiner Automation Script solutions are supported.
+This action builds a DataMiner Application Package (.dmapp) from your Automation Script solution and deploys it to your cloud-connected DataMiner System. The action will wait until the deployment is finished, with a configurable timeout. At present, only DataMiner Automation Script solutions are supported.
 
-The action exists of 2 stages `Upload` and `Deploy`
+The action consists of 2 stages: `Upload` and `Deploy`.
 
 ## Stages
 
 ### Upload
 
-This stage creates a package and uploads it to a dedicated storage in the cloud. The output of this stage will be the id of the artifact that can be used in the deploy stage.
+This stage creates a package and uploads it to dedicated storage in the cloud. The output of this stage will be the ID of the artifact, which can be used in the deploy stage.
 
 ### Deploy
 
-This stage Deploys the DataMiner Application Package from the Artifact storage to your cloud connected DataMiner System.
+This stage deploys the DataMiner Application Package from the artifact storage to your cloud-connected DataMiner System.
 
 ## Limitations
 
-This action currently only supports the creation of DataMiner Application Packages with automation scripts
+This action currently only supports the creation of DataMiner Application Packages with Automation scripts.
 
 ## Inputs
 
 ### `api-key`
-**Required** The API-key generated in the [DCP Admin app](https://admin.dataminer.services) as authentication for a certain DataMiner System. E.g. `'g597e77412e34297b827c2570a8fa2bc'`. For more information about creating a key can be found in the [Help](https://docs.dataminer.services/user-guide/Cloud_Platform/CloudAdminApp/Managing_DCP_keys.html)
+**Required**. The API key generated in the [DCP Admin app](https://admin.dataminer.services) to authenticate to a certain DataMiner System. E.g. `'g597e77412e34297b827c2570a8fa2bc'`. For more information about creating a key, refer to the [DataMiner documentation](https://docs.dataminer.services/user-guide/Cloud_Platform/CloudAdminApp/Managing_DCP_keys.html).
 
 ### `solution-path`
 
-**Optional** The path to the .sln file of the solution. Atm only DataMiner Automation Script solutions are supported. E.g. `'./Example/Script.sln'`. Required for stages `'Upload'` and `'All'`.
+**Optional**. The path to the .sln file of the solution. At present, only DataMiner Automation Script solutions are supported. E.g. `'./Example/Script.sln'`. Required for stages `'Upload'` and `'All'`.
 
 ### `package-name`
 
-**Optional** The chosen name for the package. E.g. `'MyPackageName'`. Required for stages `'Upload'` and `'All'`.
+**Optional**. The chosen name for the package. E.g. `'MyPackageName'`. Required for stages `'Upload'` and `'All'`.
 
 ### `version`
 
-**Optional** 
+**Optional**. 
 The version number for the package (format A.B.C). E.g. `'1.0.1'`. Required for stages `'Upload'` and `'All'`.
 
 ### `timeout`
 
-**Optional** The maximum time spend on waiting for the deployment to finish in seconds. Default '900' E.g. `'300'`.
+**Optional**. The maximum time spent waiting for the deployment to finish, in seconds. Default '900'. E.g. `'300'`.
 
 ### `stage`
 
-**Optional** The stage off the action to run. Options are: `'Upload'`, `'Deploy'` and `'All'`. Default: 'All'
+**Optional**. The stage of the action to run. Options are: `'Upload'`, `'Deploy'` and `'All'`. Default: 'All'.
 
 ### `artifact-id`
 
-**Optional** The private artifact to deploy. This is only needed when 'stage' is `'Deploy'`.
+**Optional**. The private artifact to deploy. This is only needed when 'stage' is `'Deploy'`.
 
 
 ## Outputs
 
 ### `artifact-id`
 
-The Id of the private artifact that has been deployed. This is only filled in for stages `'Upload'` and `'All'`.
+The ID of the private artifact that has been deployed. This is only filled in for stages `'Upload'` and `'All'`.
 
 ## Example usage
 
