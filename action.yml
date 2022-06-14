@@ -23,7 +23,7 @@ inputs:
     required: false
     default: "900"
   stage:
-    description: 'The specific stage to run in this action. Possible values are: Build, Publish and Deploy. All will run all 3 stages consecutively.'
+    description: 'The specific stage to run in this action. Possible values are: All, Upload, and Deploy. All will run all 3 stages consecutively.'
     required: false
     default: "All"
   artifact-id:
