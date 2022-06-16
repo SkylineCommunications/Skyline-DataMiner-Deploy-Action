@@ -7,7 +7,7 @@ env:
     working-directory: ./GitHubAction/Package.Builder 
 inputs:
   api-key:  # id of input
-    description: 'The API-key generated in the DCP Admin app as authentication for a certain DataMiner System. E.g. ${{ secrets.NAME_OF_YOUR_APIKEY_SECRET }}'
+    description: 'The API-key generated in the DCP Admin app as authentication for a certain DataMiner System, saved in a GitHub secret'
     required: true
   solution-path:
     description: 'The path to the .sln file of the solution. Atm only DataMiner Automation Script solutions are supported. E.g ./Example/Script.sln. Required for stages: All and Upload.' 
