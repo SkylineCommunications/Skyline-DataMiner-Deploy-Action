@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using NUnit.Framework;
 
 namespace Package.Application.UnitTest;
@@ -7,17 +8,24 @@ namespace Package.Application.UnitTest;
 public class GitLabSourceUriServiceTest
 {
     private GitLabSourceUriService _service = null!;
+    private Dictionary<string, string?> _envVariables = new();
+
+    [OneTimeSetUp]
+    public void OneTimeSetup()
+    {
+        _envVariables.Add("CI_PROJECT_URL", Environment.GetEnvironmentVariable("CI_PROJECT_URL"));
+    }
+
+    [OneTimeTearDown]
+    public void OneTimeTearDown()
+    {
+        Environment.SetEnvironmentVariable("CI_PROJECT_URL", _envVariables["CI_PROJECT_URL"]);
+    }
 
     [SetUp]
     public void Setup()
     {
         _service = new GitLabSourceUriService();
-    }
-
-    [TearDown]
-    public void TearDown()
-    {
-        Environment.SetEnvironmentVariable("CI_PROJECT_URL", null);
     }
 
     [Test]

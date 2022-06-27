@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Security;
 using NUnit.Framework;
 
 namespace Package.Application.UnitTest;
@@ -7,6 +9,22 @@ namespace Package.Application.UnitTest;
 public class GitHubSourceUriServiceTest
 {
     private GitHubSourceUriService _service = null!;
+    private Dictionary<string, string?> _envVariables = new();
+
+    [OneTimeSetUp]
+    public void OneTimeSetup()
+    {
+        _envVariables.Add("GITHUB_SERVER_URL", Environment.GetEnvironmentVariable("GITHUB_SERVER_URL"));
+        _envVariables.Add("GITHUB_REPOSITORY", Environment.GetEnvironmentVariable("GITHUB_REPOSITORY"));
+    }
+
+    [OneTimeTearDown]
+    public void OneTimeTearDown()
+    {
+        Environment.SetEnvironmentVariable("GITHUB_SERVER_URL", _envVariables["GITHUB_SERVER_URL"]);
+        Environment.SetEnvironmentVariable("GITHUB_REPOSITORY", _envVariables["GITHUB_REPOSITORY"]);
+    }
+
 
     [SetUp]
     public void Setup()
