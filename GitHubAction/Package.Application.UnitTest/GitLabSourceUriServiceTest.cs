@@ -33,6 +33,8 @@ public class GitLabSourceUriServiceTest
     [Test]
     public void Test_GetSourceUri_EnvNotSet()
     {
+        Environment.SetEnvironmentVariable("CI_PROJECT_URL", null);
+
         var uri = _service.GetSourceUri();
 
         Assert.IsNull(uri);

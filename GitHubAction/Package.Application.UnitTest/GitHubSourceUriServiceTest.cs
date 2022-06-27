@@ -35,6 +35,9 @@ public class GitHubSourceUriServiceTest
     [Test]
     public void Test_GetSourceUri_EnvNotSet()
     {
+        Environment.SetEnvironmentVariable("GITHUB_SERVER_URL", null);
+        Environment.SetEnvironmentVariable("GITHUB_REPOSITORY", null);
+
         var uri = _service.GetSourceUri();
 
         Assert.IsNull(uri);
