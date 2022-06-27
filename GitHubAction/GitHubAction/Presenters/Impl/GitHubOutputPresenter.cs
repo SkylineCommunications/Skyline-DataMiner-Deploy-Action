@@ -1,12 +1,13 @@
 ﻿using Microsoft.Extensions.Logging;
 using Serilog;
+using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace GitHubAction.Presenters.Impl;
 
-public class GithubPresenter : IGithubPresenter
+public class GitHubOutputPresenter : IOutputPresenter
 {
-    private readonly ILogger<GithubPresenter> _logger;
-    public GithubPresenter(ILogger<GithubPresenter> logger)
+    private readonly ILogger _logger;
+    public GitHubOutputPresenter(ILogger logger)
     {
         _logger = logger;
     }

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Diagnostics;
+using Microsoft.Extensions.DependencyInjection;
 using Package.Application;
 using Package.Domain.Services;
 using Package.Gateway;
@@ -73,10 +74,27 @@ public class Program
                 services.AddScoped<IPackageService, PackageService>();
                 services.AddScoped<IPackageGateway, HttpPackageGateway>();
                 services.AddScoped<IPackageBuilder, PackageBuilder>();
-                services.AddScoped<IGithubPresenter, GithubPresenter>();
                 services.AddScoped<IInputFactory, InputFactory>();
                 services.AddScoped<IInputFactoryPresenter, InputFactoryPresenter>();
                 services.BuildServiceProvider();
+
+
+                var source = Util.GetSourceHost();
+                if (source == Util.SourceHost.GitHub)
+                {
+                    services.AddScoped<ISourceUriService, GitHubSourceUriService>();
+                    services.AddScoped<IOutputPresenter, GitHubOutputPresenter>();
+                }
+                else if (source == Util.SourceHost.GitLab)
+                {
+                    services.AddScoped<ISourceUriService, GitLabSourceUriService>();
+                    services.AddScoped<IOutputPresenter, GitLabOutputPresenter>();
+                }
+                else
+                {
+                    services.AddScoped<ISourceUriService, DefaultSourceUriService>();
+                    services.AddScoped<IOutputPresenter, DefaultOutputPresenter>();
+                }
             })
             .UseSerilog((context, services, loggerConfiguration) =>
             {
@@ -94,4 +112,6 @@ public class Program
                         .Filter.ByIncludingOnly(Matching.WithProperty<string>("type", type => type == "githubCommand"))
                         .WriteTo.Console(outputTemplate: "{Message:lj}{NewLine}"));
             });
+
+
 }
