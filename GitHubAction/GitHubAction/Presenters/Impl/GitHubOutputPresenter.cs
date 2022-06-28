@@ -21,6 +21,5 @@ public class GitHubOutputPresenter : IOutputPresenter
     public void PresentInvalidArguments()
     {
         _logger.LogError("There was a problem with the provided arguments...");
-        Environment.Exit(400); // Bad Request
     }
 }

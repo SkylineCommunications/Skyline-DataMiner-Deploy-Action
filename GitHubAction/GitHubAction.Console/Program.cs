@@ -1,17 +1,16 @@
-﻿using System.Diagnostics;
-using Microsoft.Extensions.DependencyInjection;
-using Package.Application;
-using Package.Domain.Services;
-using Package.Gateway;
-using GitHubAction.Console.Extensions;
+﻿using GitHubAction.Console.Extensions;
 using GitHubAction.Console.Options;
 using GitHubAction.Factories;
 using GitHubAction.Factories.Impl;
 using GitHubAction.Presenters;
 using GitHubAction.Presenters.Impl;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Package.Application;
 using Package.Builder;
+using Package.Domain.Services;
+using Package.Gateway;
 using Serilog;
 using Serilog.Filters;
 
@@ -78,7 +77,6 @@ public class Program
                 services.AddScoped<IInputFactoryPresenter, InputFactoryPresenter>();
                 services.BuildServiceProvider();
 
-
                 var source = Util.GetSourceHost();
                 if (source == Util.SourceHost.GitHub)
                 {
@@ -107,11 +105,9 @@ public class Program
                         .Filter.ByExcluding(Matching.WithProperty<string>("type", type => type == "githubCommand"))
                         .WriteTo.Console(
                             outputTemplate:
-                                "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff} {Level:u3}]{Message:lj}[{SourceContext}]{NewLine}{Exception}"))
+                            "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff} {Level:u3}]{Message:lj}[{SourceContext}]{NewLine}{Exception}"))
                     .WriteTo.Logger(lc => lc
                         .Filter.ByIncludingOnly(Matching.WithProperty<string>("type", type => type == "githubCommand"))
                         .WriteTo.Console(outputTemplate: "{Message:lj}{NewLine}"));
             });
-
-
 }
