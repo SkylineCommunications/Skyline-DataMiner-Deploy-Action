@@ -12,6 +12,7 @@ public class Inputs
     public Stage Stage { get; init; }
 
     public string? SolutionPath { get; init; } 
+    public string? BasePath { get; init; } 
     public string? PackageName { get; init; }
     public string? Version { get; init; }
 

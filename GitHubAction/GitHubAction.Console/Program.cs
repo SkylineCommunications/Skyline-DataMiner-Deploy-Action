@@ -76,6 +76,7 @@ public class Program
                 services.AddScoped<IInputFactory, InputFactory>();
                 services.AddScoped<IInputFactoryPresenter, InputFactoryPresenter>();
                 services.BuildServiceProvider();
+                services.AddSingleton<IOutputPathProvider, OutputPathProvider>();
 
                 var source = Util.GetSourceHost();
                 if (source == Util.SourceHost.GitHub)

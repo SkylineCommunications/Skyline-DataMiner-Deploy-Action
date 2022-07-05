@@ -15,19 +15,20 @@ namespace GitHubAction
         private readonly IPackageService _packageService;
         private readonly IPackagePresenter _packagePresenter;
         private readonly IOutputPresenter _outputPresenter;
+        private readonly IOutputPathProvider _outputPathProvider;
         private readonly IInputFactory _inputParserSerivce;
         private readonly TimeSpan _deploymentBackOff;
         private readonly TimeSpan _deploymentMaxBackOff;
         private ISourceUriService _sourceUriService;
 
-        public GitHubAction(IPackageService packageService, IInputFactory inputParser, IPackagePresenter packagePresenter, IOutputPresenter outputPresenter, ISourceUriService sourceUriService) 
-            : this(packageService, inputParser, packagePresenter, outputPresenter, TimeSpan.FromSeconds(3), TimeSpan.FromMinutes(2), sourceUriService)
+        public GitHubAction(IPackageService packageService, IInputFactory inputParser, IPackagePresenter packagePresenter, IOutputPresenter outputPresenter, ISourceUriService sourceUriService, IOutputPathProvider outputPathProvider) 
+            : this(packageService, inputParser, packagePresenter, outputPresenter, TimeSpan.FromSeconds(3), TimeSpan.FromMinutes(2), sourceUriService, outputPathProvider)
         {
 
         }
 
         public GitHubAction(IPackageService packageService, IInputFactory inputParser, IPackagePresenter packagePresenter,
-            IOutputPresenter outputPresenter, TimeSpan minimumBackOff, TimeSpan maximumBackOff, ISourceUriService sourceUriService)
+            IOutputPresenter outputPresenter, TimeSpan minimumBackOff, TimeSpan maximumBackOff, ISourceUriService sourceUriService, IOutputPathProvider outputPathProvider)
         {
             _packageService = packageService;
             _inputParserSerivce = inputParser;
@@ -36,6 +37,7 @@ namespace GitHubAction
             _deploymentBackOff = minimumBackOff;
             _deploymentMaxBackOff = maximumBackOff;
             _sourceUriService = sourceUriService;
+            _outputPathProvider = outputPathProvider;
         }
 
         public async Task<int> RunAsync(string[] args, CancellationToken cancellationToken)
@@ -51,13 +53,13 @@ namespace GitHubAction
 
             UploadedPackage? uploadedPackage = null;
 
+            _outputPathProvider.BasePath = inputs.BasePath ?? Directory.GetCurrentDirectory();
+
             try
             { 
                 // Upload
                 if (inputs is { Stage: Stage.All or Stage.Upload })
                 {
-
-
                     var localPackageConfig = new LocalPackageConfig(
                         new FileInfo(inputs.SolutionPath!),
                         inputs.PackageName!,
@@ -71,7 +73,6 @@ namespace GitHubAction
                     uploadedPackage = await UploadPackageAsync(inputs.ApiKey, createdPackage);
                     if(uploadedPackage == null) return 5;
                     _outputPresenter.PresentOutputVariable("artifact-id", uploadedPackage.ArtifactId);
-                    
                 }
 
                 // Deploy

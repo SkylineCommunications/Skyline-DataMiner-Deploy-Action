@@ -5,7 +5,7 @@ namespace GitHubAction.Presenters.Impl;
 public class DefaultOutputPresenter : IOutputPresenter
 {
     private readonly ILogger _logger;
-    public DefaultOutputPresenter(ILogger logger)
+    public DefaultOutputPresenter(ILogger<DefaultOutputPresenter> logger)
     {
         _logger = logger;
     }
@@ -13,7 +13,7 @@ public class DefaultOutputPresenter : IOutputPresenter
 
     public void PresentOutputVariable(string name, string value)
     {
-        //No action required
+        // No action required
         _logger.LogInformation("{name}: {value}", name, value);
     }
 

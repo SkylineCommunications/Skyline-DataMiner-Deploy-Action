@@ -4,16 +4,19 @@ namespace GitHubAction.Presenters.Impl;
 
 public class GitLabOutputPresenter : IOutputPresenter
 {
+    private readonly IOutputPathProvider _pathProvider;
     private readonly ILogger _logger;
-    public GitLabOutputPresenter(ILogger logger)
+    public GitLabOutputPresenter(IOutputPathProvider pathProvider, ILogger<GitLabOutputPresenter> logger)
     {
+        _pathProvider = pathProvider;
         _logger = logger;
     }
 
 
     public void PresentOutputVariable(string name, string value)
     {
-        //TODO(LLS): Figure out how output variables work in GitLab
+        using var fileStream = File.AppendText(Path.Combine(_pathProvider.BasePath, "SkylineOutput.env"));
+        fileStream.WriteLine($"{name}={value}");
         _logger.LogInformation("{name}: {value}", name, value);
     }
 

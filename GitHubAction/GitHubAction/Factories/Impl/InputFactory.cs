@@ -6,7 +6,7 @@ using GitHubAction.Presenters;
 namespace GitHubAction.Factories.Impl;
 public class InputFactory : IInputFactory
 {
-    internal static List<string> ValidArgs = new() { InputArgurments.ApiKey, InputArgurments.PackageName, InputArgurments.SolutionPath, InputArgurments.Version, InputArgurments.Timeout, InputArgurments.Stage, InputArgurments.ArtifactId };
+    internal static List<string> ValidArgs = new() { InputArgurments.ApiKey, InputArgurments.PackageName, InputArgurments.SolutionPath, InputArgurments.Version, InputArgurments.Timeout, InputArgurments.Stage, InputArgurments.ArtifactId, InputArgurments.BasePath };
     private readonly IInputFactoryPresenter _presenter;
     public InputFactory( IInputFactoryPresenter presenter)
     {
@@ -49,11 +49,13 @@ public class InputFactory : IInputFactory
         string packageName = "";
         string version = "";
         string artifactId = "";
+        string basePath = "";
         try
         {
             apiKey = givenArgs[InputArgurments.ApiKey];
             stageString = givenArgs[InputArgurments.Stage];
             timeOutString = givenArgs[InputArgurments.Timeout];
+            basePath = givenArgs[InputArgurments.BasePath];
             solutionPath = givenArgs[InputArgurments.SolutionPath];
             packageName = givenArgs[InputArgurments.PackageName];
             version = givenArgs[InputArgurments.Version];
@@ -92,11 +94,15 @@ public class InputFactory : IInputFactory
 
                 if (!argumentsAreValid) return null;
 
+                if(!string.IsNullOrEmpty(basePath))
+                    solutionPath = Path.Combine(basePath, solutionPath);
+
                 return new Inputs()
                 {
                     ApiKey = apiKey,
                     PackageName = packageName,
                     SolutionPath = solutionPath,
+                    BasePath = basePath,
                     Stage = stage,
                     TimeOut = timeOut,
                     Version = version

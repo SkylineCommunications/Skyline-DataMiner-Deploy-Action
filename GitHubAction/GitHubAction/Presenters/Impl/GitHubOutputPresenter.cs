@@ -7,7 +7,7 @@ namespace GitHubAction.Presenters.Impl;
 public class GitHubOutputPresenter : IOutputPresenter
 {
     private readonly ILogger _logger;
-    public GitHubOutputPresenter(ILogger logger)
+    public GitHubOutputPresenter(ILogger<GitHubOutputPresenter> logger)
     {
         _logger = logger;
     }

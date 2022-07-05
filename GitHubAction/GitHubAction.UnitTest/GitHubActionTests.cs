@@ -26,6 +26,7 @@ namespace GitHubAction.UnitTest
         private Mock<ILogger<GitHubAction>> _loggerMock = null!;
         private GitHubAction _gitHubAction = null!;
         private Mock<ISourceUriService> _uriServiceMock;
+        private Mock<IOutputPathProvider> _outputPathProvider;
 
         [SetUp]
         public void Setup()
@@ -36,8 +37,9 @@ namespace GitHubAction.UnitTest
             _outputPresenterMock = new Mock<IOutputPresenter>();
             _inputParserMock = new Mock<IInputFactory>();
             _loggerMock = new Mock<ILogger<GitHubAction>>();
+            _outputPathProvider = new Mock<IOutputPathProvider>();
 
-            _gitHubAction = new GitHubAction(_packageServiceMock.Object, _inputParserMock.Object, _packagePresenterMock.Object, _outputPresenterMock.Object, TimeSpan.Zero, TimeSpan.Zero, _uriServiceMock.Object);
+            _gitHubAction = new GitHubAction(_packageServiceMock.Object, _inputParserMock.Object, _packagePresenterMock.Object, _outputPresenterMock.Object, TimeSpan.Zero, TimeSpan.Zero, _uriServiceMock.Object, _outputPathProvider.Object);
         }
 
         [Test]
@@ -535,7 +537,7 @@ namespace GitHubAction.UnitTest
 
             _inputParserMock.Setup(parseInputs).Returns(inputs);
 
-            _gitHubAction = new GitHubAction(_packageServiceMock.Object, _inputParserMock.Object, _packagePresenterMock.Object, _outputPresenterMock.Object, TimeSpan.FromMilliseconds(1), TimeSpan.FromMilliseconds(2), _uriServiceMock.Object);
+            _gitHubAction = new GitHubAction(_packageServiceMock.Object, _inputParserMock.Object, _packagePresenterMock.Object, _outputPresenterMock.Object, TimeSpan.FromMilliseconds(1), TimeSpan.FromMilliseconds(2), _uriServiceMock.Object, _outputPathProvider.Object);
 
             Expression<Func<IPackageService, Task<CreatedPackage>>> createPackageAsync = s =>
                 s.CreatePackageAsync(It.Is<LocalPackageConfig>(config => compareLocalPackageConfig(localPackageConfig, config)));
@@ -665,7 +667,7 @@ namespace GitHubAction.UnitTest
 
             _inputParserMock.Setup(parseInputs).Returns(inputs);
 
-            _gitHubAction = new GitHubAction(_packageServiceMock.Object, _inputParserMock.Object, _packagePresenterMock.Object, _outputPresenterMock.Object, TimeSpan.FromMilliseconds(1), TimeSpan.FromMilliseconds(2), _uriServiceMock.Object);
+            _gitHubAction = new GitHubAction(_packageServiceMock.Object, _inputParserMock.Object, _packagePresenterMock.Object, _outputPresenterMock.Object, TimeSpan.FromMilliseconds(1), TimeSpan.FromMilliseconds(2), _uriServiceMock.Object, _outputPathProvider.Object);
 
             Expression<Func<IPackageService, Task<CreatedPackage>>> createPackageAsync = s =>
                 s.CreatePackageAsync(It.Is<LocalPackageConfig>(config => compareLocalPackageConfig(localPackageConfig, config)));
@@ -794,7 +796,7 @@ namespace GitHubAction.UnitTest
 
             _inputParserMock.Setup(parseInputs).Returns(inputs);
 
-            _gitHubAction = new GitHubAction(_packageServiceMock.Object, _inputParserMock.Object, _packagePresenterMock.Object, _outputPresenterMock.Object, TimeSpan.FromMilliseconds(1), TimeSpan.FromMilliseconds(2), _uriServiceMock.Object);
+            _gitHubAction = new GitHubAction(_packageServiceMock.Object, _inputParserMock.Object, _packagePresenterMock.Object, _outputPresenterMock.Object, TimeSpan.FromMilliseconds(1), TimeSpan.FromMilliseconds(2), _uriServiceMock.Object, _outputPathProvider.Object);
 
             Expression<Func<IPackageService, Task<CreatedPackage>>> createPackageAsync = s =>
                 s.CreatePackageAsync(It.Is<LocalPackageConfig>(config => compareLocalPackageConfig(localPackageConfig, config)));
