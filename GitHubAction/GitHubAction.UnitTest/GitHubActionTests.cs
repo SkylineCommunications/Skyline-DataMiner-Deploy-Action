@@ -150,7 +150,7 @@ namespace GitHubAction.UnitTest
             _packagePresenterMock.Verify(p => p.PresentStartingPackageUpload(), Times.Once);
             _packageServiceMock.Verify(uploadPackageAsync, Times.Once);
             _packagePresenterMock.Verify(p => p.PresentPackageUploadSucceeded(), Times.Once);
-            _outputPresenterMock.Verify(p => p.PresentOutputVariable("artifact-id", id));
+            _outputPresenterMock.Verify(p => p.PresentOutputVariable("ARTIFACT_ID", id));
 
             _packagePresenterMock.Verify(p => p.PresentStartingPackageDeployment(), Times.Once);
             _packageServiceMock.Verify(deployPackageAsync, Times.Once);
@@ -272,7 +272,7 @@ namespace GitHubAction.UnitTest
             _packagePresenterMock.Verify(p => p.PresentStartingPackageUpload(), Times.Once);
             _packageServiceMock.Verify(uploadPackageAsync, Times.Once);
             _packagePresenterMock.Verify(p => p.PresentPackageUploadSucceeded(), Times.Once);
-            _outputPresenterMock.Verify(p => p.PresentOutputVariable("artifact-id", id));
+            _outputPresenterMock.Verify(p => p.PresentOutputVariable("ARTIFACT_ID", id));
 
             _packagePresenterMock.VerifyNoOtherCalls();
             _packageServiceMock.VerifyNoOtherCalls();
@@ -468,7 +468,7 @@ namespace GitHubAction.UnitTest
             _packagePresenterMock.Verify(p => p.PresentStartingPackageUpload(), Times.Once);
             _packageServiceMock.Verify(uploadPackageAsync, Times.Once);
             _packagePresenterMock.Verify(p => p.PresentPackageUploadSucceeded(), Times.Once);
-            _outputPresenterMock.Verify(p => p.PresentOutputVariable("artifact-id", id));
+            _outputPresenterMock.Verify(p => p.PresentOutputVariable("ARTIFACT_ID", id));
 
             _packagePresenterMock.Verify(p => p.PresentStartingPackageDeployment(), Times.Once);
             _packageServiceMock.Verify(deployPackageAsync, Times.Once);
@@ -597,7 +597,7 @@ namespace GitHubAction.UnitTest
             _packagePresenterMock.Verify(p => p.PresentStartingPackageUpload(), Times.Once);
             _packageServiceMock.Verify(uploadPackageAsync, Times.Once);
             _packagePresenterMock.Verify(p => p.PresentPackageUploadSucceeded(), Times.Once);
-            _outputPresenterMock.Verify(p => p.PresentOutputVariable("artifact-id", id));
+            _outputPresenterMock.Verify(p => p.PresentOutputVariable("ARTIFACT_ID", id));
 
             _packagePresenterMock.Verify(p => p.PresentStartingPackageDeployment(), Times.Once);
             _packageServiceMock.Verify(deployPackageAsync, Times.Once);
@@ -724,7 +724,7 @@ namespace GitHubAction.UnitTest
             _packagePresenterMock.Verify(p => p.PresentStartingPackageUpload(), Times.Once);
             _packageServiceMock.Verify(uploadPackageAsync, Times.Once);
             _packagePresenterMock.Verify(p => p.PresentPackageUploadSucceeded(), Times.Once);
-            _outputPresenterMock.Verify(p => p.PresentOutputVariable("artifact-id", id));
+            _outputPresenterMock.Verify(p => p.PresentOutputVariable("ARTIFACT_ID", id));
 
             _packagePresenterMock.Verify(p => p.PresentStartingPackageDeployment(), Times.Once);
             _packageServiceMock.Verify(deployPackageAsync, Times.Once);
@@ -855,7 +855,7 @@ namespace GitHubAction.UnitTest
             _packagePresenterMock.Verify(p => p.PresentStartingPackageUpload(), Times.Once);
             _packageServiceMock.Verify(uploadPackageAsync, Times.Once);
             _packagePresenterMock.Verify(p => p.PresentPackageUploadSucceeded(), Times.Once);
-            _outputPresenterMock.Verify(p => p.PresentOutputVariable("artifact-id", id));
+            _outputPresenterMock.Verify(p => p.PresentOutputVariable("ARTIFACT_ID", id));
 
             _packagePresenterMock.Verify(p => p.PresentStartingPackageDeployment(), Times.Once);
             _packageServiceMock.Verify(deployPackageAsync, Times.Once);
@@ -968,7 +968,7 @@ namespace GitHubAction.UnitTest
             _packageServiceMock.Verify(uploadPackageAsync, Times.Once);
             _packagePresenterMock.Verify(p => p.PresentPackageUploadSucceeded(), Times.Once);
 
-            _outputPresenterMock.Verify(p => p.PresentOutputVariable("artifact-id", id));
+            _outputPresenterMock.Verify(p => p.PresentOutputVariable("ARTIFACT_ID", id));
 
             _packagePresenterMock.Verify(p => p.PresentStartingPackageDeployment(), Times.Once);
             _packageServiceMock.Verify(deployPackageAsync, Times.Once);
@@ -1076,7 +1076,7 @@ namespace GitHubAction.UnitTest
             _packagePresenterMock.Verify(p => p.PresentStartingPackageUpload(), Times.Once);
             _packageServiceMock.Verify(uploadPackageAsync, Times.Once);
             _packagePresenterMock.Verify(p => p.PresentPackageUploadSucceeded(), Times.Once);
-            _outputPresenterMock.Verify(p => p.PresentOutputVariable("artifact-id", id));
+            _outputPresenterMock.Verify(p => p.PresentOutputVariable("ARTIFACT_ID", id));
 
             _packagePresenterMock.Verify(p => p.PresentStartingPackageDeployment(), Times.Once);
             _packageServiceMock.Verify(deployPackageAsync, Times.Once);
@@ -1186,7 +1186,7 @@ namespace GitHubAction.UnitTest
             _packagePresenterMock.Verify(p => p.PresentStartingPackageUpload(), Times.Once);
             _packageServiceMock.Verify(uploadPackageAsync, Times.Once);
             _packagePresenterMock.Verify(p => p.PresentPackageUploadSucceeded(), Times.Once);
-            _outputPresenterMock.Verify(p => p.PresentOutputVariable("artifact-id", id));
+            _outputPresenterMock.Verify(p => p.PresentOutputVariable("ARTIFACT_ID", id));
 
             _packagePresenterMock.Verify(p => p.PresentStartingPackageDeployment(), Times.Once);
             _packageServiceMock.Verify(deployPackageAsync, Times.Once);
