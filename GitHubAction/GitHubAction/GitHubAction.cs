@@ -72,7 +72,7 @@ namespace GitHubAction
 
                     uploadedPackage = await UploadPackageAsync(inputs.ApiKey, createdPackage);
                     if(uploadedPackage == null) return 5;
-                    _outputPresenter.PresentOutputVariable("artifact-id", uploadedPackage.ArtifactId);
+                    _outputPresenter.PresentOutputVariable("ARTIFACT_ID", uploadedPackage.ArtifactId);
                 }
 
                 // Deploy

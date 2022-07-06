@@ -90,7 +90,7 @@ jobs:
     name: build
     runs-on: ubuntu-latest
     outputs:
-      artifact-id: ${{ steps.Build_and_upload_package_step.outputs.artifact-id }}
+      ARTIFACT_ID: ${{ steps.Build_and_upload_package_step.outputs.ARTIFACT_ID }}
     steps:
       - name: Checkout	
         uses: actions/checkout@v3
@@ -115,8 +115,8 @@ jobs:
           api-key: ${{ secrets.NAME_OF_YOUR_APIKEY_SECRET }}
           stage: Deploy
           timeout: '300'
-          artifact-id: ${{ needs.build.outputs.artifact-id }}
-```    
+          artifact-id: ${{ needs.build.outputs.ARTIFACT_ID }}
+```
 
 ## License
 
