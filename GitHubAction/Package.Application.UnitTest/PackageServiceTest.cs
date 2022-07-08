@@ -37,10 +37,10 @@ namespace Package.Application.UnitTest
 
             var localPackageConfig = new LocalPackageConfig(
                 solutionFile,
-                workingDirectory,
                 packageName,
                 version,
-                SolutionType.DmScript);
+                SolutionType.DmScript,
+                null);
 
             Expression<Func<IPackageBuilder, Task<CreatedPackage>>> createPackageAsync = s =>
                 s.CreatePackageAsync(localPackageConfig);

@@ -1,12 +1,12 @@
 ﻿using GitHubAction.Domain.Entities;
 using GitHubAction.Factories;
+using GitHubAction.Presenters;
 using Package.Builder;
 using Package.Builder.Exceptions;
 using Package.Domain.Enums;
 using Package.Domain.Exceptions;
 using Package.Domain.Models;
 using Package.Domain.Services;
-using IGithubPresenter = GitHubAction.Presenters.IGithubPresenter;
 
 namespace GitHubAction
 {
@@ -14,26 +14,30 @@ namespace GitHubAction
     {
         private readonly IPackageService _packageService;
         private readonly IPackagePresenter _packagePresenter;
-        private readonly IGithubPresenter _githubPresenter;
+        private readonly IOutputPresenter _outputPresenter;
+        private readonly IOutputPathProvider _outputPathProvider;
         private readonly IInputFactory _inputParserSerivce;
         private readonly TimeSpan _deploymentBackOff;
         private readonly TimeSpan _deploymentMaxBackOff;
+        private ISourceUriService _sourceUriService;
 
-        public GitHubAction(IPackageService packageService, IInputFactory inputParser, IPackagePresenter packagePresenter, IGithubPresenter githubPresenter) 
-            : this(packageService, inputParser, packagePresenter, githubPresenter, TimeSpan.FromSeconds(3), TimeSpan.FromMinutes(2))
+        public GitHubAction(IPackageService packageService, IInputFactory inputParser, IPackagePresenter packagePresenter, IOutputPresenter outputPresenter, ISourceUriService sourceUriService, IOutputPathProvider outputPathProvider) 
+            : this(packageService, inputParser, packagePresenter, outputPresenter, TimeSpan.FromSeconds(3), TimeSpan.FromMinutes(2), sourceUriService, outputPathProvider)
         {
 
         }
 
         public GitHubAction(IPackageService packageService, IInputFactory inputParser, IPackagePresenter packagePresenter,
-            IGithubPresenter githubPresenter, TimeSpan minimumBackOff, TimeSpan maximumBackOff)
+            IOutputPresenter outputPresenter, TimeSpan minimumBackOff, TimeSpan maximumBackOff, ISourceUriService sourceUriService, IOutputPathProvider outputPathProvider)
         {
             _packageService = packageService;
             _inputParserSerivce = inputParser;
             _packagePresenter = packagePresenter;
-            _githubPresenter = githubPresenter;
+            _outputPresenter = outputPresenter;
             _deploymentBackOff = minimumBackOff;
             _deploymentMaxBackOff = maximumBackOff;
+            _sourceUriService = sourceUriService;
+            _outputPathProvider = outputPathProvider;
         }
 
         public async Task<int> RunAsync(string[] args, CancellationToken cancellationToken)
@@ -41,33 +45,34 @@ namespace GitHubAction
             var inputs = _inputParserSerivce.ParseAndValidateInputs(args);
             if (inputs == null)
             {
-                _githubPresenter.PresentInvalidArguments();
+                _outputPresenter.PresentInvalidArguments();
                 return 3;
             }
 
+            var sourceUri = _sourceUriService.GetSourceUri();
+
             UploadedPackage? uploadedPackage = null;
+
+            _outputPathProvider.BasePath = inputs.BasePath ?? Directory.GetCurrentDirectory();
 
             try
             { 
                 // Upload
                 if (inputs is { Stage: Stage.All or Stage.Upload })
                 {
-                    var workingDirectory = new DirectoryInfo(Environment.CurrentDirectory == "/github/workspace" ? Environment.CurrentDirectory : Path.Join(Environment.CurrentDirectory, "../../../../../"));
-
                     var localPackageConfig = new LocalPackageConfig(
                         new FileInfo(inputs.SolutionPath!),
-                        workingDirectory,
                         inputs.PackageName!,
                         inputs.Version!,
-                        SolutionType.DmScript);
+                        SolutionType.DmScript,
+                        sourceUri);
 
                     var createdPackage = await CreatePackageAsync(localPackageConfig);
                     if (createdPackage == null) return 4;
 
                     uploadedPackage = await UploadPackageAsync(inputs.ApiKey, createdPackage);
                     if(uploadedPackage == null) return 5;
-                    _githubPresenter.PresentOutputVariable("artifact-id", uploadedPackage.ArtifactId);
-                    
+                    _outputPresenter.PresentOutputVariable("ARTIFACT_ID", uploadedPackage.ArtifactId);
                 }
 
                 // Deploy

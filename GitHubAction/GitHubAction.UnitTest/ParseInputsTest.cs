@@ -49,7 +49,9 @@ public class ParseInputsTest
             "--stage",
             stage,
             "--artifact-id",
-            artifactId
+            artifactId,
+            "--base-path",
+            ""
         };
 
         // When
@@ -95,7 +97,9 @@ public class ParseInputsTest
             "--stage",
             stage,
             "--artifact-id",
-            artifactId
+            artifactId,
+            "--base-path",
+            ""
         };
 
         // When
@@ -140,8 +144,12 @@ public class ParseInputsTest
             timeOut,
             "--stage",
             stage,
+            "--base-path",
+            "",
             "--artifact-id",
-            artifactId
+            artifactId,
+            "--base-path",
+            ""
         };
 
         // When
@@ -196,7 +204,9 @@ public class ParseInputsTest
             "--stage",
             stage,
             "--artifact-id",
-            artifactId
+            artifactId,
+            "--base-path",
+            ""
         };
 
         // When
@@ -238,7 +248,9 @@ public class ParseInputsTest
             "--stage",
             stage,
             "--artifact-id",
-            artifactId
+            artifactId,
+            "--base-path",
+            ""
         };
 
         // When
@@ -280,7 +292,9 @@ public class ParseInputsTest
             "--stage",
             stage,
             "--artifact-id",
-            artifactId
+            artifactId,
+            "--base-path",
+            ""
         };
 
         // When
@@ -322,7 +336,9 @@ public class ParseInputsTest
             "--stage",
             stage,
             "--artifact-id",
-            artifactId
+            artifactId,
+            "--base-path",
+            ""
         };
 
         // When
@@ -371,7 +387,9 @@ public class ParseInputsTest
             "--stage",
             stage,
             "--artifact-id",
-            artifactId
+            artifactId,
+            "--base-path",
+            ""
         };
 
         // When
@@ -420,7 +438,9 @@ public class ParseInputsTest
             "--stage",
             stage,
             "--artifact-id",
-            artifactId
+            artifactId,
+            "--base-path",
+            ""
         };
 
         // When
@@ -469,7 +489,9 @@ public class ParseInputsTest
             "--stage",
             stage,
             "--artifact-id",
-            artifactId
+            artifactId,
+            "--base-path",
+            ""
         };
 
         // When
@@ -516,7 +538,9 @@ public class ParseInputsTest
             "--stage",
             stage,
             "--artifact-id",
-            artifactId
+            artifactId,
+            "--base-path",
+            ""
         };
 
         // When
@@ -556,7 +580,9 @@ public class ParseInputsTest
             "--stage",
             stage,
             "--artifact-id",
-            artifactId
+            artifactId,
+            "--base-path",
+            ""
         };
 
         // When
@@ -596,7 +622,9 @@ public class ParseInputsTest
             "--stage",
             stage,
             "--artifact-id",
-            artifactId
+            artifactId,
+            "--base-path",
+            ""
         };
 
         // When
@@ -638,7 +666,9 @@ public class ParseInputsTest
             "--stage",
             stage,
             "--artifact-id",
-            artifactId
+            artifactId,
+            "--base-path",
+            ""
         };
 
         // When
@@ -686,6 +716,8 @@ public class ParseInputsTest
             stage,
             "--artifact-id",
             artifactId,
+            "--base-path",
+            "",
             "--some-unknown-key",
             ""
         };
@@ -725,7 +757,9 @@ public class ParseInputsTest
             "--timeout",
             timeOut,
             "--stage",
-            stage
+            stage,
+            "--base-path",
+            ""
         };
 
         // When
@@ -765,6 +799,8 @@ public class ParseInputsTest
             "--stage",
             stage,
             "--artifact-id",
+            "",
+            "--base-path",
             ""
         };
 

@@ -1,12 +1,11 @@
 ﻿using Microsoft.Extensions.Logging;
-using Serilog;
 
 namespace GitHubAction.Presenters.Impl;
 
-public class GithubPresenter : IGithubPresenter
+public class DefaultOutputPresenter : IOutputPresenter
 {
-    private readonly ILogger<GithubPresenter> _logger;
-    public GithubPresenter(ILogger<GithubPresenter> logger)
+    private readonly ILogger _logger;
+    public DefaultOutputPresenter(ILogger<DefaultOutputPresenter> logger)
     {
         _logger = logger;
     }
@@ -14,12 +13,12 @@ public class GithubPresenter : IGithubPresenter
 
     public void PresentOutputVariable(string name, string value)
     {
-        Log.ForContext("type", "githubCommand").Information("::set-output name={0}::{1}", name, value);
+        // No action required
+        _logger.LogInformation("{name}: {value}", name, value);
     }
 
     public void PresentInvalidArguments()
     {
         _logger.LogError("There was a problem with the provided arguments...");
-        Environment.Exit(400); // Bad Request
     }
 }

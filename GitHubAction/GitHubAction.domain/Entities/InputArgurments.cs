@@ -9,4 +9,5 @@ public static class InputArgurments
     public const string Timeout = "timeout";
     public const string Stage = "stage";
     public const string ArtifactId = "artifact-id";
+    public const string BasePath = "base-path";
 }

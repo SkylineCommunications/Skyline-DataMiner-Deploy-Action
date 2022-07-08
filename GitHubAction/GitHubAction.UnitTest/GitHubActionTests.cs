@@ -21,21 +21,25 @@ namespace GitHubAction.UnitTest
     {
         private Mock<IPackageService> _packageServiceMock = null!;
         private Mock<IPackagePresenter> _packagePresenterMock = null!;
-        private Mock<IGithubPresenter> _githubPresenterMock = null!;
+        private Mock<IOutputPresenter> _outputPresenterMock = null!;
         private Mock<IInputFactory> _inputParserMock = null!;
         private Mock<ILogger<GitHubAction>> _loggerMock = null!;
         private GitHubAction _gitHubAction = null!;
+        private Mock<ISourceUriService> _uriServiceMock;
+        private Mock<IOutputPathProvider> _outputPathProvider;
 
         [SetUp]
         public void Setup()
         {
             _packageServiceMock = new Mock<IPackageService>();
+            _uriServiceMock = new Mock<ISourceUriService>();
             _packagePresenterMock = new Mock<IPackagePresenter>();
-            _githubPresenterMock = new Mock<IGithubPresenter>();
+            _outputPresenterMock = new Mock<IOutputPresenter>();
             _inputParserMock = new Mock<IInputFactory>();
             _loggerMock = new Mock<ILogger<GitHubAction>>();
+            _outputPathProvider = new Mock<IOutputPathProvider>();
 
-            _gitHubAction = new GitHubAction(_packageServiceMock.Object, _inputParserMock.Object, _packagePresenterMock.Object, _githubPresenterMock.Object, TimeSpan.Zero, TimeSpan.Zero);
+            _gitHubAction = new GitHubAction(_packageServiceMock.Object, _inputParserMock.Object, _packagePresenterMock.Object, _outputPresenterMock.Object, TimeSpan.Zero, TimeSpan.Zero, _uriServiceMock.Object, _outputPathProvider.Object);
         }
 
         [Test]
@@ -50,13 +54,14 @@ namespace GitHubAction.UnitTest
             var timeOut = "12:00";
             var stage = "All";
             var id = Guid.NewGuid().ToString();
+            var sourceUri = new Uri("https://github.com/SkylineCommunications/Skyline-DataMiner-Deploy-Action");
 
             var localPackageConfig = new LocalPackageConfig(
                 solutionFile,
-                workingDirectory,
                 packageName,
                 version,
-                SolutionType.DmScript);
+                SolutionType.DmScript,
+                sourceUri);
 
             var args = new string[]
             {
@@ -130,6 +135,8 @@ namespace GitHubAction.UnitTest
                 .Setup(getDeployedPackageAsync)
                 .ReturnsAsync(deployedPackage);
 
+            _uriServiceMock.Setup(s => s.GetSourceUri()).Returns(sourceUri);
+
             // When
             var exitCode = await _gitHubAction.RunAsync(args, CancellationToken.None);
 
@@ -143,7 +150,7 @@ namespace GitHubAction.UnitTest
             _packagePresenterMock.Verify(p => p.PresentStartingPackageUpload(), Times.Once);
             _packageServiceMock.Verify(uploadPackageAsync, Times.Once);
             _packagePresenterMock.Verify(p => p.PresentPackageUploadSucceeded(), Times.Once);
-            _githubPresenterMock.Verify(p => p.PresentOutputVariable("artifact-id", id));
+            _outputPresenterMock.Verify(p => p.PresentOutputVariable("ARTIFACT_ID", id));
 
             _packagePresenterMock.Verify(p => p.PresentStartingPackageDeployment(), Times.Once);
             _packageServiceMock.Verify(deployPackageAsync, Times.Once);
@@ -153,7 +160,7 @@ namespace GitHubAction.UnitTest
 
             _packagePresenterMock.VerifyNoOtherCalls();
             _packageServiceMock.VerifyNoOtherCalls();
-            _githubPresenterMock.VerifyNoOtherCalls();
+            _outputPresenterMock.VerifyNoOtherCalls();
         }
 
         [Test]
@@ -168,13 +175,15 @@ namespace GitHubAction.UnitTest
             var timeOut = "12:00";
             var stage = "Upload";
             var id = Guid.NewGuid().ToString();
+            var sourceUri = new Uri("https://github.com/SkylineCommunications/Skyline-DataMiner-Deploy-Action");
+
 
             var localPackageConfig = new LocalPackageConfig(
                 solutionFile,
-                workingDirectory,
                 packageName,
                 version,
-                SolutionType.DmScript);
+                SolutionType.DmScript,
+                sourceUri);
 
             var args = new string[]
             {
@@ -248,6 +257,8 @@ namespace GitHubAction.UnitTest
                 .Setup(getDeployedPackageAsync)
                 .ReturnsAsync(deployedPackage);
 
+            _uriServiceMock.Setup(s => s.GetSourceUri()).Returns(sourceUri);
+
             // When
             var exitCode = await _gitHubAction.RunAsync(args, CancellationToken.None);
 
@@ -261,11 +272,11 @@ namespace GitHubAction.UnitTest
             _packagePresenterMock.Verify(p => p.PresentStartingPackageUpload(), Times.Once);
             _packageServiceMock.Verify(uploadPackageAsync, Times.Once);
             _packagePresenterMock.Verify(p => p.PresentPackageUploadSucceeded(), Times.Once);
-            _githubPresenterMock.Verify(p => p.PresentOutputVariable("artifact-id", id));
+            _outputPresenterMock.Verify(p => p.PresentOutputVariable("ARTIFACT_ID", id));
 
             _packagePresenterMock.VerifyNoOtherCalls();
             _packageServiceMock.VerifyNoOtherCalls();
-            _githubPresenterMock.VerifyNoOtherCalls();
+            _outputPresenterMock.VerifyNoOtherCalls();
         }
 
         [Test]
@@ -347,7 +358,7 @@ namespace GitHubAction.UnitTest
 
             _packagePresenterMock.VerifyNoOtherCalls();
             _packageServiceMock.VerifyNoOtherCalls();
-            _githubPresenterMock.VerifyNoOtherCalls();
+            _outputPresenterMock.VerifyNoOtherCalls();
         }
 
         [Test]
@@ -362,13 +373,14 @@ namespace GitHubAction.UnitTest
             var timeOut = "12:00";
             var stage = "All";
             var id = Guid.NewGuid().ToString();
+            var sourceUri = new Uri("https://github.com/SkylineCommunications/Skyline-DataMiner-Deploy-Action");
 
             var localPackageConfig = new LocalPackageConfig(
                 solutionFile,
-                workingDirectory,
                 packageName,
                 version,
-                SolutionType.DmScript);
+                SolutionType.DmScript,
+                sourceUri);
 
             var args = new string[]
             {
@@ -441,6 +453,8 @@ namespace GitHubAction.UnitTest
                 .Setup(getDeployedPackageAsync)
                 .ThrowsAsync(new KeyException("this should be thrown in the test"));
 
+            _uriServiceMock.Setup(s => s.GetSourceUri()).Returns(sourceUri);
+
             // When
             var exitCode = await _gitHubAction.RunAsync(args, CancellationToken.None);
 
@@ -454,7 +468,7 @@ namespace GitHubAction.UnitTest
             _packagePresenterMock.Verify(p => p.PresentStartingPackageUpload(), Times.Once);
             _packageServiceMock.Verify(uploadPackageAsync, Times.Once);
             _packagePresenterMock.Verify(p => p.PresentPackageUploadSucceeded(), Times.Once);
-            _githubPresenterMock.Verify(p => p.PresentOutputVariable("artifact-id", id));
+            _outputPresenterMock.Verify(p => p.PresentOutputVariable("ARTIFACT_ID", id));
 
             _packagePresenterMock.Verify(p => p.PresentStartingPackageDeployment(), Times.Once);
             _packageServiceMock.Verify(deployPackageAsync, Times.Once);
@@ -464,7 +478,7 @@ namespace GitHubAction.UnitTest
 
             _packagePresenterMock.VerifyNoOtherCalls();
             _packageServiceMock.VerifyNoOtherCalls();
-            _githubPresenterMock.VerifyNoOtherCalls();
+            _outputPresenterMock.VerifyNoOtherCalls();
         }
 
         [Test]
@@ -479,13 +493,15 @@ namespace GitHubAction.UnitTest
             var timeOut = "12:00";
             var stage = "All";
             var id = Guid.NewGuid().ToString();
+            var sourceUri = new Uri("https://github.com/SkylineCommunications/Skyline-DataMiner-Deploy-Action");
+
 
             var localPackageConfig = new LocalPackageConfig(
                 solutionFile,
-                workingDirectory,
                 packageName,
                 version,
-                SolutionType.DmScript);
+                SolutionType.DmScript, 
+                sourceUri);
 
             var args = new string[]
             {
@@ -521,7 +537,7 @@ namespace GitHubAction.UnitTest
 
             _inputParserMock.Setup(parseInputs).Returns(inputs);
 
-            _gitHubAction = new GitHubAction(_packageServiceMock.Object, _inputParserMock.Object, _packagePresenterMock.Object, _githubPresenterMock.Object, TimeSpan.FromMilliseconds(1), TimeSpan.FromMilliseconds(2));
+            _gitHubAction = new GitHubAction(_packageServiceMock.Object, _inputParserMock.Object, _packagePresenterMock.Object, _outputPresenterMock.Object, TimeSpan.FromMilliseconds(1), TimeSpan.FromMilliseconds(2), _uriServiceMock.Object, _outputPathProvider.Object);
 
             Expression<Func<IPackageService, Task<CreatedPackage>>> createPackageAsync = s =>
                 s.CreatePackageAsync(It.Is<LocalPackageConfig>(config => compareLocalPackageConfig(localPackageConfig, config)));
@@ -566,6 +582,8 @@ namespace GitHubAction.UnitTest
                 .ReturnsAsync((DeployedPackage)null!)
                 .ReturnsAsync(deployedPackage);
 
+            _uriServiceMock.Setup(s => s.GetSourceUri()).Returns(sourceUri);
+
             // When
             var exitCode = await _gitHubAction.RunAsync(args, CancellationToken.None);
 
@@ -579,7 +597,7 @@ namespace GitHubAction.UnitTest
             _packagePresenterMock.Verify(p => p.PresentStartingPackageUpload(), Times.Once);
             _packageServiceMock.Verify(uploadPackageAsync, Times.Once);
             _packagePresenterMock.Verify(p => p.PresentPackageUploadSucceeded(), Times.Once);
-            _githubPresenterMock.Verify(p => p.PresentOutputVariable("artifact-id", id));
+            _outputPresenterMock.Verify(p => p.PresentOutputVariable("ARTIFACT_ID", id));
 
             _packagePresenterMock.Verify(p => p.PresentStartingPackageDeployment(), Times.Once);
             _packageServiceMock.Verify(deployPackageAsync, Times.Once);
@@ -590,7 +608,7 @@ namespace GitHubAction.UnitTest
 
             _packagePresenterMock.VerifyNoOtherCalls();
             _packageServiceMock.VerifyNoOtherCalls();
-            _githubPresenterMock.VerifyNoOtherCalls();
+            _outputPresenterMock.VerifyNoOtherCalls();
         }
 
         [Test]
@@ -605,13 +623,15 @@ namespace GitHubAction.UnitTest
             var timeOut = "12:00";
             var stage = "All";
             var id = Guid.NewGuid().ToString();
+            var sourceUri = new Uri("https://github.com/SkylineCommunications/Skyline-DataMiner-Deploy-Action");
+
 
             var localPackageConfig = new LocalPackageConfig(
                 solutionFile,
-                workingDirectory,
                 packageName,
                 version,
-                SolutionType.DmScript);
+                SolutionType.DmScript,
+                sourceUri);
 
             var args = new string[]
             {
@@ -647,7 +667,7 @@ namespace GitHubAction.UnitTest
 
             _inputParserMock.Setup(parseInputs).Returns(inputs);
 
-            _gitHubAction = new GitHubAction(_packageServiceMock.Object, _inputParserMock.Object, _packagePresenterMock.Object, _githubPresenterMock.Object, TimeSpan.FromMilliseconds(1), TimeSpan.FromMilliseconds(2));
+            _gitHubAction = new GitHubAction(_packageServiceMock.Object, _inputParserMock.Object, _packagePresenterMock.Object, _outputPresenterMock.Object, TimeSpan.FromMilliseconds(1), TimeSpan.FromMilliseconds(2), _uriServiceMock.Object, _outputPathProvider.Object);
 
             Expression<Func<IPackageService, Task<CreatedPackage>>> createPackageAsync = s =>
                 s.CreatePackageAsync(It.Is<LocalPackageConfig>(config => compareLocalPackageConfig(localPackageConfig, config)));
@@ -689,6 +709,8 @@ namespace GitHubAction.UnitTest
                 .ReturnsAsync((DeployedPackage)null!)
                 .ThrowsAsync(new KeyException("this should be thrown in the test"));
 
+            _uriServiceMock.Setup(s => s.GetSourceUri()).Returns(sourceUri);
+
             // When
             var exitCode = await _gitHubAction.RunAsync(args, CancellationToken.None);
 
@@ -702,7 +724,7 @@ namespace GitHubAction.UnitTest
             _packagePresenterMock.Verify(p => p.PresentStartingPackageUpload(), Times.Once);
             _packageServiceMock.Verify(uploadPackageAsync, Times.Once);
             _packagePresenterMock.Verify(p => p.PresentPackageUploadSucceeded(), Times.Once);
-            _githubPresenterMock.Verify(p => p.PresentOutputVariable("artifact-id", id));
+            _outputPresenterMock.Verify(p => p.PresentOutputVariable("ARTIFACT_ID", id));
 
             _packagePresenterMock.Verify(p => p.PresentStartingPackageDeployment(), Times.Once);
             _packageServiceMock.Verify(deployPackageAsync, Times.Once);
@@ -713,7 +735,7 @@ namespace GitHubAction.UnitTest
 
             _packagePresenterMock.VerifyNoOtherCalls();
             _packageServiceMock.VerifyNoOtherCalls();
-            _githubPresenterMock.VerifyNoOtherCalls();
+            _outputPresenterMock.VerifyNoOtherCalls();
         }
 
         [Test]
@@ -730,13 +752,15 @@ namespace GitHubAction.UnitTest
             var timeOut = "12:00";
             var stage = "All";
             var id = Guid.NewGuid().ToString();
+            var sourceUri = new Uri("https://github.com/SkylineCommunications/Skyline-DataMiner-Deploy-Action");
+
 
             var localPackageConfig = new LocalPackageConfig(
                 solutionFile,
-                workingDirectory,
                 packageName,
                 version,
-                SolutionType.DmScript);
+                SolutionType.DmScript,
+                sourceUri);
 
             var args = new string[]
             {
@@ -772,7 +796,7 @@ namespace GitHubAction.UnitTest
 
             _inputParserMock.Setup(parseInputs).Returns(inputs);
 
-            _gitHubAction = new GitHubAction(_packageServiceMock.Object, _inputParserMock.Object, _packagePresenterMock.Object, _githubPresenterMock.Object, TimeSpan.FromMilliseconds(1), TimeSpan.FromMilliseconds(2));
+            _gitHubAction = new GitHubAction(_packageServiceMock.Object, _inputParserMock.Object, _packagePresenterMock.Object, _outputPresenterMock.Object, TimeSpan.FromMilliseconds(1), TimeSpan.FromMilliseconds(2), _uriServiceMock.Object, _outputPathProvider.Object);
 
             Expression<Func<IPackageService, Task<CreatedPackage>>> createPackageAsync = s =>
                 s.CreatePackageAsync(It.Is<LocalPackageConfig>(config => compareLocalPackageConfig(localPackageConfig, config)));
@@ -816,6 +840,8 @@ namespace GitHubAction.UnitTest
                 .ReturnsAsync(new DeployedPackage(deployingPackage.ArtifactId, deploymentId, "Pending"))
                 .ReturnsAsync(FailedDeployedPackage);
 
+            _uriServiceMock.Setup(s => s.GetSourceUri()).Returns(sourceUri);
+
             // When
             var exitCode = await _gitHubAction.RunAsync(args, CancellationToken.None);
 
@@ -829,7 +855,7 @@ namespace GitHubAction.UnitTest
             _packagePresenterMock.Verify(p => p.PresentStartingPackageUpload(), Times.Once);
             _packageServiceMock.Verify(uploadPackageAsync, Times.Once);
             _packagePresenterMock.Verify(p => p.PresentPackageUploadSucceeded(), Times.Once);
-            _githubPresenterMock.Verify(p => p.PresentOutputVariable("artifact-id", id));
+            _outputPresenterMock.Verify(p => p.PresentOutputVariable("ARTIFACT_ID", id));
 
             _packagePresenterMock.Verify(p => p.PresentStartingPackageDeployment(), Times.Once);
             _packageServiceMock.Verify(deployPackageAsync, Times.Once);
@@ -840,7 +866,7 @@ namespace GitHubAction.UnitTest
 
             _packagePresenterMock.VerifyNoOtherCalls();
             _packageServiceMock.VerifyNoOtherCalls();
-            _githubPresenterMock.VerifyNoOtherCalls();
+            _outputPresenterMock.VerifyNoOtherCalls();
 
         }
 
@@ -856,13 +882,15 @@ namespace GitHubAction.UnitTest
             var timeOut = "12:00";
             var stage = "All";
             var id = Guid.NewGuid().ToString();
+            var sourceUri = new Uri("https://github.com/SkylineCommunications/Skyline-DataMiner-Deploy-Action");
+
 
             var localPackageConfig = new LocalPackageConfig(
                 solutionFile,
-                workingDirectory,
                 packageName,
                 version,
-                SolutionType.DmScript);
+                SolutionType.DmScript,
+                sourceUri);
 
             var args = new string[]
             {
@@ -924,6 +952,8 @@ namespace GitHubAction.UnitTest
                 .Setup(deployPackageAsync)
                 .ThrowsAsync(new DmsUnavailableException("this should be thrown in the test"));
 
+            _uriServiceMock.Setup(s => s.GetSourceUri()).Returns(sourceUri);
+
             // When
             var exitCode = await _gitHubAction.RunAsync(args, CancellationToken.None);
 
@@ -938,7 +968,7 @@ namespace GitHubAction.UnitTest
             _packageServiceMock.Verify(uploadPackageAsync, Times.Once);
             _packagePresenterMock.Verify(p => p.PresentPackageUploadSucceeded(), Times.Once);
 
-            _githubPresenterMock.Verify(p => p.PresentOutputVariable("artifact-id", id));
+            _outputPresenterMock.Verify(p => p.PresentOutputVariable("ARTIFACT_ID", id));
 
             _packagePresenterMock.Verify(p => p.PresentStartingPackageDeployment(), Times.Once);
             _packageServiceMock.Verify(deployPackageAsync, Times.Once);
@@ -946,7 +976,7 @@ namespace GitHubAction.UnitTest
 
             _packagePresenterMock.VerifyNoOtherCalls();
             _packageServiceMock.VerifyNoOtherCalls();
-            _githubPresenterMock.VerifyNoOtherCalls();
+            _outputPresenterMock.VerifyNoOtherCalls();
         }
 
         [Test]
@@ -961,13 +991,15 @@ namespace GitHubAction.UnitTest
             var timeOut = "12:00";
             var stage = "All";
             var id = Guid.NewGuid().ToString();
+            var sourceUri = new Uri("https://github.com/SkylineCommunications/Skyline-DataMiner-Deploy-Action");
+
 
             var localPackageConfig = new LocalPackageConfig(
                 solutionFile,
-                workingDirectory,
                 packageName,
                 version,
-                SolutionType.DmScript);
+                SolutionType.DmScript,
+                sourceUri);
 
             var args = new string[]
             {
@@ -1029,6 +1061,8 @@ namespace GitHubAction.UnitTest
                 .Setup(deployPackageAsync)
                 .ThrowsAsync(new KeyException("this should be thrown in the test"));
 
+            _uriServiceMock.Setup(s => s.GetSourceUri()).Returns(sourceUri);
+
             // When
             var exitCode = await _gitHubAction.RunAsync(args, CancellationToken.None);
 
@@ -1042,7 +1076,7 @@ namespace GitHubAction.UnitTest
             _packagePresenterMock.Verify(p => p.PresentStartingPackageUpload(), Times.Once);
             _packageServiceMock.Verify(uploadPackageAsync, Times.Once);
             _packagePresenterMock.Verify(p => p.PresentPackageUploadSucceeded(), Times.Once);
-            _githubPresenterMock.Verify(p => p.PresentOutputVariable("artifact-id", id));
+            _outputPresenterMock.Verify(p => p.PresentOutputVariable("ARTIFACT_ID", id));
 
             _packagePresenterMock.Verify(p => p.PresentStartingPackageDeployment(), Times.Once);
             _packageServiceMock.Verify(deployPackageAsync, Times.Once);
@@ -1050,7 +1084,7 @@ namespace GitHubAction.UnitTest
 
             _packagePresenterMock.VerifyNoOtherCalls();
             _packageServiceMock.VerifyNoOtherCalls();
-            _githubPresenterMock.VerifyNoOtherCalls();
+            _outputPresenterMock.VerifyNoOtherCalls();
         }
 
         [Test]
@@ -1065,13 +1099,15 @@ namespace GitHubAction.UnitTest
             var timeOut = "12:00";
             var stage = "All";
             var id = Guid.NewGuid().ToString();
+            var sourceUri = new Uri("https://github.com/SkylineCommunications/Skyline-DataMiner-Deploy-Action");
+
 
             var localPackageConfig = new LocalPackageConfig(
                 solutionFile,
-                workingDirectory,
                 packageName,
                 version,
-                SolutionType.DmScript);
+                SolutionType.DmScript,
+                sourceUri);
 
             var args = new string[]
             {
@@ -1135,6 +1171,8 @@ namespace GitHubAction.UnitTest
                 .Setup(deployPackageAsync)
                 .ThrowsAsync(ex);
 
+            _uriServiceMock.Setup(s => s.GetSourceUri()).Returns(sourceUri);
+
             // When
             var exitCode = await _gitHubAction.RunAsync(args, CancellationToken.None);
 
@@ -1148,7 +1186,7 @@ namespace GitHubAction.UnitTest
             _packagePresenterMock.Verify(p => p.PresentStartingPackageUpload(), Times.Once);
             _packageServiceMock.Verify(uploadPackageAsync, Times.Once);
             _packagePresenterMock.Verify(p => p.PresentPackageUploadSucceeded(), Times.Once);
-            _githubPresenterMock.Verify(p => p.PresentOutputVariable("artifact-id", id));
+            _outputPresenterMock.Verify(p => p.PresentOutputVariable("ARTIFACT_ID", id));
 
             _packagePresenterMock.Verify(p => p.PresentStartingPackageDeployment(), Times.Once);
             _packageServiceMock.Verify(deployPackageAsync, Times.Once);
@@ -1156,7 +1194,7 @@ namespace GitHubAction.UnitTest
 
             _packagePresenterMock.VerifyNoOtherCalls();
             _packageServiceMock.VerifyNoOtherCalls();
-            _githubPresenterMock.VerifyNoOtherCalls();
+            _outputPresenterMock.VerifyNoOtherCalls();
         }
 
         [Test]
@@ -1171,13 +1209,15 @@ namespace GitHubAction.UnitTest
             var timeOut = "12:00";
             var stage = "All";
             var id = Guid.NewGuid().ToString();
+            var sourceUri = new Uri("https://github.com/SkylineCommunications/Skyline-DataMiner-Deploy-Action");
+
 
             var localPackageConfig = new LocalPackageConfig(
                 solutionFile,
-                workingDirectory,
                 packageName,
                 version,
-                SolutionType.DmScript);
+                SolutionType.DmScript,
+                sourceUri);
 
             var args = new string[]
             {
@@ -1231,6 +1271,8 @@ namespace GitHubAction.UnitTest
                 .Setup(uploadPackageAsync)
                 .ThrowsAsync(ex);
 
+            _uriServiceMock.Setup(s => s.GetSourceUri()).Returns(sourceUri);
+
             // When
             var exitCode = await _gitHubAction.RunAsync(args, CancellationToken.None);
 
@@ -1247,7 +1289,7 @@ namespace GitHubAction.UnitTest
 
             _packagePresenterMock.VerifyNoOtherCalls();
             _packageServiceMock.VerifyNoOtherCalls();
-            _githubPresenterMock.VerifyNoOtherCalls();
+            _outputPresenterMock.VerifyNoOtherCalls();
         }
 
         [Test]
@@ -1262,13 +1304,14 @@ namespace GitHubAction.UnitTest
             var timeOut = "12:00";
             var stage = "All";
             var id = Guid.NewGuid().ToString();
+            var sourceUri = new Uri("https://github.com/SkylineCommunications/Skyline-DataMiner-Deploy-Action");
 
             var localPackageConfig = new LocalPackageConfig(
                 solutionFile,
-                workingDirectory,
                 packageName,
                 version,
-                SolutionType.DmScript);
+                SolutionType.DmScript,
+                sourceUri);
 
             var args = new string[]
             {
@@ -1320,6 +1363,8 @@ namespace GitHubAction.UnitTest
                 .Setup(uploadPackageAsync)
                 .ThrowsAsync(new KeyException("this should be thrown in the test"));
 
+            _uriServiceMock.Setup(s => s.GetSourceUri()).Returns(sourceUri);
+
             // When
             var exitCode = await _gitHubAction.RunAsync(args, CancellationToken.None);
 
@@ -1336,7 +1381,7 @@ namespace GitHubAction.UnitTest
 
             _packagePresenterMock.VerifyNoOtherCalls();
             _packageServiceMock.VerifyNoOtherCalls();
-            _githubPresenterMock.VerifyNoOtherCalls();
+            _outputPresenterMock.VerifyNoOtherCalls();
         }
 
         [Test]
@@ -1351,13 +1396,14 @@ namespace GitHubAction.UnitTest
             var timeOut = "12:00";
             var stage = "All";
             var id = Guid.NewGuid().ToString();
+            var sourceUri = new Uri("https://github.com/SkylineCommunications/Skyline-DataMiner-Deploy-Action");
 
             var localPackageConfig = new LocalPackageConfig(
                 solutionFile,
-                workingDirectory,
                 packageName,
                 version,
-                SolutionType.DmScript);
+                SolutionType.DmScript,
+                sourceUri);
 
             var args = new string[]
             {
@@ -1401,6 +1447,8 @@ namespace GitHubAction.UnitTest
                 .Setup(createPackageAsync)
                 .ThrowsAsync(createPackageException);
 
+            _uriServiceMock.Setup(s => s.GetSourceUri()).Returns(sourceUri);
+
             // When
             var exitCode = await _gitHubAction.RunAsync(args, CancellationToken.None);
 
@@ -1413,7 +1461,7 @@ namespace GitHubAction.UnitTest
 
             _packagePresenterMock.VerifyNoOtherCalls();
             _packageServiceMock.VerifyNoOtherCalls();
-            _githubPresenterMock.VerifyNoOtherCalls();
+            _outputPresenterMock.VerifyNoOtherCalls();
         }
 
         [Test]
@@ -1449,20 +1497,20 @@ namespace GitHubAction.UnitTest
             // Then
             Assert.AreEqual(3, exitCode);
 
-            _githubPresenterMock.Verify(p => p.PresentInvalidArguments());
+            _outputPresenterMock.Verify(p => p.PresentInvalidArguments());
 
             _packagePresenterMock.VerifyNoOtherCalls();
             _packageServiceMock.VerifyNoOtherCalls();
-            _githubPresenterMock.VerifyNoOtherCalls();
+            _outputPresenterMock.VerifyNoOtherCalls();
         }
 
         public static bool compareLocalPackageConfig(LocalPackageConfig expected, LocalPackageConfig actual)
         {
             return expected.PackageName == actual.PackageName
                    && expected.Version == actual.Version
-                   && expected.ConvertedSolutionWorkingDirectory.Name == actual.ConvertedSolutionWorkingDirectory.Name
                    && expected.SolutionFile.FullName == actual.SolutionFile.FullName
-                   && expected.Type == actual.Type;
+                   && expected.Type == actual.Type
+                   && expected.SourceUri?.AbsolutePath == actual.SourceUri?.AbsolutePath;
         }
     }
 }

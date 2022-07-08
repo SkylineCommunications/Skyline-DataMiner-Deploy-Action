@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Xml;
 using Package.Builder.Exceptions;
 using Package.Domain.Enums;
@@ -13,12 +14,8 @@ namespace Package.Builder
         public async Task<CreatedPackage> CreatePackageAsync(
             LocalPackageConfig localPackageConfig)
         {
-            var githubServerUrl = new Uri(Environment.GetEnvironmentVariable("GITHUB_SERVER_URL")!);
-            var repository = Environment.GetEnvironmentVariable("GITHUB_REPOSITORY")!;
-            var sourceUrl = new Uri(githubServerUrl, repository);
-
             var convertedFilesDirectory =
-                new DirectoryInfo(Path.Combine(localPackageConfig.ConvertedSolutionWorkingDirectory.FullName, "__SLC_CONVERTED__"));
+                new DirectoryInfo(Path.Combine(Environment.CurrentDirectory, "__SLC_CONVERTED__"));
 
             if (localPackageConfig.Type != SolutionType.DmScript)
             {
@@ -29,21 +26,21 @@ namespace Package.Builder
             {
                 await ConvertAutomationScriptSolutionAsync(localPackageConfig.SolutionFile, convertedFilesDirectory);
 
-                var filesInConvertedDirectory = convertedFilesDirectory.GetFiles();
-                foreach (var file in filesInConvertedDirectory)
+                if(localPackageConfig.SourceUri != null)
                 {
-                    var doc = new XmlDocument();
-                    doc.Load(file.FullName);
-                    var root = doc.DocumentElement!;
-                    var sourceUrlNode = doc.CreateElement("ExternalSourceUrl", root.NamespaceURI);
-                    sourceUrlNode.InnerText = sourceUrl.AbsoluteUri;
-                    root.AppendChild(sourceUrlNode);
-                    doc.Save(file.FullName);
+                    var filesInConvertedDirectory = convertedFilesDirectory.GetFiles();
+                    foreach (var file in filesInConvertedDirectory)
+                    {
+                        var doc = new XmlDocument();
+                        doc.Load(file.FullName);
+                        var root = doc.DocumentElement!;
+                        var sourceUrlNode = doc.CreateElement("ExternalSourceUrl", root.NamespaceURI);
+                        sourceUrlNode.InnerText = localPackageConfig.SourceUri.AbsoluteUri;
+                        root.AppendChild(sourceUrlNode);
+                        doc.Save(file.FullName);
+                    }
                 }
-
-                var dmappPackage = await BuildDmappPackageForAutomationAsync(
-                    localPackageConfig.ConvertedSolutionWorkingDirectory,
-                    localPackageConfig.PackageName,
+                var dmappPackage = await BuildDmappPackageForAutomationAsync(localPackageConfig.PackageName,
                     localPackageConfig.Version);
 
                 return new CreatedPackage(
@@ -77,7 +74,6 @@ namespace Package.Builder
         /// <summary>
         /// Builds a DataMiner Application package.
         /// </summary>
-        /// <param name="convertedSolutionWorkingDirectory">The working directory containing the converted solution files in a folder with name '__SLC_CONVERTED__'.</param>
         /// <param name="packageName">The name of the package.</param>
         /// <param name="version">The version of the package.</param>
         /// <param name="installScriptInfo"></param>
@@ -85,23 +81,21 @@ namespace Package.Builder
         /// <exception cref="ArgumentNullException">Arguments cannot be null.</exception>
         /// <returns></returns>
         /// <exception cref="CreatePackageException">When an exception is encountered building the package.</exception>
-        private static async Task<FileInfo> BuildDmappPackageForAutomationAsync(
-            DirectoryInfo convertedSolutionWorkingDirectory,
-            string packageName,
+        private static async Task<FileInfo> BuildDmappPackageForAutomationAsync(string packageName,
             string version)
         {
-            if (convertedSolutionWorkingDirectory == null)
-                throw new ArgumentNullException(nameof(convertedSolutionWorkingDirectory));
+            var workingDirectory = new DirectoryInfo(Environment.CurrentDirectory);
+
             if (packageName == null) throw new ArgumentNullException(nameof(packageName));
             if (version == null) throw new ArgumentNullException(nameof(version));
-            if (!convertedSolutionWorkingDirectory.Exists) 
-                throw new ArgumentException("Directory not found: " + nameof(convertedSolutionWorkingDirectory));
+            if (!workingDirectory.Exists) 
+                throw new ArgumentException("Directory not found: " + nameof(workingDirectory));
 
             var convertedFilesDirectory =
-                new DirectoryInfo(Path.Combine(convertedSolutionWorkingDirectory.FullName, "__SLC_CONVERTED__"));
+                new DirectoryInfo(Path.Combine(workingDirectory.FullName, "__SLC_CONVERTED__"));
 
             if (!convertedFilesDirectory.Exists)
-                throw new ArgumentException("Directory "+ nameof(convertedSolutionWorkingDirectory) + " should contain a  '__SLC_CONVERTED__' directory.");
+                throw new ArgumentException("Directory "+ nameof(workingDirectory) + " should contain a  '__SLC_CONVERTED__' directory.");
 
             try
             {
@@ -110,7 +104,7 @@ namespace Package.Builder
 
                 await Skyline.SystemEngineering.CiCd.Tools.Program.Main(new[]
                 {
-                    convertedSolutionWorkingDirectory.FullName,
+                    workingDirectory.FullName,
                     packageName,
                     "/",
                     "/",

@@ -6,7 +6,7 @@ using GitHubAction.Presenters;
 namespace GitHubAction.Factories.Impl;
 public class InputFactory : IInputFactory
 {
-    internal static List<string> ValidArgs = new() { InputArgurments.ApiKey, InputArgurments.PackageName, InputArgurments.SolutionPath, InputArgurments.Version, InputArgurments.Timeout, InputArgurments.Stage, InputArgurments.ArtifactId };
+    internal static List<string> ValidArgs = new() { InputArgurments.ApiKey, InputArgurments.PackageName, InputArgurments.SolutionPath, InputArgurments.Version, InputArgurments.Timeout, InputArgurments.Stage, InputArgurments.ArtifactId, InputArgurments.BasePath };
     private readonly IInputFactoryPresenter _presenter;
     public InputFactory( IInputFactoryPresenter presenter)
     {
@@ -42,30 +42,30 @@ public class InputFactory : IInputFactory
     public Inputs? SerializeArguments(Dictionary<string, string> givenArgs)
     {
         var argumentsAreValid = true;
-        string apiKey = "";
-        string stageString = "";
-        string timeOutString = "";
-        string solutionPath = "";
-        string packageName = "";
-        string version = "";
-        string artifactId = "";
-        try
-        {
-            apiKey = givenArgs[InputArgurments.ApiKey];
-            stageString = givenArgs[InputArgurments.Stage];
-            timeOutString = givenArgs[InputArgurments.Timeout];
-            solutionPath = givenArgs[InputArgurments.SolutionPath];
-            packageName = givenArgs[InputArgurments.PackageName];
-            version = givenArgs[InputArgurments.Version];
-            artifactId = givenArgs[InputArgurments.ArtifactId];
-        }
-        catch (KeyNotFoundException ex)
-        {
-            _presenter.PresentKeyNotFound(ex.Message);
-        }
 
-        
-        
+        if (!givenArgs.TryGetValue(InputArgurments.ApiKey, out var apiKey))
+            _presenter.PresentKeyNotFound($"Argument {InputArgurments.ApiKey} not found");
+
+        if (!givenArgs.TryGetValue(InputArgurments.Stage, out var stageString))
+            _presenter.PresentKeyNotFound($"Argument {InputArgurments.Stage} not found");
+
+        if (!givenArgs.TryGetValue(InputArgurments.Timeout, out var timeOutString))
+            _presenter.PresentKeyNotFound($"Argument {InputArgurments.Timeout} not found");
+
+        if (!givenArgs.TryGetValue(InputArgurments.BasePath, out var basePath))
+            _presenter.PresentKeyNotFound($"Argument {InputArgurments.BasePath} not found");
+
+        if (!givenArgs.TryGetValue(InputArgurments.SolutionPath, out var solutionPath))
+            _presenter.PresentKeyNotFound($"Argument {InputArgurments.SolutionPath} not found");
+
+        if (!givenArgs.TryGetValue(InputArgurments.PackageName, out var packageName))
+            _presenter.PresentKeyNotFound($"Argument {InputArgurments.PackageName} not found");
+
+        if (!givenArgs.TryGetValue(InputArgurments.Version, out var version))
+            _presenter.PresentKeyNotFound($"Argument {InputArgurments.Version} not found");
+
+        if (!givenArgs.TryGetValue(InputArgurments.ArtifactId, out var artifactId))
+            _presenter.PresentKeyNotFound($"Argument {InputArgurments.ArtifactId} not found");
 
         if (!ValidateArgumentNotEmpty(InputArgurments.Stage, stageString)) return null;
         if (!ValidateArgumentNotEmpty(InputArgurments.ApiKey, apiKey)) return null;
@@ -92,11 +92,15 @@ public class InputFactory : IInputFactory
 
                 if (!argumentsAreValid) return null;
 
+                if(!string.IsNullOrEmpty(basePath))
+                    solutionPath = Path.Combine(basePath, solutionPath);
+
                 return new Inputs()
                 {
                     ApiKey = apiKey,
                     PackageName = packageName,
                     SolutionPath = solutionPath,
+                    BasePath = basePath,
                     Stage = stage,
                     TimeOut = timeOut,
                     Version = version
@@ -120,7 +124,7 @@ public class InputFactory : IInputFactory
     }
 
 
-    private bool ValidateArgumentNotEmpty(string key, string value)
+    private bool ValidateArgumentNotEmpty(string key, string? value)
     {
         if (string.IsNullOrWhiteSpace(value))
         {
@@ -131,7 +135,7 @@ public class InputFactory : IInputFactory
         return true;
     }
 
-    private bool ValidateVersion(string key, string version)
+    private bool ValidateVersion(string key, string? version)
     {
         var versionRegex = new Regex("^\\d+\\.\\d+\\.\\d+$"); //validate format
         if (!versionRegex.IsMatch(version))
@@ -143,7 +147,7 @@ public class InputFactory : IInputFactory
         return true;
     }
 
-    private bool ValidateTimeout(string timeOutInSecondsString, out TimeSpan timeout)
+    private bool ValidateTimeout(string? timeOutInSecondsString, out TimeSpan timeout)
     {
 
         if (!int.TryParse(timeOutInSecondsString, out int timeOutInSeconds))
