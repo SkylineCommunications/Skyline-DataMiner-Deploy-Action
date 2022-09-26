@@ -81,6 +81,8 @@ jobs:
           timeout: '300'
 ```
 
+### Seperate stages
+
 ```yaml
 on: [push]
 
