@@ -2,12 +2,12 @@
 
 public class CreatedPackage
 {
-    public FileInfo Package { get; }
+    public byte[] Package { get; }
     public string Name { get; } 
     public string Type { get; } 
     public string Version { get; }
 
-    public CreatedPackage(FileInfo package, string name, string type, string version)
+    public CreatedPackage(byte[] package, string name, string type, string version)
     {
         Package = package;
         Name = name;

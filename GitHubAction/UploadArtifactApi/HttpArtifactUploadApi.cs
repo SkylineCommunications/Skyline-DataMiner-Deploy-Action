@@ -14,8 +14,8 @@ public class HttpArtifactUploadApi : IArtifactUploadApi, IDisposable
         _httpClient = httpClient;
     }
 
-    public async Task<PrivateArtifactModel> ArtifactUploadV10PrivateArtifactPostAsync(
-        FileStream fileStream, 
+    public async Task<PrivateArtifactModel> ArtifactUploadV11PrivateArtifactPostAsync(
+        byte[] package, 
         string name, 
         string version, 
         string contentType, 
@@ -27,7 +27,7 @@ public class HttpArtifactUploadApi : IArtifactUploadApi, IDisposable
         formData.Add(new StringContent(name), "name"); 
         formData.Add(new StringContent(version), "version");
         formData.Add(new StringContent(contentType), "contentType");
-        formData.Add(new StreamContent(fileStream), "file", Path.GetFileName(fileStream.Name));
+        formData.Add(new ByteArrayContent(package), "file");
 
         var response = await _httpClient.PostAsync(UploadPath, formData, cancellationToken);
 
