@@ -8,9 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Import\" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="Skyline.DataMiner.CICD.Assemblers.Automation" Version="1.45440.32-ExtractRemainingStuff.32" />
-    <PackageReference Include="Skyline.DataMiner.CICD.DMApp.Automation" Version="1.45440.32-ExtractRemainingStuff.32" />
   </ItemGroup>
 
   <ItemGroup>
@@ -25,5 +27,11 @@
       <HintPath>Import\DmAppPackageCreator\DmAppPackageCreator.dll</HintPath>
     </Reference>
   </ItemGroup>
+	
+	<ItemGroup>
+		<None Update="Import\**">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
 
 </Project>

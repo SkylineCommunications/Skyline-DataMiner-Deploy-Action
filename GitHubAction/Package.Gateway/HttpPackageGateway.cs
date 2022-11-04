@@ -29,8 +29,10 @@ public class HttpPackageGateway : IPackageGateway
     {
         try
         {
-            var res = await _artifactUploadApi.ArtifactUploadV11PrivateArtifactPostAsync(
-                createdPackage.Package,
+            await using var fileStream = createdPackage.Package.OpenRead();
+
+            var res = await _artifactUploadApi.ArtifactUploadV10PrivateArtifactPostAsync(
+                fileStream,
                 createdPackage.Name,
                 createdPackage.Version,
                 createdPackage.Type,

@@ -100,7 +100,7 @@ namespace GitHubAction.UnitTest
             Expression<Func<IPackageService, Task<CreatedPackage>>> createPackageAsync = s =>
                 s.CreatePackageAsync(It.Is<LocalPackageConfig>(config => compareLocalPackageConfig(localPackageConfig, config)));
 
-            var createdPackage = new CreatedPackage(new byte[0], "name", "type", "version");
+            var createdPackage = new CreatedPackage(new FileInfo("something.txt"), "name", "type", "version");
 
             _packageServiceMock
                 .Setup(createPackageAsync)
@@ -222,7 +222,7 @@ namespace GitHubAction.UnitTest
             Expression<Func<IPackageService, Task<CreatedPackage>>> createPackageAsync = s =>
                 s.CreatePackageAsync(It.Is<LocalPackageConfig>(config => compareLocalPackageConfig(localPackageConfig, config)));
 
-            var createdPackage = new CreatedPackage(new byte[0], "name", "type", "version");
+            var createdPackage = new CreatedPackage(new FileInfo("something.txt"), "name", "type", "version");
 
             _packageServiceMock
                 .Setup(createPackageAsync)
@@ -419,7 +419,7 @@ namespace GitHubAction.UnitTest
             Expression<Func<IPackageService, Task<CreatedPackage>>> createPackageAsync = s =>
                 s.CreatePackageAsync(It.Is<LocalPackageConfig>(config => compareLocalPackageConfig(localPackageConfig, config)));
 
-            var createdPackage = new CreatedPackage(new byte[0], "name", "type", "version");
+            var createdPackage = new CreatedPackage(new FileInfo("something.txt"), "name", "type", "version");
 
             _packageServiceMock
                 .Setup(createPackageAsync)
@@ -542,7 +542,7 @@ namespace GitHubAction.UnitTest
             Expression<Func<IPackageService, Task<CreatedPackage>>> createPackageAsync = s =>
                 s.CreatePackageAsync(It.Is<LocalPackageConfig>(config => compareLocalPackageConfig(localPackageConfig, config)));
 
-            var createdPackage = new CreatedPackage(new byte[0], "name", "type", "version");
+            var createdPackage = new CreatedPackage(new FileInfo("something.txt"), "name", "type", "version");
 
             _packageServiceMock
                 .Setup(createPackageAsync)
@@ -672,7 +672,7 @@ namespace GitHubAction.UnitTest
             Expression<Func<IPackageService, Task<CreatedPackage>>> createPackageAsync = s =>
                 s.CreatePackageAsync(It.Is<LocalPackageConfig>(config => compareLocalPackageConfig(localPackageConfig, config)));
 
-            var createdPackage = new CreatedPackage(new byte[0], "name", "type", "version");
+            var createdPackage = new CreatedPackage(new FileInfo("something.txt"), "name", "type", "version");
 
             _packageServiceMock
                 .Setup(createPackageAsync)
@@ -801,7 +801,7 @@ namespace GitHubAction.UnitTest
             Expression<Func<IPackageService, Task<CreatedPackage>>> createPackageAsync = s =>
                 s.CreatePackageAsync(It.Is<LocalPackageConfig>(config => compareLocalPackageConfig(localPackageConfig, config)));
 
-            var createdPackage = new CreatedPackage(new byte[0], "name", "type", "version");
+            var createdPackage = new CreatedPackage(new FileInfo("something.txt"), "name", "type", "version");
 
             _packageServiceMock
                 .Setup(createPackageAsync)
@@ -929,7 +929,7 @@ namespace GitHubAction.UnitTest
             Expression<Func<IPackageService, Task<CreatedPackage>>> createPackageAsync = s =>
                 s.CreatePackageAsync(It.Is<LocalPackageConfig>(config => compareLocalPackageConfig(localPackageConfig, config)));
 
-            var createdPackage = new CreatedPackage(new byte[0], "name", "type", "version");
+            var createdPackage = new CreatedPackage(new FileInfo("something.txt"), "name", "type", "version");
 
             _packageServiceMock
                 .Setup(createPackageAsync)
@@ -1038,7 +1038,7 @@ namespace GitHubAction.UnitTest
             Expression<Func<IPackageService, Task<CreatedPackage>>> createPackageAsync = s =>
                 s.CreatePackageAsync(It.Is<LocalPackageConfig>(config => compareLocalPackageConfig(localPackageConfig, config)));
 
-            var createdPackage = new CreatedPackage(new byte[0], "name", "type", "version");
+            var createdPackage = new CreatedPackage(new FileInfo("something.txt"), "name", "type", "version");
 
             _packageServiceMock
                 .Setup(createPackageAsync)
@@ -1146,7 +1146,7 @@ namespace GitHubAction.UnitTest
             Expression<Func<IPackageService, Task<CreatedPackage>>> createPackageAsync = s =>
                 s.CreatePackageAsync(It.Is<LocalPackageConfig>(config => compareLocalPackageConfig(localPackageConfig, config)));
 
-            var createdPackage = new CreatedPackage(new byte[0], "name", "type", "version");
+            var createdPackage = new CreatedPackage(new FileInfo("something.txt"), "name", "type", "version");
 
             _packageServiceMock
                 .Setup(createPackageAsync)
@@ -1256,7 +1256,7 @@ namespace GitHubAction.UnitTest
             Expression<Func<IPackageService, Task<CreatedPackage>>> createPackageAsync = s =>
                 s.CreatePackageAsync(It.Is<LocalPackageConfig>(config => compareLocalPackageConfig(localPackageConfig, config)));
 
-            var createdPackage = new CreatedPackage(new byte[0], "name", "type", "version");
+            var createdPackage = new CreatedPackage(new FileInfo("something.txt"), "name", "type", "version");
 
             _packageServiceMock
                 .Setup(createPackageAsync)
@@ -1350,7 +1350,7 @@ namespace GitHubAction.UnitTest
             Expression<Func<IPackageService, Task<CreatedPackage>>> createPackageAsync = s =>
                 s.CreatePackageAsync(It.Is<LocalPackageConfig>(config => compareLocalPackageConfig(localPackageConfig, config)));
 
-            var createdPackage = new CreatedPackage(new byte[0], "name", "type", "version");
+            var createdPackage = new CreatedPackage(new FileInfo("something.txt"), "name", "type", "version");
 
             _packageServiceMock
                 .Setup(createPackageAsync)

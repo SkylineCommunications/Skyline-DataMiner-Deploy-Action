@@ -45,7 +45,7 @@ namespace Package.Application.UnitTest
             Expression<Func<IPackageBuilder, Task<CreatedPackage>>> createPackageAsync = s =>
                 s.CreatePackageAsync(localPackageConfig);
 
-            var createdPackage = new CreatedPackage(new byte[0], "name", "type", "version");
+            var createdPackage = new CreatedPackage(new FileInfo("something.txt"), "name", "type", "version");
             _packageBuilderMock
                 .Setup(createPackageAsync)
                 .ReturnsAsync(createdPackage);
@@ -64,7 +64,7 @@ namespace Package.Application.UnitTest
         public async Task UploadPackage_HappyFlow()
         {
             // Given
-            var createdPackage = new CreatedPackage(new byte[0], "name", "type", "version");
+            var createdPackage = new CreatedPackage(new FileInfo("something.txt"), "name", "type", "version");
             var key = "key";
 
             Expression<Func<IPackageGateway, Task<UploadedPackage>>> uploadPackageAsync = s =>
