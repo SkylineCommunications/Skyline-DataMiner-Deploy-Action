@@ -8,6 +8,8 @@ using Package.Domain.Exceptions;
 using Package.Domain.Models;
 using Package.Domain.Services;
 
+using Skyline.DataMiner.CICD.FileSystem;
+
 namespace GitHubAction
 {
     public class GitHubAction
@@ -50,7 +52,6 @@ namespace GitHubAction
             }
 
             var sourceUri = _sourceUriService.GetSourceUri();
-
             UploadedPackage? uploadedPackage = null;
 
             _outputPathProvider.BasePath = inputs.BasePath ?? Directory.GetCurrentDirectory();
@@ -65,7 +66,8 @@ namespace GitHubAction
                         inputs.PackageName!,
                         inputs.Version!,
                         SolutionType.DmScript,
-                        sourceUri);
+                        sourceUri,
+                        inputs.BuildNumber!);
 
                     var createdPackage = await CreatePackageAsync(localPackageConfig);
                     if (createdPackage == null) return 4;

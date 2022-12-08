@@ -14,6 +14,8 @@ using Package.Gateway;
 using Serilog;
 using Serilog.Filters;
 
+using Skyline.DataMiner.CICD.FileSystem;
+
 namespace GitHubAction.Console;
 
 public class Program
@@ -73,6 +75,7 @@ public class Program
                 services.AddScoped<IPackageService, PackageService>();
                 services.AddScoped<IPackageGateway, HttpPackageGateway>();
                 services.AddScoped<IPackageBuilder, PackageBuilder>();
+                services.AddScoped<IFileSystem, FileSystem>();
                 services.AddScoped<IInputFactory, InputFactory>();
                 services.AddScoped<IInputFactoryPresenter, InputFactoryPresenter>();
                 services.BuildServiceProvider();

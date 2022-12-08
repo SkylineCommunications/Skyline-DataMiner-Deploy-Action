@@ -1,16 +1,21 @@
 ﻿using System.Globalization;
 using System.Text.RegularExpressions;
+
 using GitHubAction.Domain.Entities;
 using GitHubAction.Presenters;
+
+using Skyline.DataMiner.CICD.FileSystem;
 
 namespace GitHubAction.Factories.Impl;
 public class InputFactory : IInputFactory
 {
-    internal static List<string> ValidArgs = new() { InputArgurments.ApiKey, InputArgurments.PackageName, InputArgurments.SolutionPath, InputArgurments.Version, InputArgurments.Timeout, InputArgurments.Stage, InputArgurments.ArtifactId, InputArgurments.BasePath };
+    internal static List<string> ValidArgs = new() { InputArgurments.ApiKey, InputArgurments.PackageName, InputArgurments.SolutionPath, InputArgurments.Version, InputArgurments.Timeout, InputArgurments.Stage, InputArgurments.ArtifactId, InputArgurments.BasePath, InputArgurments.BuildNumber };
     private readonly IInputFactoryPresenter _presenter;
-    public InputFactory( IInputFactoryPresenter presenter)
+    private readonly IFileSystem _fileSystem;
+    public InputFactory(IInputFactoryPresenter presenter, IFileSystem fileSystem)
     {
         _presenter = presenter;
+        _fileSystem = fileSystem;
     }
 
     public Inputs? ParseAndValidateInputs(string[] args)
@@ -61,8 +66,11 @@ public class InputFactory : IInputFactory
         if (!givenArgs.TryGetValue(InputArgurments.PackageName, out var packageName))
             _presenter.PresentKeyNotFound($"Argument {InputArgurments.PackageName} not found");
 
-        if (!givenArgs.TryGetValue(InputArgurments.Version, out var version))
-            _presenter.PresentKeyNotFound($"Argument {InputArgurments.Version} not found");
+
+        bool isVersionPresent = givenArgs.TryGetValue(InputArgurments.Version, out var version);
+        bool isBuildNumberPresent = givenArgs.TryGetValue(InputArgurments.BuildNumber, out var buildNumber);
+        if (!isVersionPresent && !isBuildNumberPresent)
+            _presenter.PresentKeyNotFound($"Argument {InputArgurments.Version} or {InputArgurments.BuildNumber} not found");
 
         if (!givenArgs.TryGetValue(InputArgurments.ArtifactId, out var artifactId))
             _presenter.PresentKeyNotFound($"Argument {InputArgurments.ArtifactId} not found");
@@ -83,27 +91,46 @@ public class InputFactory : IInputFactory
             case Stage.All:
             case Stage.Upload:
                 argumentsAreValid &= ValidateArgumentNotEmpty(InputArgurments.SolutionPath, solutionPath);
+                string workSpace = _fileSystem.File.GetParentDirectory(solutionPath);
+                _presenter.PresentLogging("Workspace: "+ workSpace);
+                _fileSystem.Directory.AllowWritesOnDirectory(workSpace);
+
+                if (solutionPath!= null && !_fileSystem.File.Exists(solutionPath))
+                {
+                    _presenter.PresentSolutionNotFound(solutionPath);
+                    argumentsAreValid &= false;
+                }
+
                 argumentsAreValid &= ValidateArgumentNotEmpty(InputArgurments.PackageName, packageName);
-                argumentsAreValid &= ValidateArgumentNotEmpty(InputArgurments.Version, version);
+
+                if(String.IsNullOrWhiteSpace(version) && String.IsNullOrWhiteSpace(buildNumber))
+                {
+                    _presenter.PresentMissingArgument(InputArgurments.Version + " or " + InputArgurments.BuildNumber);
+                    argumentsAreValid &= false;
+                }
 
                 if (!argumentsAreValid) return null;
 
-                argumentsAreValid &= ValidateVersion(InputArgurments.Version, version);
+                if(isVersionPresent)
+                    argumentsAreValid &= ValidateVersion(InputArgurments.Version, version);
 
                 if (!argumentsAreValid) return null;
 
-                if(!string.IsNullOrEmpty(basePath))
+                if (!string.IsNullOrEmpty(basePath))
                     solutionPath = Path.Combine(basePath, solutionPath);
+
+                string cleanPackageName = CleanPackageName(packageName);
 
                 return new Inputs()
                 {
                     ApiKey = apiKey,
-                    PackageName = packageName,
+                    PackageName = cleanPackageName,
                     SolutionPath = solutionPath,
                     BasePath = basePath,
                     Stage = stage,
                     TimeOut = timeOut,
-                    Version = version
+                    Version = version,
+                    BuildNumber = buildNumber
                 };
             case Stage.Deploy:
                 argumentsAreValid &= ValidateArgumentNotEmpty(InputArgurments.ArtifactId, artifactId);
@@ -123,6 +150,15 @@ public class InputFactory : IInputFactory
         }
     }
 
+    private string CleanPackageName(string packageName)
+    {
+        string cleanPackageName = StringExtensions.Replace(packageName, new char[] {  '\"', '<', '>', '|', '\0', (char)1, (char)2, (char)3, (char)4, (char)5, (char)6, (char)7, (char)8, (char)9, (char)10,
+            (char)11, (char)12, (char)13, (char)14, (char)15, (char)16, (char)17, (char)18, (char)19, (char)20,
+            (char)21, (char)22, (char)23, (char)24, (char)25, (char)26, (char)27, (char)28, (char)29, (char)30,
+            (char)31, ':', '*', '?', '\\', '/' }, '_');
+
+        return cleanPackageName;
+    }
 
     private bool ValidateArgumentNotEmpty(string key, string? value)
     {
@@ -137,8 +173,7 @@ public class InputFactory : IInputFactory
 
     private bool ValidateVersion(string key, string? version)
     {
-        var versionRegex = new Regex("^\\d+\\.\\d+\\.\\d+$"); //validate format
-        if (!versionRegex.IsMatch(version))
+        if(version == null || (version != "" && !Regex.IsMatch(version, "[0-9]+.[0-9]+.[0-9]+(-CU[0-9]+)?") && !Regex.IsMatch(version, "[0-9]+.[0-9]+.[0-9]+.[0-9]")))
         {
             _presenter.PresentInvalidVersionFormat();
             return false;

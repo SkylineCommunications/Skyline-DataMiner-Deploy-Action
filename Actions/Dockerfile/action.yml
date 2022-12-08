@@ -1,38 +1,40 @@
 name: 'Skyline DataMiner Deploy Action'
-description: 'The action builds a DataMiner Application Package from your solution and deploys it to your cloud connected DataMiner System.'
+description: 'The action builds an artifact from your solution and deploys it to your cloud connected DataMiner System.'
 branding:
   icon: 'download-cloud'  
   color: 'gray-dark'
 env:
-    working-directory: ./GitHubAction/Package.Builder 
+    working-directory: ./GitHubAction/Package.Builder
 inputs:
   api-key:  # id of input
-    description: 'The API-key generated in the DCP Admin app as authentication for a certain DataMiner System. E.g. g597e77412e34297b827c2570a8fa2bc'
+    description: 'The API-key generated in the DCP Admin app as authentication for a certain DataMiner System, saved in a GitHub secret'
     required: true
   solution-path:
-    description: 'The path to the .sln file of the solution. Atm only DataMiner Automation Script solutions are supported. E.g ./Example/Script.sln. Required for stages: All and Build.' 
+    description: 'The path to the .sln file of the solution. Atm only DataMiner Automation Script solutions are supported. E.g ./Example/Script.sln. Required for stages: All and Upload.'
     required: false
-  package-name:
-    description: 'The chosen name of the package. E.g. MyPackageName.  Required for stages: All, Build and Publish.'
+  artifact-name:
+    description: 'The chosen name of the artifact. E.g. MyPackageName.  Required for stages: All, Upload and Deploy.'
     required: false
   version:
-    description: 'The version number for the package (format A.B.C). E.g. 1.0.1.  Required for stages: All, Build and Publish.'
+    description: 'The version number for the artifact. Only required for a release run. (format A.B.C). E.g. 1.0.1. Required for stages Upload and All if no build number was provided instead.'
     required: false
   timeout:
     description: 'The maximum time spend on waiting for the deployment to finish in seconds. E.g. 900.'
     required: false
     default: "900"
   stage:
-    description: 'The specific stage to run in this action. Possible values are: Build, Publish and Deploy. All will run all 3 stages consecutively.'
+    description: 'The specific stage to run in this action. Possible values are: All, Upload, and Deploy. All will run all 3 stages consecutively.'
     required: false
     default: "All"
   artifact-id:
-    description: 'The artifact Id of the package that you would like to deploy'
+    description: 'The artifact Id of the artifact that you would like to deploy'
     required: false
-
+  build-number:
+    description: 'The build number of a workflow run. Only required for a development run. Required for stages Upload and All if no version was provided instead.'
+    required: false
 outputs:
   artifact-id:
-    description: 'The artifact Id of the package has been published'
+    description: 'The artifact Id of the artifact has been uploaded'
   
 runs:
   using: 'docker'
@@ -42,8 +44,8 @@ runs:
     - ${{ inputs.api-key }}
     - --solution-path
     - ${{ inputs.solution-path }}
-    - --package-name
-    - ${{ inputs.package-name }}
+    - --artifact-name
+    - ${{ inputs.artifact-name }}
     - --version
     - ${{ inputs.version }}
     - --timeout
@@ -52,3 +54,7 @@ runs:
     - ${{ inputs.stage }}
     - --artifact-id
     - ${{ inputs.artifact-id }}
+    - --build-number
+    - ${{ inputs.build-number }}
+
+

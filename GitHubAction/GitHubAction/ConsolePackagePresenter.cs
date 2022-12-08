@@ -50,6 +50,11 @@ public class ConsolePackagePresenter : IPackagePresenter
         _logger.LogInformation("Finished package upload!");
     }
 
+    public void PresentPackageCreationLogging(string line)
+    {
+        _logger.LogInformation(line);
+    }
+
     public void PresentStartingPackageDeployment()
     {
         _logger.LogInformation("Start package deployment...");

@@ -63,4 +63,14 @@
             throw new TimeoutException();
         }
     }
+
+	internal static class StringExtensions
+	{
+		public static string Replace(this string s, char[] charsToReplace, char replacementChar)
+		{
+			string[] temp;
+			temp = s.Split(charsToReplace, StringSplitOptions.RemoveEmptyEntries);
+			return String.Join(replacementChar, temp);
+		}
+	}
 }

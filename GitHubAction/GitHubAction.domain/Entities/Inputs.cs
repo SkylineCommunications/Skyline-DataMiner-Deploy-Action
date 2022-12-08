@@ -17,4 +17,6 @@ public class Inputs
     public string? Version { get; init; }
 
     public string? ArtifactId { get; init; }
+
+    public string? BuildNumber { get; init; }
 }

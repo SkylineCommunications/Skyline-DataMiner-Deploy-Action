@@ -1,6 +1,7 @@
 ﻿namespace Package.Builder
 {
     using System.Diagnostics;
+    using System.Text.RegularExpressions;
 
     using Package.Builder.Exceptions;
     using Package.Domain.Enums;
@@ -11,28 +12,53 @@
     using Skyline.DataMiner.CICD.DMApp.Common;
     using Skyline.DataMiner.CICD.Loggers;
 
-    public class TempLogger : ILogCollector
+    public class GitHubActionLogger : ILogCollector
     {
         public IList<string> Logging { get; }
+        public bool HasError { get; private set; }
+        private IPackagePresenter _presenter;
+
+        public GitHubActionLogger(IPackagePresenter presenter)
+        {
+            Logging = new List<string>();
+            HasError = false;
+            _presenter = presenter;
+        }
 
         public void ReportError(string error)
         {
-            // Do Nothing
+            HasError = true;
+            Logging.Add("ERROR: " + error);
         }
 
         public void ReportStatus(string status)
         {
-            // Do Nothing
+            Logging.Add("STATUS: " + status);
         }
 
         public void ReportWarning(string warning)
         {
-            // Do Nothing
+            Logging.Add("WARNING: " + warning);
+        }
+
+        public void SendToPresenter()
+        {
+            foreach (var line in Logging)
+            {
+                _presenter.PresentPackageCreationLogging(line);
+            }        
         }
     }
 
     public class PackageBuilder : IPackageBuilder
     {
+        IPackagePresenter _presenter;
+
+        public PackageBuilder(IPackagePresenter presenter)
+        {
+            _presenter = presenter;
+        }
+
         public async Task<CreatedPackage> CreatePackageAsync(
             LocalPackageConfig localPackageConfig)
         {
@@ -41,16 +67,53 @@
                 throw new UnsupportedSolutionException($"Solution of type {localPackageConfig.Type} is not supported.");
             }
 
-            var logger = new TempLogger();
-            DMAppVersion version = DMAppVersion.FromProtocolVersion(localPackageConfig.Version);
-            var dmappPackageCreator = PackageCreatorForAutomation.Factory.FromRepository(logger, Path.GetFullPath(localPackageConfig.SolutionFile.FullName), localPackageConfig.PackageName, version);
-            var dmappPackage = await dmappPackageCreator.CreateAsync();
+            var logger = new GitHubActionLogger(_presenter);
+            DMAppVersion version;
 
-            return new CreatedPackage(
-                dmappPackage,
-                localPackageConfig.PackageName,
-                localPackageConfig.Type.ToString(),
-                localPackageConfig.Version);
+            if (!String.IsNullOrWhiteSpace(localPackageConfig.Version))
+            {
+                if (Regex.IsMatch(localPackageConfig.Version, "[0-9]+.[0-9]+.[0-9]+(-CU[0-9]+)?"))
+                {
+                    version = DMAppVersion.FromDataMinerVersion(localPackageConfig.Version);
+                }
+                else
+                {
+                    version = DMAppVersion.FromProtocolVersion(localPackageConfig.Version);
+                }
+
+            }
+            else
+            {
+                // TODO: replace this again with commented line one upload API supports x.x.x-CUx version string.
+                //version = DMAppVersion.FromBuildNumber(Convert.ToInt32(localPackageConfig.BuildNumber));
+                version = DMAppVersion.FromDataMinerVersion("0.0." + localPackageConfig.BuildNumber);
+            }
+
+            // var dmappPackageCreator = AppPackageCreatorForAutomation.Factory.FromRepository(logger, Environment.GetEnvironmentVariable("GITHUB_WORKSPACE"), localPackageConfig.PackageName, version);
+            var dmappPackageCreator = AppPackageCreatorForAutomation.Factory.FromRepository(logger, localPackageConfig?.SolutionFile?.Directory?.FullName ?? "", localPackageConfig.PackageName, version);
+           
+            try
+            {
+                var dmappPackage = await dmappPackageCreator.CreateAsync();
+               var result = new CreatedPackage(
+                    dmappPackage,
+                    localPackageConfig.PackageName,
+                    localPackageConfig.Type.ToString(),
+                    version.ToString());       
+                logger.SendToPresenter();
+                if (logger.HasError)
+                {
+                    throw new InvalidOperationException("Failed to Create Package!");
+                }
+
+                return result;
+            }
+            catch (Exception e)
+            {
+                logger.ReportError("Exception during Dmapp Creation:" + e);
+                logger.SendToPresenter();
+                throw new InvalidOperationException("Failed to Create Package!");
+            }
         }
 
         /// <summary>

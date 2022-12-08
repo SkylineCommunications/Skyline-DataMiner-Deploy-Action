@@ -22,6 +22,7 @@ namespace Package.Domain.Services
         void PresentUnsupportedSolutionType();
         void PresentCouldNotFetchTheDeployedPackage();
         void PresentStartingPackageDeploymentFailed(DeployPackageException e);
+        void PresentPackageCreationLogging(string line);
         void PresentPackageDeploymentFailed(DeployedPackage deployedPackage);
     }
 }

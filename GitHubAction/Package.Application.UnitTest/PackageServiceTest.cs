@@ -22,7 +22,6 @@ namespace Package.Application.UnitTest
         {
             _packageGatewayMock = new Mock<IPackageGateway>();
             _packageBuilderMock = new Mock<IPackageBuilder>();
-
             _packageService = new PackageService(_packageGatewayMock.Object, _packageBuilderMock.Object);
         }
 

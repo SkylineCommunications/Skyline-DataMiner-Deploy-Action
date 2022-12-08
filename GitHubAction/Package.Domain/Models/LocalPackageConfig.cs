@@ -9,18 +9,21 @@ namespace Package.Domain.Models
         public string Version { get; }
         public SolutionType Type { get; }
         public Uri? SourceUri { get; }
+        public string BuildNumber { get; }
 
         public LocalPackageConfig(FileInfo solutionFile,
             string packageName,
             string version,
             SolutionType type,
-            Uri? sourceUri)
+            Uri? sourceUri,
+            string buildNumber = "")
         {
             SolutionFile = new FileInfo(solutionFile.FullName);
             PackageName = packageName;
             Version = version;
             Type = type;
             SourceUri = sourceUri;
+            BuildNumber = buildNumber;
         }
     }
 }

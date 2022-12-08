@@ -35,7 +35,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Package.Builder", "Package.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitHubAction.Domain", "GitHubAction.domain\GitHubAction.Domain.csproj", "{8B5C33E3-6ECF-42EA-9A05-10AC9C7478F3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitHubAction.Console.UnitTest", "GitHubAction.Console.UnitTest\GitHubAction.Console.UnitTest.csproj", "{21A15AB5-38A6-4E75-96A6-3FE67716EDE9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitHubAction.Console.UnitTest", "GitHubAction.Console.UnitTest\GitHubAction.Console.UnitTest.csproj", "{21A15AB5-38A6-4E75-96A6-3FE67716EDE9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

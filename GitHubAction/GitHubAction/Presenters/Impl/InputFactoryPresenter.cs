@@ -1,4 +1,5 @@
 ﻿using GitHubAction.Domain.Entities;
+
 using Microsoft.Extensions.Logging;
 
 namespace GitHubAction.Presenters.Impl;
@@ -55,5 +56,16 @@ public class InputFactoryPresenter : IInputFactoryPresenter
     public void PresentUnkownArgument(string key)
     {
         _logger.LogError("Unknown argument \"{key}\"", key);
+    }
+
+
+    public void PresentSolutionNotFound(string path)
+    {
+        _logger.LogError("Solution File does not exist: " + path);
+    }
+
+    public void PresentLogging(string message)
+    {
+        _logger.LogInformation(message);
     }
 }

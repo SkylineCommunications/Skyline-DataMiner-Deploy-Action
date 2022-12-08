@@ -9,21 +9,13 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="Skyline.DataMiner.CICD.Assemblers.Automation" Version="1.45440.32-ExtractRemainingStuff.32" />
-    <PackageReference Include="Skyline.DataMiner.CICD.DMApp.Automation" Version="1.45440.32-ExtractRemainingStuff.32" />
+    <PackageReference Include="Skyline.DataMiner.CICD.Assemblers.Automation" Version="1.0.0.1" />
+    <PackageReference Include="Skyline.DataMiner.CICD.DMApp.Automation" Version="1.0.0.1" />
+    <PackageReference Include="Skyline.DataMiner.CICD.FileSystem" Version="1.0.0.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Package.Domain\Package.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="AutomationScriptBuilder">
-      <HintPath>Import\SolutionConverter\AutomationScriptBuilder.dll</HintPath>
-    </Reference>
-    <Reference Include="DmAppPackageCreator">
-      <HintPath>Import\DmAppPackageCreator\DmAppPackageCreator.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>
