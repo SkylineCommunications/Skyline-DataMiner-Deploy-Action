@@ -19,7 +19,7 @@ inputs:
     description: 'The version number for the artifact. Only required for a release run. (format A.B.C). E.g. 1.0.1. Required for stages Upload and All if no build number was provided instead.'
     required: false
   timeout:
-    description: 'The maximum time spend on waiting for the deployment to finish in seconds. E.g. 900.'
+    description: 'The maximum time spent on waiting for the deployment to finish in seconds. E.g. 900.'
     required: false
     default: "900"
   stage:
@@ -34,7 +34,7 @@ inputs:
     required: false
 outputs:
   artifact-id:
-    description: 'The artifact Id if the artifact has been uploaded'
+    description: 'The artifact ID if the artifact has been uploaded'
   
 runs:
   using: 'docker'
