@@ -75,6 +75,10 @@ jobs:
       # To use this action, the repository must be checked out 
       - name: Checkout	
         uses: actions/checkout@v3
+	  - name: Set up NuGet
+        uses: nuget/setup-nuget@v1.1.1      
+      - name: NuGet restore solution
+        run: nuget restore "AutomationScript.sln" -OutputDirectory ${{ github.workspace }}/packages
       - name: Deploy the artifact on the DataMiner System step
         uses: SkylineCommunications/Skyline-DataMiner-Deploy-Action@v1
         id: deploy_artifact_step
@@ -101,6 +105,10 @@ jobs:
     steps:
       - name: Checkout	
         uses: actions/checkout@v3
+	  - name: Set up NuGet
+        uses: nuget/setup-nuget@v1.1.1      
+      - name: NuGet restore solution
+        run: nuget restore "AutomationScript.sln" -OutputDirectory ${{ github.workspace }}/packages
       - name: Deploy the artifact on the DataMiner System step
         uses: SkylineCommunications/Skyline-DataMiner-Deploy-Action@v1
         id: Build_and_upload_artifact_step
