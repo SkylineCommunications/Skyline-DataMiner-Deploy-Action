@@ -5,6 +5,8 @@ on:
   push:
     branches: ['main']
     tags: ['v[0-9]+.[0-9]+.[0-9]+']
+  release:
+    types: [published, edited]
 
 env:
   REGISTRY: ghcr.io
@@ -45,3 +47,12 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          
+      - name: Actions Tagger
+        if: github.ref_type == 'tag'
+        uses: Actions-R-Us/actions-tagger@v2.0.3
+        with:
+          # Whether or not to also publish a `latest` tag
+          publish_latest_tag: true
+          # Do you prefer creating major branches as opposed to major tags?
+          prefer_branch_releases: false
