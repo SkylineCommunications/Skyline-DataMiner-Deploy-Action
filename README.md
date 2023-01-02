@@ -75,7 +75,7 @@ jobs:
       # To use this action, the repository must be checked out 
       - name: Checkout	
         uses: actions/checkout@v3
-	  - name: Set up NuGet
+      - name: Set up NuGet
         uses: nuget/setup-nuget@v1.1.1      
       - name: NuGet restore solution
         run: nuget restore "AutomationScript.sln" -OutputDirectory ${{ github.workspace }}/packages
@@ -105,7 +105,7 @@ jobs:
     steps:
       - name: Checkout	
         uses: actions/checkout@v3
-	  - name: Set up NuGet
+      - name: Set up NuGet
         uses: nuget/setup-nuget@v1.1.1      
       - name: NuGet restore solution
         run: nuget restore "AutomationScript.sln" -OutputDirectory ${{ github.workspace }}/packages
