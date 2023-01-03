@@ -85,7 +85,7 @@ jobs:
         with:
           api-key: ${{ secrets.NAME_OF_YOUR_APIKEY_SECRET }}
           solution-path: './Example/Script.sln'
-          package-name: 'MyPackageName'
+          artifact-name: 'MyPackageName'
           version: '1.0.1'
           timeout: '300'
 ```
@@ -115,7 +115,7 @@ jobs:
         with:
           api-key: ${{ secrets.NAME_OF_YOUR_APIKEY_SECRET }}
           solution-path: './Example/Script.sln'
-          package-name: 'MyPackageName'
+          artifact-name: 'MyPackageName'
           version: '1.0.1'
           stage: Upload
 
