@@ -75,7 +75,7 @@ jobs:
       # To use this action, the repository must be checked out 
       - name: Checkout	
         uses: actions/checkout@v3
-	  - name: Set up NuGet
+      - name: Set up NuGet
         uses: nuget/setup-nuget@v1.1.1      
       - name: NuGet restore solution
         run: nuget restore "AutomationScript.sln" -OutputDirectory ${{ github.workspace }}/packages
@@ -85,7 +85,7 @@ jobs:
         with:
           api-key: ${{ secrets.NAME_OF_YOUR_APIKEY_SECRET }}
           solution-path: './Example/Script.sln'
-          artifact-name: 'MyPackageName'
+          artifact-name: 'MyArtifactName'
           version: '1.0.1'
           timeout: '300'
 ```
@@ -105,7 +105,7 @@ jobs:
     steps:
       - name: Checkout	
         uses: actions/checkout@v3
-	  - name: Set up NuGet
+      - name: Set up NuGet
         uses: nuget/setup-nuget@v1.1.1      
       - name: NuGet restore solution
         run: nuget restore "AutomationScript.sln" -OutputDirectory ${{ github.workspace }}/packages
@@ -115,7 +115,7 @@ jobs:
         with:
           api-key: ${{ secrets.NAME_OF_YOUR_APIKEY_SECRET }}
           solution-path: './Example/Script.sln'
-          artifact-name: 'MyPackageName'
+          artifact-name: 'MyArtifactName'
           version: '1.0.1'
           stage: Upload
 
