@@ -10,8 +10,8 @@ inputs:
     description: 'The API-key generated in the DCP Admin app as authentication for a certain DataMiner System, saved in a GitHub secret'
     required: true
   solution-path:
-    description: 'The path to the .sln file of the solution. Atm only DataMiner Automation Script solutions are supported. E.g ./Example/Script.sln. Required for stages: All and Upload.' 
-    required: false
+    description: 'The path to the .sln file of the solution. Atm only DataMiner Automation Script solutions are supported. E.g ./Example/AutomationScript.sln. Required for stages: All and Upload.' 
+    required: true
   artifact-name:
     description: 'The chosen name of the artifact. E.g. MyPackageName.  Required for stages: All, Upload and Deploy.'
     required: false

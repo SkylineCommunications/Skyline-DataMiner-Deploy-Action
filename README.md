@@ -26,7 +26,7 @@ This action currently only supports the creation of artifacts with Automation sc
 
 ### `solution-path`
 
-**Optional**. The path to the .sln file of the solution. At present, only DataMiner Automation Script solutions are supported. E.g. `'./Example/Script.sln'`. Required for stages `'Upload'` and `'All'`.
+**Required**. The path to the .sln file of the solution. At present, only DataMiner Automation Script solutions are supported. E.g. `'./Example/AutomationScript.sln'`. Required for stages `'Upload'` and `'All'`.
 
 ### `artifact-name`
 
@@ -84,7 +84,7 @@ jobs:
         id: deploy_artifact_step
         with:
           api-key: ${{ secrets.NAME_OF_YOUR_APIKEY_SECRET }}
-          solution-path: './Example/Script.sln'
+          solution-path: './Example/AutomationScript.sln'
           artifact-name: 'MyArtifactName'
           version: '1.0.1'
           timeout: '300'
@@ -114,7 +114,7 @@ jobs:
         id: Build_and_upload_artifact_step
         with:
           api-key: ${{ secrets.NAME_OF_YOUR_APIKEY_SECRET }}
-          solution-path: './Example/Script.sln'
+          solution-path: './Example/AutomationScript.sln'
           artifact-name: 'MyArtifactName'
           version: '1.0.1'
           stage: Upload
