@@ -38,7 +38,7 @@ outputs:
   
 runs:
   using: 'docker'
-  image: 'docker://ghcr.io/skylinecommunications/skyline-dataminer-deploy-action:1.0.12'
+  image: 'docker://ghcr.io/skylinecommunications/skyline-dataminer-deploy-action:1.0.14'
   args:
     - --api-key
     - ${{ inputs.api-key }}
