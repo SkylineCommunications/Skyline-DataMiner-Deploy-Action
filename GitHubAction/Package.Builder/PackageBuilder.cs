@@ -72,7 +72,7 @@
 
             if (!String.IsNullOrWhiteSpace(localPackageConfig.Version))
             {
-                if (Regex.IsMatch(localPackageConfig.Version, "[0-9]+.[0-9]+.[0-9]+(-CU[0-9]+)?"))
+                if (Regex.IsMatch(localPackageConfig.Version, "^[0-9]+.[0-9]+.[0-9]+(-CU[0-9]+)?$"))
                 {
                     version = DMAppVersion.FromDataMinerVersion(localPackageConfig.Version);
                 }
