@@ -107,7 +107,7 @@ namespace GitHubAction.UnitTest
                 .ReturnsAsync(createdPackage);
 
             Expression<Func<IPackageService, Task<UploadedPackage>>> uploadPackageAsync = s =>
-                s.UploadPackageAsync(It.IsAny<CreatedPackage>(), key);
+                s.UploadPackageAsync(It.IsAny<CreatedPackage>(), version, key);
 
             var uploadedPackage = new UploadedPackage(id);
 
@@ -229,7 +229,7 @@ namespace GitHubAction.UnitTest
                 .ReturnsAsync(createdPackage);
 
             Expression<Func<IPackageService, Task<UploadedPackage>>> uploadPackageAsync = s =>
-                s.UploadPackageAsync(It.IsAny<CreatedPackage>(), key);
+                s.UploadPackageAsync(It.IsAny<CreatedPackage>(), version, key);
 
             var uploadedPackage = new UploadedPackage(id);
 
@@ -426,7 +426,7 @@ namespace GitHubAction.UnitTest
                 .ReturnsAsync(createdPackage);
 
             Expression<Func<IPackageService, Task<UploadedPackage>>> uploadPackageAsync = s =>
-                s.UploadPackageAsync(It.IsAny<CreatedPackage>(), key);
+                s.UploadPackageAsync(It.IsAny<CreatedPackage>(), version, key);
 
             var uploadedPackage = new UploadedPackage(id);
 
@@ -549,7 +549,7 @@ namespace GitHubAction.UnitTest
                 .ReturnsAsync(createdPackage);
 
             Expression<Func<IPackageService, Task<UploadedPackage>>> uploadPackageAsync = s =>
-                s.UploadPackageAsync(It.IsAny<CreatedPackage>(), key);
+                s.UploadPackageAsync(It.IsAny<CreatedPackage>(), version, key);
 
             var uploadedPackage = new UploadedPackage(id);
 
@@ -679,7 +679,7 @@ namespace GitHubAction.UnitTest
                 .ReturnsAsync(createdPackage);
 
             Expression<Func<IPackageService, Task<UploadedPackage>>> uploadPackageAsync = s =>
-                s.UploadPackageAsync(It.IsAny<CreatedPackage>(), key);
+                s.UploadPackageAsync(It.IsAny<CreatedPackage>(), version, key);
 
             var uploadedPackage = new UploadedPackage(id);
 
@@ -808,7 +808,7 @@ namespace GitHubAction.UnitTest
                 .ReturnsAsync(createdPackage);
 
             Expression<Func<IPackageService, Task<UploadedPackage>>> uploadPackageAsync = s =>
-                s.UploadPackageAsync(It.IsAny<CreatedPackage>(), key);
+                s.UploadPackageAsync(It.IsAny<CreatedPackage>(), version, key);
 
             var uploadedPackage = new UploadedPackage(id);
 
@@ -937,7 +937,7 @@ namespace GitHubAction.UnitTest
 
             // Mocks
             Expression<Func<IPackageService, Task<UploadedPackage>>> uploadPackageAsync = s =>
-                s.UploadPackageAsync(It.IsAny<CreatedPackage>(), key);
+                s.UploadPackageAsync(It.IsAny<CreatedPackage>(), version, key);
 
             var uploadedPackage = new UploadedPackage(id);
 
@@ -1046,7 +1046,7 @@ namespace GitHubAction.UnitTest
 
             // Mocks
             Expression<Func<IPackageService, Task<UploadedPackage>>> uploadPackageAsync = s =>
-                s.UploadPackageAsync(It.IsAny<CreatedPackage>(), key);
+                s.UploadPackageAsync(It.IsAny<CreatedPackage>(), version, key);
 
             var uploadedPackage = new UploadedPackage(id);
 
@@ -1154,7 +1154,7 @@ namespace GitHubAction.UnitTest
 
             // Mocks
             Expression<Func<IPackageService, Task<UploadedPackage>>> uploadPackageAsync = s =>
-                s.UploadPackageAsync(It.IsAny<CreatedPackage>(), key);
+                s.UploadPackageAsync(It.IsAny<CreatedPackage>(), version, key);
 
             var uploadedPackage = new UploadedPackage(id);
 
@@ -1263,7 +1263,7 @@ namespace GitHubAction.UnitTest
                 .ReturnsAsync(createdPackage);
 
             Expression<Func<IPackageService, Task<UploadedPackage>>> uploadPackageAsync = s =>
-                s.UploadPackageAsync(It.IsAny<CreatedPackage>(), key);
+                s.UploadPackageAsync(It.IsAny<CreatedPackage>(), version, key);
 
             var ex = new UploadPackageException("this should be thrown in the test", new Exception("inner exception"));
 
@@ -1357,7 +1357,7 @@ namespace GitHubAction.UnitTest
                 .ReturnsAsync(createdPackage);
 
             Expression<Func<IPackageService, Task<UploadedPackage>>> uploadPackageAsync = s =>
-                s.UploadPackageAsync(It.IsAny<CreatedPackage>(), key);
+                s.UploadPackageAsync(It.IsAny<CreatedPackage>(), version, key);
 
             _packageServiceMock
                 .Setup(uploadPackageAsync)

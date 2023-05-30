@@ -25,14 +25,14 @@ public class HttpPackageGateway : IPackageGateway
         _deployArtifactApi = deployArtifactApi;
     }
 
-    public async Task<UploadedPackage> UploadPackageAsync(CreatedPackage createdPackage, string key)
+    public async Task<UploadedPackage> UploadPackageAsync(CreatedPackage createdPackage, string catalogVersion, string key)
     {
         try
         {
             var res = await _artifactUploadApi.ArtifactUploadV11PrivateArtifactPostAsync(
                 createdPackage.Package,
                 createdPackage.Name,
-                createdPackage.Version,
+                catalogVersion,
                 createdPackage.Type,
                 key,
                 default);

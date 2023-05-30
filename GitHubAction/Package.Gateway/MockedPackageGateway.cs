@@ -5,7 +5,7 @@ namespace Package.Gateway;
 
 public class MockedPackageGateway : IPackageGateway
 {
-    public Task<UploadedPackage> UploadPackageAsync(CreatedPackage createdPackage, string key)
+    public Task<UploadedPackage> UploadPackageAsync(CreatedPackage createdPackage, string catalogVersion, string key)
     {
         return Task.FromResult(new UploadedPackage(Guid.NewGuid().ToString()));
     }
