@@ -39,6 +39,10 @@ public class HttpArtifactUploadApi : IArtifactUploadApi, IDisposable
         formData.Add(new StringContent(contentType), "contentType");
         formData.Add(new StreamContent(fileStream), "file", Path.GetFileName(fileStream.Name));
 
+        string logInfo = $"--name {name} --version {version} --contentType {contentType} --file {Path.GetFileName(fileStream.Name)}";
+
+        _presenter.LogInformation("HTTP Post with info: " + logInfo);
+
         var response = await _httpClient.PostAsync(UploadPath, formData, cancellationToken);
 
         if (response.IsSuccessStatusCode)
