@@ -50,7 +50,7 @@ public class HttpPackageGateway : IPackageGateway
         }
         catch (Exception e)
         {
-            throw new UploadPackageException($"Couldn't upload the package. Error message: {e.Message}");
+            throw new UploadPackageException($"Couldn't upload the package. Error message: {e}");
         }
     }
 
@@ -63,7 +63,7 @@ public class HttpPackageGateway : IPackageGateway
         }
         catch (Exception e)
         {
-            throw new DeployPackageException($"Couldn't deploy the package {e.ToString()}", e);
+            throw new DeployPackageException($"Couldn't deploy the package {e}", e);
         }
 
         if (res.Response.IsSuccessStatusCode)
