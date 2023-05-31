@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+
 using Package.Builder;
 using Package.Domain.Exceptions;
 using Package.Domain.Models;
@@ -37,7 +38,7 @@ public class ConsolePackagePresenter : IPackagePresenter
 
     public void PresentPackageUploadFailed(UploadPackageException e)
     {
-        _logger.LogError("The package could not be uploaded.");
+        _logger.LogError("The package could not be uploaded. " + e);
     }
 
     public void PresentStartingPackageUpload()

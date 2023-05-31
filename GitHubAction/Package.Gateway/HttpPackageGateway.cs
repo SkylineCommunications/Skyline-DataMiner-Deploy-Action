@@ -31,7 +31,7 @@ public class HttpPackageGateway : IPackageGateway
     {
         try
         {
-            _packagePresenter.LogInformation("Calling Artifact Upload.");
+            _packagePresenter.LogInformation("Calling Artifact Upload");
             var res = await _artifactUploadApi.ArtifactUploadV11PrivateArtifactPostAsync(
                 createdPackage.Package,
                 createdPackage.Name,
