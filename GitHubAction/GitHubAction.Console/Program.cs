@@ -46,9 +46,9 @@ public class Program
         Host.CreateDefaultBuilder(args)
             .ConfigureServices((hostContext, services) =>
             {
+                services.AddScoped<IPackagePresenter, ConsolePackagePresenter>();
                 services.AddScoped<GitHubAction>();
                 services.AddHttpClient();
-                services.AddScoped<IPackagePresenter, ConsolePackagePresenter>();
                 services.AddSingleton<ApiOptions>(sp =>
                 {
                     var environment = Environment.GetEnvironmentVariable("Skyline-deploy-action-namespace");

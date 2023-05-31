@@ -2,6 +2,7 @@
 using System.Net;
 using Newtonsoft.Json;
 using Package.Domain.Services;
+using System.Text;
 
 namespace UploadArtifactApi;
 
@@ -29,9 +30,11 @@ public class HttpArtifactUploadApi : IArtifactUploadApi, IDisposable
 		File.WriteAllBytes(dmappFilePath, package);
 		FileStream fileStream = new FileStream(dmappFilePath, FileMode.Open, FileAccess.Read, FileShare.None);
 
+        StringBuilder sb = new StringBuilder();
+
 		using var formData = new MultipartFormDataContent();
         formData.Headers.Add("Ocp-Apim-Subscription-Key", key);
-        formData.Add(new StringContent(name), "name"); 
+        formData.Add(new StringContent(name), "name");
         formData.Add(new StringContent(version), "version");
         formData.Add(new StringContent(contentType), "contentType");
         formData.Add(new StreamContent(fileStream), "file", Path.GetFileName(fileStream.Name));
