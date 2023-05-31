@@ -9,13 +9,11 @@ namespace UploadArtifactApi;
 public class HttpArtifactUploadApi : IArtifactUploadApi, IDisposable
 {
     private readonly HttpClient _httpClient;
-    private readonly IPackagePresenter _presenter;
     private const string UploadPath = "api/key-artifact-upload/v1-0/private/artifact";
 
-    public HttpArtifactUploadApi(IPackagePresenter presenter, HttpClient httpClient)
+    public HttpArtifactUploadApi(HttpClient httpClient)
     {
         _httpClient = httpClient;
-        _presenter = presenter;
     }
 
     public async Task<PrivateArtifactModel> ArtifactUploadV11PrivateArtifactPostAsync(
@@ -24,7 +22,7 @@ public class HttpArtifactUploadApi : IArtifactUploadApi, IDisposable
         string version,
         string contentType,
         string key,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken, IPackagePresenter presenter)
     {
         string dmappFilePath = Path.Combine(Environment.GetEnvironmentVariable("GITHUB_WORKSPACE"), name);
         File.WriteAllBytes(dmappFilePath, package);
@@ -40,8 +38,7 @@ public class HttpArtifactUploadApi : IArtifactUploadApi, IDisposable
         formData.Add(new StreamContent(fileStream), "file", Path.GetFileName(fileStream.Name));
 
         string logInfo = $"--name {name} --version {version} --contentType {contentType} --file {Path.GetFileName(fileStream.Name)}";
-
-        _presenter.LogInformation("HTTP Post with info: " + logInfo);
+        presenter.LogInformation("HTTP Post with info: " + logInfo);
 
         var response = await _httpClient.PostAsync(UploadPath, formData, cancellationToken);
 

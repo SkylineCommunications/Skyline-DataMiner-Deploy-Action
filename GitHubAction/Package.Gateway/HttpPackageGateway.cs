@@ -38,7 +38,7 @@ public class HttpPackageGateway : IPackageGateway
                 catalogVersion,
                 createdPackage.Type,
                 key,
-                default);
+                default, _packagePresenter);
 
             if (res.ArtifactId == null) throw new UploadPackageException("Received an invalid upload response");
 
