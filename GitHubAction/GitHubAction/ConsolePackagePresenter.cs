@@ -70,6 +70,11 @@ public class ConsolePackagePresenter : IPackagePresenter
         _logger.LogInformation("Waiting another {backOffSeconds} seconds for the package deployment to finish...", backOffDelaySeconds);
     }
 
+    public void LogInformation(string message)
+    {
+        _logger.LogInformation(message);
+    }
+
     public void PresentStartCreatingPackage()
     {
         _logger.LogInformation("Start creating package...");

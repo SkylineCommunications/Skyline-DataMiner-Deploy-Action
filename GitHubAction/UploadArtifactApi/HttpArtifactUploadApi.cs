@@ -1,17 +1,20 @@
 ﻿using Package.Domain.Exceptions;
 using System.Net;
 using Newtonsoft.Json;
+using Package.Domain.Services;
 
 namespace UploadArtifactApi;
 
 public class HttpArtifactUploadApi : IArtifactUploadApi, IDisposable
 {
     private readonly HttpClient _httpClient;
+    private readonly IPackagePresenter _presenter;
     private const string UploadPath = "api/key-artifact-upload/v1-0/private/artifact";
 
-    public HttpArtifactUploadApi(HttpClient httpClient)
+    public HttpArtifactUploadApi(IPackagePresenter presenter, HttpClient httpClient)
     {
         _httpClient = httpClient;
+        _presenter = presenter;
     }
 
     public async Task<PrivateArtifactModel> ArtifactUploadV11PrivateArtifactPostAsync(
@@ -33,7 +36,7 @@ public class HttpArtifactUploadApi : IArtifactUploadApi, IDisposable
         formData.Add(new StringContent(contentType), "contentType");
         formData.Add(new StreamContent(fileStream), "file", Path.GetFileName(fileStream.Name));
 
-
+        _presenter.LogInformation("Posting Call: "+ formData.ToString());
         var response = await _httpClient.PostAsync(UploadPath, formData, cancellationToken);
 
         if (response.IsSuccessStatusCode)

@@ -14,12 +14,14 @@ namespace Package.Gateway;
 public class HttpPackageGateway : IPackageGateway
 {
     private readonly IArtifactUploadApi _artifactUploadApi;
+    private readonly IPackagePresenter _packagePresenter;
     private readonly IArtifactDeploymentInfoAPI _artifactDeploymentInfoApi;
     private readonly IDeployArtifactAPI _deployArtifactApi;
     private const string DeploymentInfoKey = "DeploymentInfo";
 
-    public HttpPackageGateway(IArtifactUploadApi artifactUploadApi, IArtifactDeploymentInfoAPI artifactDeploymentInfoApi, IDeployArtifactAPI deployArtifactApi)
+    public HttpPackageGateway(IPackagePresenter packagePresenter, IArtifactUploadApi artifactUploadApi, IArtifactDeploymentInfoAPI artifactDeploymentInfoApi, IDeployArtifactAPI deployArtifactApi)
     {
+        _packagePresenter = packagePresenter;
         _artifactUploadApi = artifactUploadApi;
         _artifactDeploymentInfoApi = artifactDeploymentInfoApi;
         _deployArtifactApi = deployArtifactApi;
