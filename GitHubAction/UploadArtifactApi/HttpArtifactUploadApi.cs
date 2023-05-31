@@ -19,20 +19,20 @@ public class HttpArtifactUploadApi : IArtifactUploadApi, IDisposable
     }
 
     public async Task<PrivateArtifactModel> ArtifactUploadV11PrivateArtifactPostAsync(
-        byte[] package, 
-        string name, 
-        string version, 
-        string contentType, 
-        string key, 
+        byte[] package,
+        string name,
+        string version,
+        string contentType,
+        string key,
         CancellationToken cancellationToken)
     {
         string dmappFilePath = Path.Combine(Environment.GetEnvironmentVariable("GITHUB_WORKSPACE"), name);
-		File.WriteAllBytes(dmappFilePath, package);
-		FileStream fileStream = new FileStream(dmappFilePath, FileMode.Open, FileAccess.Read, FileShare.None);
+        File.WriteAllBytes(dmappFilePath, package);
+        FileStream fileStream = new FileStream(dmappFilePath, FileMode.Open, FileAccess.Read, FileShare.None);
 
         StringBuilder sb = new StringBuilder();
 
-		using var formData = new MultipartFormDataContent();
+        using var formData = new MultipartFormDataContent();
         formData.Headers.Add("Ocp-Apim-Subscription-Key", key);
         formData.Add(new StringContent(name), "name");
         formData.Add(new StringContent(version), "version");
@@ -48,10 +48,10 @@ public class HttpArtifactUploadApi : IArtifactUploadApi, IDisposable
 
         if (response.StatusCode is HttpStatusCode.Forbidden or HttpStatusCode.Unauthorized)
         {
-            throw new KeyException($"The upload api returned a {response.StatusCode} response.");
+            throw new KeyException($"The upload api returned a {response.StatusCode} response. Body:" + response?.Content?.ToString() ?? "null");
         }
 
-        throw new UploadPackageException($"The upload api returned a {response.StatusCode} response.");
+        throw new UploadPackageException($"The upload api returned a {response.StatusCode} response. Body:" + response?.Content?.ToString() ?? "null");
     }
 
     public void Dispose()
