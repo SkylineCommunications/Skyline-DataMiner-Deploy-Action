@@ -51,7 +51,7 @@ public class HttpArtifactUploadApi : IArtifactUploadApi, IDisposable
             throw new KeyException($"The upload api returned a {response.StatusCode} response. Body: {response.Content}");
         }
 
-        throw new UploadPackageException($"The upload api returned a {response.StatusCode} response. Body:" + response?.Content?.ToString() ?? "null");
+        throw new UploadPackageException($"The upload api returned a {response.StatusCode} response. Body: {response.Content}");
     }
 
     public void Dispose()
