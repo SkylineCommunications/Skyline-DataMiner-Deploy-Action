@@ -28,7 +28,6 @@ public class HttpArtifactUploadApi : IArtifactUploadApi, IDisposable
         File.WriteAllBytes(dmappFilePath, package);
         FileStream fileStream = new FileStream(dmappFilePath, FileMode.Open, FileAccess.Read, FileShare.None);
 
-        StringBuilder sb = new StringBuilder();
 
         using var formData = new MultipartFormDataContent();
         formData.Headers.Add("Ocp-Apim-Subscription-Key", key);
