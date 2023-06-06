@@ -19,7 +19,7 @@ public class PackageService : IPackageService
         return await _packageBuilder.CreatePackageAsync(localPackageConfig);
     }
 
-    public async Task<UploadedPackage> UploadPackageAsync(CreatedPackage createdPackage,string catalogVersion, string key)
+    public async Task<UploadedPackage> UploadPackageAsync(CreatedPackage createdPackage, string catalogVersion, string key)
     {
         return await _packageGateway.UploadPackageAsync(createdPackage,catalogVersion, key);
     }
