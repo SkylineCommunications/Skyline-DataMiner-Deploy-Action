@@ -31,7 +31,6 @@ public static class ApiExtensions
         {
             var httpClient = s.GetRequiredService<IHttpClientFactory>().CreateClient(nameof(HttpArtifactUploadApi));
             var options = s.GetService<ApiOptions>();
-            var presenter = s.GetService<ConsolePackagePresenter>();
             httpClient.BaseAddress = new Uri($"{options.ApiBaseUrl}/");
             return new HttpArtifactUploadApi(httpClient);
         });
