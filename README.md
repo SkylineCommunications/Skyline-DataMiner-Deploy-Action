@@ -35,7 +35,7 @@ This action currently only supports the creation of artifacts with Automation sc
 ### `version`
 
 **Optional**.
-The version number for the artifact. Only required for a release run. (format A.B.C). E.g. `'1.0.1'`. Required for stages `'Upload'` and `'All'` if no build-number was provided instead.
+The version number for the artifact. Only required for a release run. Format A.B.C for a stable release or A.B.C-text for a pre-release. E.g. `'1.0.1'`. Required for stages `'Upload'` and `'All'` if no build-number was provided instead.
 
 ### `timeout`
 

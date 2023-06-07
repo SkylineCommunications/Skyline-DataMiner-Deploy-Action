@@ -111,8 +111,8 @@ public class InputFactory : IInputFactory
 
                 if (!argumentsAreValid) return null;
 
-                if(isVersionPresent)
-                    argumentsAreValid &= ValidateVersion(InputArgurments.Version, version);
+                //if(isVersionPresent)
+                //    argumentsAreValid &= ValidateVersion(InputArgurments.Version, version);
 
                 if (!argumentsAreValid) return null;
 
@@ -171,16 +171,16 @@ public class InputFactory : IInputFactory
         return true;
     }
 
-    private bool ValidateVersion(string key, string? version)
-    {
-        if(version == null || (version != "" && !Regex.IsMatch(version, "[0-9]+.[0-9]+.[0-9]+(-CU[0-9]+)?") && !Regex.IsMatch(version, "[0-9]+.[0-9]+.[0-9]+.[0-9]")))
-        {
-            _presenter.PresentInvalidVersionFormat();
-            return false;
-        }
+    //private bool ValidateVersion(string key, string? version)
+    //{
+    //    if(version == null || (version != "" && !Regex.IsMatch(version, "[0-9]+.[0-9]+.[0-9]+(-CU[0-9]+)?") && !Regex.IsMatch(version, "[0-9]+.[0-9]+.[0-9]+.[0-9]")))
+    //    {
+    //        _presenter.PresentInvalidVersionFormat();
+    //        return false;
+    //    }
 
-        return true;
-    }
+    //    return true;
+    //}
 
     private bool ValidateTimeout(string? timeOutInSecondsString, out TimeSpan timeout)
     {

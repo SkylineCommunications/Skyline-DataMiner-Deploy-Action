@@ -14,28 +14,31 @@ namespace Package.Gateway;
 public class HttpPackageGateway : IPackageGateway
 {
     private readonly IArtifactUploadApi _artifactUploadApi;
+    private readonly IPackagePresenter _packagePresenter;
     private readonly IArtifactDeploymentInfoAPI _artifactDeploymentInfoApi;
     private readonly IDeployArtifactAPI _deployArtifactApi;
     private const string DeploymentInfoKey = "DeploymentInfo";
 
-    public HttpPackageGateway(IArtifactUploadApi artifactUploadApi, IArtifactDeploymentInfoAPI artifactDeploymentInfoApi, IDeployArtifactAPI deployArtifactApi)
+    public HttpPackageGateway(IPackagePresenter packagePresenter, IArtifactUploadApi artifactUploadApi, IArtifactDeploymentInfoAPI artifactDeploymentInfoApi, IDeployArtifactAPI deployArtifactApi)
     {
+        _packagePresenter = packagePresenter;
         _artifactUploadApi = artifactUploadApi;
         _artifactDeploymentInfoApi = artifactDeploymentInfoApi;
         _deployArtifactApi = deployArtifactApi;
     }
 
-    public async Task<UploadedPackage> UploadPackageAsync(CreatedPackage createdPackage, string key)
+    public async Task<UploadedPackage> UploadPackageAsync(CreatedPackage createdPackage, string catalogVersion, string key)
     {
         try
         {
+            _packagePresenter.LogInformation("Calling Artifact Upload");
             var res = await _artifactUploadApi.ArtifactUploadV11PrivateArtifactPostAsync(
                 createdPackage.Package,
                 createdPackage.Name,
-                createdPackage.Version,
+                catalogVersion,
                 createdPackage.Type,
                 key,
-                default);
+                default, _packagePresenter);
 
             if (res.ArtifactId == null) throw new UploadPackageException("Received an invalid upload response");
 
@@ -47,7 +50,7 @@ public class HttpPackageGateway : IPackageGateway
         }
         catch (Exception e)
         {
-            throw new UploadPackageException($"Couldn't upload the package. Error message: {e.Message}");
+            throw new UploadPackageException($"Couldn't upload the package. Error message: {e}");
         }
     }
 
@@ -60,7 +63,7 @@ public class HttpPackageGateway : IPackageGateway
         }
         catch (Exception e)
         {
-            throw new DeployPackageException($"Couldn't deploy the package {e.ToString()}", e);
+            throw new DeployPackageException($"Couldn't deploy the package {e}", e);
         }
 
         if (res.Response.IsSuccessStatusCode)

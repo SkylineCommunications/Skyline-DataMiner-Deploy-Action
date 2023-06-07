@@ -24,5 +24,6 @@ namespace Package.Domain.Services
         void PresentStartingPackageDeploymentFailed(DeployPackageException e);
         void PresentPackageCreationLogging(string line);
         void PresentPackageDeploymentFailed(DeployedPackage deployedPackage);
+        void LogInformation(string message);
     }
 }

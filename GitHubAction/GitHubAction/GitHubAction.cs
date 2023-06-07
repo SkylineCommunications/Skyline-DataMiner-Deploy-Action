@@ -1,6 +1,7 @@
 ﻿using GitHubAction.Domain.Entities;
 using GitHubAction.Factories;
 using GitHubAction.Presenters;
+
 using Package.Builder;
 using Package.Builder.Exceptions;
 using Package.Domain.Enums;
@@ -23,7 +24,7 @@ namespace GitHubAction
         private readonly TimeSpan _deploymentMaxBackOff;
         private ISourceUriService _sourceUriService;
 
-        public GitHubAction(IPackageService packageService, IInputFactory inputParser, IPackagePresenter packagePresenter, IOutputPresenter outputPresenter, ISourceUriService sourceUriService, IOutputPathProvider outputPathProvider) 
+        public GitHubAction(IPackageService packageService, IInputFactory inputParser, IPackagePresenter packagePresenter, IOutputPresenter outputPresenter, ISourceUriService sourceUriService, IOutputPathProvider outputPathProvider)
             : this(packageService, inputParser, packagePresenter, outputPresenter, TimeSpan.FromSeconds(3), TimeSpan.FromMinutes(2), sourceUriService, outputPathProvider)
         {
 
@@ -57,7 +58,7 @@ namespace GitHubAction
             _outputPathProvider.BasePath = inputs.BasePath ?? Directory.GetCurrentDirectory();
 
             try
-            { 
+            {
                 // Upload
                 if (inputs is { Stage: Stage.All or Stage.Upload })
                 {
@@ -72,13 +73,13 @@ namespace GitHubAction
                     var createdPackage = await CreatePackageAsync(localPackageConfig);
                     if (createdPackage == null) return 4;
 
-                    uploadedPackage = await UploadPackageAsync(inputs.ApiKey, createdPackage);
-                    if(uploadedPackage == null) return 5;
+                    uploadedPackage = await UploadPackageAsync(inputs.ApiKey, inputs.Version ?? "0.0.0", createdPackage);
+                    if (uploadedPackage == null) return 5;
                     _outputPresenter.PresentOutputVariable("ARTIFACT_ID", uploadedPackage.ArtifactId);
                 }
 
                 // Deploy
-                if (inputs is {Stage: Stage.All or Stage.Deploy})
+                if (inputs is { Stage: Stage.All or Stage.Deploy })
                 {
                     if (uploadedPackage == null)
                     {
@@ -88,10 +89,10 @@ namespace GitHubAction
                     if (deployingPackage == null) return 6;
 
                     var deployedPackage = await ConfirmSuccesfullDeploymentAsync(inputs.ApiKey, _deploymentBackOff, _deploymentMaxBackOff, inputs.TimeOut, deployingPackage);
-                    if(deployedPackage == null)  return 7;
+                    if (deployedPackage == null) return 7;
                     _packagePresenter.PresentPackageDeploymentFinished(deployedPackage.Status);
                 }
-                
+
             }
             catch (KeyException)
             {
@@ -108,8 +109,8 @@ namespace GitHubAction
             DeployedPackage deployedPackage;
             try
             {
-                _packagePresenter.PresentWaitingForFinishedPackageDeployment((int) deploymentBackOff.TotalSeconds);
-                await Task.Delay((int) deploymentBackOff.TotalMilliseconds);
+                _packagePresenter.PresentWaitingForFinishedPackageDeployment((int)deploymentBackOff.TotalSeconds);
+                await Task.Delay((int)deploymentBackOff.TotalMilliseconds);
 
                 deployedPackage = (await Utils.ExecuteWithRetryAsync(
                     async () =>
@@ -124,7 +125,7 @@ namespace GitHubAction
                             return null;
                         }
                     },
-                    (output) => output is {Status: "Succeeded" or "Timeout" or "Error" },
+                    (output) => output is { Status: "Succeeded" or "Timeout" or "Error" },
                     (backOffDelaySeconds) =>
                         _packagePresenter.PresentWaitingMoreForFinishedPackageDeployment(backOffDelaySeconds),
                     deploymentBackOff,
@@ -137,7 +138,7 @@ namespace GitHubAction
                 return null;
             }
 
-            if (deployedPackage is {Status: "Timeout" or "Error"})
+            if (deployedPackage is { Status: "Timeout" or "Error" })
             {
                 _packagePresenter.PresentPackageDeploymentFailed(deployedPackage);
                 return null;
@@ -169,14 +170,14 @@ namespace GitHubAction
             return deployingPackage;
         }
 
-        private async Task<UploadedPackage?> UploadPackageAsync(string key, CreatedPackage createdPackage)
+        private async Task<UploadedPackage?> UploadPackageAsync(string key, string catalogVersion, CreatedPackage createdPackage)
         {
             _packagePresenter.PresentStartingPackageUpload();
 
             UploadedPackage uploadedPackage;
             try
             {
-                uploadedPackage = await _packageService.UploadPackageAsync(createdPackage, key);
+                uploadedPackage = await _packageService.UploadPackageAsync(createdPackage, catalogVersion, key);
             }
             catch (UploadPackageException e)
             {

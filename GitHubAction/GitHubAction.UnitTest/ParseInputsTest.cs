@@ -580,58 +580,6 @@ public class ParseInputsTest
     }
 
     [Test]
-    [TestCase("All", true)]
-    [TestCase("Upload", true)]
-    [TestCase("Deploy", false)]
-    public void ParseAndValidateInputs_InvalidVersion(string stage, bool required)
-    {
-        // Given
-        var key = "some key";
-        var solutionFile = "solution-path";
-        var packageName = "TestPackage";
-        var version = "sqdfsdg";
-        var timeOut = "900";
-        var artifactId = "some string";
-
-        var args = new string[]
-        {
-            "--api-key",
-            key,
-            "--solution-path",
-            solutionFile,
-            "--artifact-name",
-            packageName,
-            "--version",
-            version,
-            "--timeout",
-            timeOut,
-            "--stage",
-            stage,
-            "--artifact-id",
-            artifactId,
-            "--base-path",
-            ""
-        };
-
-        // When
-        var inputs = _inputParserService.ParseAndValidateInputs(args)!;
-
-        // Then
-        if (required) _inputParserPresenterMock.Verify(p => p.PresentInvalidVersionFormat(), Times.Once);
-        _inputParserPresenterMock.Verify(p => p.PresentLogging(It.IsAny<string>()), Times.AtMost(100));
-        _inputParserPresenterMock.VerifyNoOtherCalls();
-
-        if (required)
-        {
-            Assert.IsNull(inputs);
-        }
-        else
-        {
-            Assert.IsNotNull(inputs);
-        }
-    }
-
-    [Test]
     public void ParseAndValidateInputs_InvalidTimeOut_NotAValidInt()
     {
         // Given

@@ -67,7 +67,7 @@ namespace Package.Application.UnitTest
             var key = "key";
 
             Expression<Func<IPackageGateway, Task<UploadedPackage>>> uploadPackageAsync = s =>
-                s.UploadPackageAsync(createdPackage, key);
+                s.UploadPackageAsync(createdPackage, "version", key);
 
             var uploadedPackage = new UploadedPackage(Guid.NewGuid().ToString());
             _packageGatewayMock
@@ -75,7 +75,7 @@ namespace Package.Application.UnitTest
                 .ReturnsAsync(uploadedPackage);
 
             // When
-            var result = await _packageService.UploadPackageAsync(createdPackage, key);
+            var result = await _packageService.UploadPackageAsync(createdPackage,"version", key);
 
             // Then
             Assert.AreEqual(uploadedPackage, result);

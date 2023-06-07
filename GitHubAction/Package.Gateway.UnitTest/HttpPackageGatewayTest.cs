@@ -4,16 +4,25 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+
 using ArtifactDeploymentInfoApi.Generated;
 using ArtifactDeploymentInfoApi.Generated.Models;
+
 using DeployArtifactApi.Generated;
 using DeployArtifactApi.Generated.Models;
+
 using Microsoft.Rest;
+
 using Moq;
+
 using NUnit.Framework;
+
 using Package.Domain.Exceptions;
 using Package.Domain.Models;
+using Package.Domain.Services;
+
 using UploadArtifactApi;
+
 using ValidationException = Microsoft.Rest.ValidationException;
 
 namespace Package.Gateway.UnitTest
@@ -25,6 +34,7 @@ namespace Package.Gateway.UnitTest
         private Mock<IArtifactDeploymentInfoAPI> _artifactDeploymentInfoApi = null!;
         private Mock<IArtifactUploadApi> _artifactUploadApi = null!;
         private UploadedPackage _uploadedPackage = null!;
+        private Mock<IPackagePresenter> _presenter = null!;
         private string _key = null!;
         private DeployingPackage _deployingPackage = null!;
 
@@ -34,6 +44,7 @@ namespace Package.Gateway.UnitTest
             _deployArtifactApi = new Mock<IDeployArtifactAPI>();
             _artifactDeploymentInfoApi = new Mock<IArtifactDeploymentInfoAPI>();
             _artifactUploadApi = new Mock<IArtifactUploadApi>();
+            _presenter = new Mock<IPackagePresenter>();
             _uploadedPackage = new UploadedPackage(Guid.NewGuid().ToString());
             _key = "MyDummyKey";
 
@@ -56,7 +67,7 @@ namespace Package.Gateway.UnitTest
                         .Result)
                 .Throws(validationException);
 
-            var httpGateway = new HttpPackageGateway(_artifactUploadApi.Object, _artifactDeploymentInfoApi.Object, _deployArtifactApi.Object);
+            var httpGateway = new HttpPackageGateway(_presenter.Object, _artifactUploadApi.Object, _artifactDeploymentInfoApi.Object, _deployArtifactApi.Object);
             try
             { // When
                 await httpGateway.DeployPackageAsync(_uploadedPackage, _key);
@@ -84,7 +95,7 @@ namespace Package.Gateway.UnitTest
                         .Result)
                 .Throws(validationException);
 
-            var httpGateway = new HttpPackageGateway(_artifactUploadApi.Object, _artifactDeploymentInfoApi.Object, _deployArtifactApi.Object);
+            var httpGateway = new HttpPackageGateway(_presenter.Object, _artifactUploadApi.Object, _artifactDeploymentInfoApi.Object, _deployArtifactApi.Object);
             try
             { // When
                 await httpGateway.DeployPackageAsync(_uploadedPackage, _key);
@@ -118,14 +129,14 @@ namespace Package.Gateway.UnitTest
                         .Result)
                 .Returns(result);
 
-            var httpGateway = new HttpPackageGateway(_artifactUploadApi.Object, _artifactDeploymentInfoApi.Object, _deployArtifactApi.Object);
+            var httpGateway = new HttpPackageGateway(_presenter.Object, _artifactUploadApi.Object, _artifactDeploymentInfoApi.Object, _deployArtifactApi.Object);
             try
             { // When
                 await httpGateway.DeployPackageAsync(_uploadedPackage, _key);
             } // Then
             catch (Exception e)
             {
-                Assert.IsTrue(e.GetType()==typeof(DeployPackageException));
+                Assert.IsTrue(e.GetType() == typeof(DeployPackageException));
                 var exceptionMessage = e.Message;
                 Assert.IsTrue(exceptionMessage.StartsWith(expectedText));
             }
@@ -150,7 +161,7 @@ namespace Package.Gateway.UnitTest
                         .Result)
                 .Returns(result);
 
-            var httpGateway = new HttpPackageGateway(_artifactUploadApi.Object, _artifactDeploymentInfoApi.Object, _deployArtifactApi.Object);
+            var httpGateway = new HttpPackageGateway(_presenter.Object, _artifactUploadApi.Object, _artifactDeploymentInfoApi.Object, _deployArtifactApi.Object);
             try
             { // When
                 await httpGateway.DeployPackageAsync(_uploadedPackage, _key);
@@ -181,11 +192,11 @@ namespace Package.Gateway.UnitTest
                         .Result)
                 .Returns(result);
 
-            var httpGateway = new HttpPackageGateway(_artifactUploadApi.Object, _artifactDeploymentInfoApi.Object, _deployArtifactApi.Object);
-            
+            var httpGateway = new HttpPackageGateway(_presenter.Object, _artifactUploadApi.Object, _artifactDeploymentInfoApi.Object, _deployArtifactApi.Object);
+
             // When
             var deployPackage = await httpGateway.DeployPackageAsync(_uploadedPackage, _key);
-            
+
             // Then
             Assert.IsTrue(deployPackage.ArtifactId.Equals(_uploadedPackage.ArtifactId));
             Assert.IsTrue(deployPackage.DeploymentId.Equals(deploymentId));
@@ -204,7 +215,7 @@ namespace Package.Gateway.UnitTest
                         .Result)
                 .Throws(validationException);
 
-            var httpGateway = new HttpPackageGateway(_artifactUploadApi.Object, _artifactDeploymentInfoApi.Object, _deployArtifactApi.Object);
+            var httpGateway = new HttpPackageGateway(_presenter.Object, _artifactUploadApi.Object, _artifactDeploymentInfoApi.Object, _deployArtifactApi.Object);
 
             try
             { // When
@@ -239,7 +250,7 @@ namespace Package.Gateway.UnitTest
                         .Result)
                 .Returns(result);
 
-            var httpGateway = new HttpPackageGateway(_artifactUploadApi.Object, _artifactDeploymentInfoApi.Object, _deployArtifactApi.Object);
+            var httpGateway = new HttpPackageGateway(_presenter.Object, _artifactUploadApi.Object, _artifactDeploymentInfoApi.Object, _deployArtifactApi.Object);
 
             try
             { // When
@@ -275,7 +286,7 @@ namespace Package.Gateway.UnitTest
                         .Result)
                 .Returns(result);
 
-            var httpGateway = new HttpPackageGateway(_artifactUploadApi.Object, _artifactDeploymentInfoApi.Object, _deployArtifactApi.Object);
+            var httpGateway = new HttpPackageGateway(_presenter.Object, _artifactUploadApi.Object, _artifactDeploymentInfoApi.Object, _deployArtifactApi.Object);
 
             try
             { // When
@@ -296,13 +307,13 @@ namespace Package.Gateway.UnitTest
             // Given
             var result = new HttpOperationResponse<IDictionary<string, DeploymentInfoModel>>();
             var httpResponse = new HttpResponseMessage(HttpStatusCode.OK);
-            
+
             var deploymentDic = new Dictionary<string, DeploymentInfoModel>();
             var deploymentInfo = new DeploymentInfoModel
             {
                 ArtifactId = Guid.NewGuid().ToString()
             };
-            deploymentDic.Add("DeploymentInfo",deploymentInfo);
+            deploymentDic.Add("DeploymentInfo", deploymentInfo);
             result.Body = deploymentDic;
             result.Response = httpResponse;
 
@@ -312,11 +323,11 @@ namespace Package.Gateway.UnitTest
                         .Result)
                 .Returns(result);
 
-            var httpGateway = new HttpPackageGateway(_artifactUploadApi.Object, _artifactDeploymentInfoApi.Object, _deployArtifactApi.Object);
+            var httpGateway = new HttpPackageGateway(_presenter.Object, _artifactUploadApi.Object, _artifactDeploymentInfoApi.Object, _deployArtifactApi.Object);
 
             // When
             var deployedPackage = await httpGateway.GetDeployedPackageAsync(_deployingPackage, _key);
-            
+
             // Then
             Assert.IsTrue(deployedPackage.ArtifactId.Equals(deploymentInfo.ArtifactId));
         }
