@@ -73,7 +73,17 @@ namespace GitHubAction
                     var createdPackage = await CreatePackageAsync(localPackageConfig);
                     if (createdPackage == null) return 4;
 
-                    uploadedPackage = await UploadPackageAsync(inputs.ApiKey, inputs.Version ?? "0.0.0", createdPackage);
+                    string uploadVersion;
+                    if(String.IsNullOrWhiteSpace(inputs.Version))
+                    {
+                        uploadVersion = "0.0.0";
+                    }
+                    else
+                    {
+                        uploadVersion = inputs.Version;
+                    }
+
+                    uploadedPackage = await UploadPackageAsync(inputs.ApiKey, uploadVersion, createdPackage);
                     if (uploadedPackage == null) return 5;
                     _outputPresenter.PresentOutputVariable("ARTIFACT_ID", uploadedPackage.ArtifactId);
                 }
