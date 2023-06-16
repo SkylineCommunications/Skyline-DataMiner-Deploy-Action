@@ -34,14 +34,15 @@ namespace GitHubAction.UnitTest
         private Mock<IInputFactory> _inputParserMock = null!;
         private Mock<ILogger<GitHubAction>> _loggerMock = null!;
         private GitHubAction _gitHubAction = null!;
-        private Mock<ISourceUriService> _uriServiceMock;
+        private Mock<IEnvironmentVariableService> _uriServiceMock;
         private Mock<IOutputPathProvider> _outputPathProvider;
         private Mock<IGITInfo> _gitInfo;
+
         [SetUp]
         public void Setup()
         {
             _packageServiceMock = new Mock<IPackageService>();
-            _uriServiceMock = new Mock<ISourceUriService>();
+            _uriServiceMock = new Mock<IEnvironmentVariableService>();
             _packagePresenterMock = new Mock<IPackagePresenter>();
             _outputPresenterMock = new Mock<IOutputPresenter>();
             _inputParserMock = new Mock<IInputFactory>();
@@ -65,6 +66,7 @@ namespace GitHubAction.UnitTest
             var stage = "All";
             var id = Guid.NewGuid().ToString();
             var sourceUri = new Uri("https://github.com/SkylineCommunications/Skyline-DataMiner-Deploy-Action");
+            var branch = "master";
 
             var localPackageConfig = new LocalPackageConfig(
                 solutionFile,
@@ -119,9 +121,9 @@ namespace GitHubAction.UnitTest
             CatalogData catalog = new CatalogData()
             {
                 Version = version,
-                Branch = String.Empty,
+                Branch = branch,
                 ContentType = "type",
-                Identifier = String.Empty,
+                Identifier = sourceUri.ToString(),
                 IsPreRelease = false,
                 Name = packageName
             };
@@ -156,6 +158,7 @@ namespace GitHubAction.UnitTest
                 .ReturnsAsync(deployedPackage);
 
             _uriServiceMock.Setup(s => s.GetSourceUri()).Returns(sourceUri);
+            _uriServiceMock.Setup(s => s.GetBranch()).Returns(branch);
 
             // When
             var exitCode = await _gitHubAction.RunAsync(args, CancellationToken.None);
@@ -196,7 +199,7 @@ namespace GitHubAction.UnitTest
             var stage = "Upload";
             var id = Guid.NewGuid().ToString();
             var sourceUri = new Uri("https://github.com/SkylineCommunications/Skyline-DataMiner-Deploy-Action");
-
+            var branch = "master";
 
             var localPackageConfig = new LocalPackageConfig(
                 solutionFile,
@@ -251,9 +254,9 @@ namespace GitHubAction.UnitTest
             CatalogData catalog = new CatalogData()
             {
                 Version = version,
-                Branch = String.Empty,
+                Branch = branch,
                 ContentType = "type",
-                Identifier = String.Empty,
+                Identifier = sourceUri.ToString(),
                 IsPreRelease = false,
                 Name = packageName
             };
@@ -288,6 +291,7 @@ namespace GitHubAction.UnitTest
                 .ReturnsAsync(deployedPackage);
 
             _uriServiceMock.Setup(s => s.GetSourceUri()).Returns(sourceUri);
+            _uriServiceMock.Setup(s => s.GetBranch()).Returns(branch);
 
             // When
             var exitCode = await _gitHubAction.RunAsync(args, CancellationToken.None);
@@ -404,6 +408,7 @@ namespace GitHubAction.UnitTest
             var stage = "All";
             var id = Guid.NewGuid().ToString();
             var sourceUri = new Uri("https://github.com/SkylineCommunications/Skyline-DataMiner-Deploy-Action");
+            var branch = "master";
 
             var localPackageConfig = new LocalPackageConfig(
                 solutionFile,
@@ -458,9 +463,9 @@ namespace GitHubAction.UnitTest
             CatalogData catalog = new CatalogData()
             {
                 Version = version,
-                Branch = String.Empty,
+                Branch = branch,
                 ContentType = "type",
-                Identifier = String.Empty,
+                Identifier = sourceUri.ToString(),
                 IsPreRelease = false,
                 Name = packageName
             };
@@ -494,6 +499,7 @@ namespace GitHubAction.UnitTest
                 .ThrowsAsync(new KeyException("this should be thrown in the test"));
 
             _uriServiceMock.Setup(s => s.GetSourceUri()).Returns(sourceUri);
+            _uriServiceMock.Setup(s => s.GetBranch()).Returns(branch);
 
             // When
             var exitCode = await _gitHubAction.RunAsync(args, CancellationToken.None);
@@ -534,7 +540,7 @@ namespace GitHubAction.UnitTest
             var stage = "All";
             var id = Guid.NewGuid().ToString();
             var sourceUri = new Uri("https://github.com/SkylineCommunications/Skyline-DataMiner-Deploy-Action");
-
+            var branch = "master";
 
             var localPackageConfig = new LocalPackageConfig(
                 solutionFile,
@@ -591,9 +597,9 @@ namespace GitHubAction.UnitTest
             CatalogData catalog = new CatalogData()
             {
                 Version = version,
-                Branch = String.Empty,
+                Branch = branch,
                 ContentType = "type",
-                Identifier = String.Empty,
+                Identifier = sourceUri.ToString(),
                 IsPreRelease = false,
                 Name = packageName
             };
@@ -633,6 +639,7 @@ namespace GitHubAction.UnitTest
                 .ReturnsAsync(deployedPackage);
 
             _uriServiceMock.Setup(s => s.GetSourceUri()).Returns(sourceUri);
+            _uriServiceMock.Setup(s => s.GetBranch()).Returns(branch);
 
             // When
             var exitCode = await _gitHubAction.RunAsync(args, CancellationToken.None);
@@ -674,7 +681,7 @@ namespace GitHubAction.UnitTest
             var stage = "All";
             var id = Guid.NewGuid().ToString();
             var sourceUri = new Uri("https://github.com/SkylineCommunications/Skyline-DataMiner-Deploy-Action");
-
+            var branch = "master";
 
             var localPackageConfig = new LocalPackageConfig(
                 solutionFile,
@@ -731,9 +738,9 @@ namespace GitHubAction.UnitTest
             CatalogData catalog = new CatalogData()
             {
                 Version = version,
-                Branch = String.Empty,
+                Branch = branch,
                 ContentType = "type",
-                Identifier = String.Empty,
+                Identifier = sourceUri.ToString(),
                 IsPreRelease = false,
                 Name = packageName
             };
@@ -770,6 +777,7 @@ namespace GitHubAction.UnitTest
                 .ThrowsAsync(new KeyException("this should be thrown in the test"));
 
             _uriServiceMock.Setup(s => s.GetSourceUri()).Returns(sourceUri);
+            _uriServiceMock.Setup(s => s.GetBranch()).Returns(branch);
 
             // When
             var exitCode = await _gitHubAction.RunAsync(args, CancellationToken.None);
@@ -813,7 +821,7 @@ namespace GitHubAction.UnitTest
             var stage = "All";
             var id = Guid.NewGuid().ToString();
             var sourceUri = new Uri("https://github.com/SkylineCommunications/Skyline-DataMiner-Deploy-Action");
-
+            var branch = "master";
 
             var localPackageConfig = new LocalPackageConfig(
                 solutionFile,
@@ -870,9 +878,9 @@ namespace GitHubAction.UnitTest
             CatalogData catalog = new CatalogData()
             {
                 Version = version,
-                Branch = String.Empty,
+                Branch = branch,
                 ContentType = "type",
-                Identifier = String.Empty,
+                Identifier = sourceUri.ToString(),
                 IsPreRelease = false,
                 Name = packageName
             };
@@ -911,6 +919,7 @@ namespace GitHubAction.UnitTest
                 .ReturnsAsync(FailedDeployedPackage);
 
             _uriServiceMock.Setup(s => s.GetSourceUri()).Returns(sourceUri);
+            _uriServiceMock.Setup(s => s.GetBranch()).Returns(branch);
 
             // When
             var exitCode = await _gitHubAction.RunAsync(args, CancellationToken.None);
@@ -953,7 +962,7 @@ namespace GitHubAction.UnitTest
             var stage = "All";
             var id = Guid.NewGuid().ToString();
             var sourceUri = new Uri("https://github.com/SkylineCommunications/Skyline-DataMiner-Deploy-Action");
-
+            var branch = "master";
 
             var localPackageConfig = new LocalPackageConfig(
                 solutionFile,
@@ -1008,9 +1017,9 @@ namespace GitHubAction.UnitTest
             CatalogData catalog = new CatalogData()
             {
                 Version = version,
-                Branch = String.Empty,
+                Branch = branch,
                 ContentType = "type",
-                Identifier = String.Empty,
+                Identifier = sourceUri.ToString(),
                 IsPreRelease = false,
                 Name = packageName
             };
@@ -1033,6 +1042,7 @@ namespace GitHubAction.UnitTest
                 .ThrowsAsync(new DmsUnavailableException("this should be thrown in the test"));
 
             _uriServiceMock.Setup(s => s.GetSourceUri()).Returns(sourceUri);
+            _uriServiceMock.Setup(s => s.GetBranch()).Returns(branch);
 
             // When
             var exitCode = await _gitHubAction.RunAsync(args, CancellationToken.None);
@@ -1072,7 +1082,7 @@ namespace GitHubAction.UnitTest
             var stage = "All";
             var id = Guid.NewGuid().ToString();
             var sourceUri = new Uri("https://github.com/SkylineCommunications/Skyline-DataMiner-Deploy-Action");
-
+            var branch = "master";
 
             var localPackageConfig = new LocalPackageConfig(
                 solutionFile,
@@ -1127,9 +1137,9 @@ namespace GitHubAction.UnitTest
             CatalogData catalog = new CatalogData()
             {
                 Version = version,
-                Branch = String.Empty,
+                Branch = branch,
                 ContentType = "type",
-                Identifier = String.Empty,
+                Identifier = sourceUri.ToString(),
                 IsPreRelease = false,
                 Name = packageName
             };
@@ -1152,6 +1162,7 @@ namespace GitHubAction.UnitTest
                 .ThrowsAsync(new KeyException("this should be thrown in the test"));
 
             _uriServiceMock.Setup(s => s.GetSourceUri()).Returns(sourceUri);
+            _uriServiceMock.Setup(s => s.GetBranch()).Returns(branch);
 
             // When
             var exitCode = await _gitHubAction.RunAsync(args, CancellationToken.None);
@@ -1190,7 +1201,7 @@ namespace GitHubAction.UnitTest
             var stage = "All";
             var id = Guid.NewGuid().ToString();
             var sourceUri = new Uri("https://github.com/SkylineCommunications/Skyline-DataMiner-Deploy-Action");
-
+            var branch = "master";
 
             var localPackageConfig = new LocalPackageConfig(
                 solutionFile,
@@ -1245,9 +1256,9 @@ namespace GitHubAction.UnitTest
             CatalogData catalog = new CatalogData()
             {
                 Version = version,
-                Branch = String.Empty,
+                Branch = branch,
                 ContentType = "type",
-                Identifier = String.Empty,
+                Identifier = sourceUri.ToString(),
                 IsPreRelease = false,
                 Name = packageName
             };
@@ -1272,6 +1283,7 @@ namespace GitHubAction.UnitTest
                 .ThrowsAsync(ex);
 
             _uriServiceMock.Setup(s => s.GetSourceUri()).Returns(sourceUri);
+            _uriServiceMock.Setup(s => s.GetBranch()).Returns(branch);
 
             // When
             var exitCode = await _gitHubAction.RunAsync(args, CancellationToken.None);
@@ -1310,7 +1322,7 @@ namespace GitHubAction.UnitTest
             var stage = "All";
             var id = Guid.NewGuid().ToString();
             var sourceUri = new Uri("https://github.com/SkylineCommunications/Skyline-DataMiner-Deploy-Action");
-
+            var branch = "master";
 
             var localPackageConfig = new LocalPackageConfig(
                 solutionFile,
@@ -1365,9 +1377,9 @@ namespace GitHubAction.UnitTest
             CatalogData catalog = new CatalogData()
             {
                 Version = version,
-                Branch = String.Empty,
+                Branch = branch,
                 ContentType = "type",
-                Identifier = String.Empty,
+                Identifier = sourceUri.ToString(),
                 IsPreRelease = false,
                 Name = packageName
             };
@@ -1382,6 +1394,7 @@ namespace GitHubAction.UnitTest
                 .ThrowsAsync(ex);
 
             _uriServiceMock.Setup(s => s.GetSourceUri()).Returns(sourceUri);
+            _uriServiceMock.Setup(s => s.GetBranch()).Returns(branch);
 
             // When
             var exitCode = await _gitHubAction.RunAsync(args, CancellationToken.None);
@@ -1415,6 +1428,7 @@ namespace GitHubAction.UnitTest
             var stage = "All";
             var id = Guid.NewGuid().ToString();
             var sourceUri = new Uri("https://github.com/SkylineCommunications/Skyline-DataMiner-Deploy-Action");
+            var branch = "master";
 
             var localPackageConfig = new LocalPackageConfig(
                 solutionFile,
@@ -1469,9 +1483,9 @@ namespace GitHubAction.UnitTest
             CatalogData catalog = new CatalogData()
             {
                 Version = version,
-                Branch = String.Empty,
+                Branch = branch,
                 ContentType = "type",
-                Identifier = String.Empty,
+                Identifier = sourceUri.ToString(),
                 IsPreRelease = false,
                 Name = packageName
             };
@@ -1484,6 +1498,7 @@ namespace GitHubAction.UnitTest
                 .ThrowsAsync(new KeyException("this should be thrown in the test"));
 
             _uriServiceMock.Setup(s => s.GetSourceUri()).Returns(sourceUri);
+            _uriServiceMock.Setup(s => s.GetBranch()).Returns(branch);
 
             // When
             var exitCode = await _gitHubAction.RunAsync(args, CancellationToken.None);
@@ -1517,6 +1532,7 @@ namespace GitHubAction.UnitTest
             var stage = "All";
             var id = Guid.NewGuid().ToString();
             var sourceUri = new Uri("https://github.com/SkylineCommunications/Skyline-DataMiner-Deploy-Action");
+            var branch = "master";
 
             var localPackageConfig = new LocalPackageConfig(
                 solutionFile,
@@ -1568,6 +1584,7 @@ namespace GitHubAction.UnitTest
                 .ThrowsAsync(createPackageException);
 
             _uriServiceMock.Setup(s => s.GetSourceUri()).Returns(sourceUri);
+            _uriServiceMock.Setup(s => s.GetBranch()).Returns(branch);
 
             // When
             var exitCode = await _gitHubAction.RunAsync(args, CancellationToken.None);

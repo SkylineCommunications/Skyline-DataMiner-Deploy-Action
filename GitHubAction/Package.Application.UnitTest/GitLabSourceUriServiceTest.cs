@@ -7,7 +7,7 @@ namespace Package.Application.UnitTest;
 [TestFixture]
 public class GitLabSourceUriServiceTest
 {
-    private GitLabSourceUriService _service = null!;
+    private GitLabEnvironmentVariableService _service = null!;
     private Dictionary<string, string?> _envVariables = new();
 
     [OneTimeSetUp]
@@ -25,7 +25,7 @@ public class GitLabSourceUriServiceTest
     [SetUp]
     public void Setup()
     {
-        _service = new GitLabSourceUriService();
+        _service = new GitLabEnvironmentVariableService();
     }
 
     [Test]

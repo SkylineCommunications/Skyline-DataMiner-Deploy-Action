@@ -29,16 +29,16 @@ namespace GitHubAction
         private readonly TimeSpan _deploymentBackOff;
         private readonly TimeSpan _deploymentMaxBackOff;
         private readonly IGITInfo _git;
-        private ISourceUriService _sourceUriService;
+        private readonly IEnvironmentVariableService _EnvVarService;
 
-        public GitHubAction(IPackageService packageService, IInputFactory inputParser, IPackagePresenter packagePresenter, IOutputPresenter outputPresenter, ISourceUriService sourceUriService, IOutputPathProvider outputPathProvider, IGITInfo git)
+        public GitHubAction(IPackageService packageService, IInputFactory inputParser, IPackagePresenter packagePresenter, IOutputPresenter outputPresenter, IEnvironmentVariableService sourceUriService, IOutputPathProvider outputPathProvider, IGITInfo git)
             : this(packageService, inputParser, packagePresenter, outputPresenter, TimeSpan.FromSeconds(3), TimeSpan.FromMinutes(2), sourceUriService, outputPathProvider, git)
         {
 
         }
 
         public GitHubAction(IPackageService packageService, IInputFactory inputParser, IPackagePresenter packagePresenter,
-            IOutputPresenter outputPresenter, TimeSpan minimumBackOff, TimeSpan maximumBackOff, ISourceUriService sourceUriService, IOutputPathProvider outputPathProvider, IGITInfo git)
+            IOutputPresenter outputPresenter, TimeSpan minimumBackOff, TimeSpan maximumBackOff, IEnvironmentVariableService envVarService, IOutputPathProvider outputPathProvider, IGITInfo git)
         {
             _packageService = packageService;
             _inputParserSerivce = inputParser;
@@ -46,7 +46,7 @@ namespace GitHubAction
             _outputPresenter = outputPresenter;
             _deploymentBackOff = minimumBackOff;
             _deploymentMaxBackOff = maximumBackOff;
-            _sourceUriService = sourceUriService;
+            _EnvVarService = envVarService;
             _outputPathProvider = outputPathProvider;
             _git = git;
         }
@@ -60,7 +60,8 @@ namespace GitHubAction
                 return 3;
             }
 
-            var sourceUri = _sourceUriService.GetSourceUri();
+            var sourceUri = _EnvVarService.GetSourceUri();
+            var branch = _EnvVarService.GetBranch();
             UploadedPackage? uploadedPackage = null;
 
             _outputPathProvider.BasePath = inputs.BasePath ?? Directory.GetCurrentDirectory();
@@ -81,7 +82,7 @@ namespace GitHubAction
                     var createdPackage = await CreatePackageAsync(localPackageConfig);
                     if (createdPackage == null) return 4;
 
-                    var catalog = CatalogDataFactory.Create(inputs, createdPackage, _git);
+                    var catalog = CatalogDataFactory.Create(inputs, createdPackage, _git, sourceUri?.ToString() ?? "", branch);
                     uploadedPackage = await UploadPackageAsync(inputs.ApiKey, createdPackage, catalog);
                     if (uploadedPackage == null) return 5;
                     _outputPresenter.PresentOutputVariable("ARTIFACT_ID", uploadedPackage.ArtifactId);

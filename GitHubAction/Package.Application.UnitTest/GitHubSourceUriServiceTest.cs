@@ -8,7 +8,7 @@ namespace Package.Application.UnitTest;
 [TestFixture]
 public class GitHubSourceUriServiceTest
 {
-    private GitHubSourceUriService _service = null!;
+    private GitHubEnvironmentVariableService _service = null!;
     private Dictionary<string, string?> _envVariables = new();
 
     [OneTimeSetUp]
@@ -29,7 +29,7 @@ public class GitHubSourceUriServiceTest
     [SetUp]
     public void Setup()
     {
-        _service = new GitHubSourceUriService();
+        _service = new GitHubEnvironmentVariableService();
     }
 
     [TearDown]

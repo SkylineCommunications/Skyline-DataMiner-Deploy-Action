@@ -2,7 +2,7 @@
 
 namespace Package.Application;
 
-public class GitHubSourceUriService : ISourceUriService
+public class GitHubEnvironmentVariableService : IEnvironmentVariableService
 {
     /// <inheritdoc />
     public Uri? GetSourceUri()
@@ -16,5 +16,10 @@ public class GitHubSourceUriService : ISourceUriService
         }
 
         return null;
+    }
+
+    public string GetBranch()
+    {
+        return Environment.GetEnvironmentVariable("GITHUB_REF_NAME")??String.Empty;
     }
 }

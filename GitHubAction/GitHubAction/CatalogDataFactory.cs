@@ -12,14 +12,26 @@
 
     internal class CatalogDataFactory
     {
-        public static CatalogData Create(Inputs inputs, CreatedPackage createdPackage, IGITInfo git)
+        public static CatalogData Create(Inputs inputs, CreatedPackage createdPackage, IGITInfo git, string sourceUri, string branch)
         {
+            // Fallback
+            if(String.IsNullOrWhiteSpace(sourceUri))
+            {
+                sourceUri = git.GetSourceUrl();
+            }
+
+            if(String.IsNullOrWhiteSpace(branch))
+            {
+                branch = git.GetCurrentBranch();
+            }
+
             CatalogData catalog = new CatalogData()
             {
                 ContentType = createdPackage.Type,
-                Branch = git.GetCurrentBranch()??String.Empty,
+                // Branch = git.GetCurrentBranch() ?? String.Empty,
+                Branch = branch,
                 Version = String.IsNullOrWhiteSpace(inputs.Version) ? "0.0.0" : inputs.Version,
-                Identifier = git.GetSourceUrl()??String.Empty,
+                Identifier = sourceUri,
                 Name = inputs.PackageName ?? "PackageName",
             };
 
