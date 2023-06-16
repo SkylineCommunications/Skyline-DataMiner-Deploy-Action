@@ -7,7 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\GitHubAction.domain\GitHubAction.Domain.csproj" />
     <ProjectReference Include="..\Package.Domain\Package.Domain.csproj" />
+    <ProjectReference Include="..\UploadArtifactApi\UploadArtifactApi.csproj" />
   </ItemGroup>
 
 </Project>

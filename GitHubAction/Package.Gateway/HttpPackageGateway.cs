@@ -1,12 +1,19 @@
 ﻿using System.Net;
+
 using ArtifactDeploymentInfoApi.Generated;
 using ArtifactDeploymentInfoApi.Generated.Models;
+
+using Catalog.Domain;
+
 using DeployArtifactApi.Generated;
 using DeployArtifactApi.Generated.Models;
+
 using Microsoft.Rest;
+
 using Package.Domain.Exceptions;
 using Package.Domain.Models;
 using Package.Domain.Services;
+
 using UploadArtifactApi;
 
 namespace Package.Gateway;
@@ -27,7 +34,7 @@ public class HttpPackageGateway : IPackageGateway
         _deployArtifactApi = deployArtifactApi;
     }
 
-    public async Task<UploadedPackage> UploadPackageAsync(CreatedPackage createdPackage, string catalogVersion, string key)
+    public async Task<UploadedPackage> UploadPackageAsync(CreatedPackage createdPackage, string key, CatalogData catalog)
     {
         try
         {
@@ -35,9 +42,8 @@ public class HttpPackageGateway : IPackageGateway
             var res = await _artifactUploadApi.ArtifactUploadV11PrivateArtifactPostAsync(
                 createdPackage.Package,
                 createdPackage.Name,
-                catalogVersion,
-                createdPackage.Type,
                 key,
+                catalog,
                 default, _packagePresenter);
 
             if (res.ArtifactId == null) throw new UploadPackageException("Received an invalid upload response");
@@ -108,7 +114,7 @@ public class HttpPackageGateway : IPackageGateway
             }
             throw new GetDeploymentPackageException("Received an invalid deployment info response");
         }
-        
+
         if (res.Response.StatusCode is HttpStatusCode.Forbidden or HttpStatusCode.Unauthorized)
         {
             throw new KeyException($"The GetDeployedPackage API returned a response with status code {res.Response.StatusCode}");

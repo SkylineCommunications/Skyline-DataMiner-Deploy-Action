@@ -1,4 +1,6 @@
-﻿using Package.Builder;
+﻿using Catalog.Domain;
+
+using Package.Builder;
 using Package.Builder.Exceptions;
 using Package.Domain.Exceptions;
 using Package.Domain.Models;
@@ -24,7 +26,7 @@ public interface IPackageService
     /// <returns>The uploaded package if succeeded.</returns>
     /// <exception cref="KeyException">When the <paramref name="key"/> isn't valid or authorized to execute this action.</exception>
     /// <exception cref="UploadPackageException">When something went wrong while uploading the package.</exception>
-    Task<UploadedPackage> UploadPackageAsync(CreatedPackage createdPackage,string catalogVersion, string key);
+    Task<UploadedPackage> UploadPackageAsync(CreatedPackage createdPackage, string key, CatalogData catalog);
 
     /// <summary>
     /// Starts the deployment of the package on the DMS.

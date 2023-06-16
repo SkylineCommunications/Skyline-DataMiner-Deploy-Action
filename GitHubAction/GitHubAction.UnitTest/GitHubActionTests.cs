@@ -3,12 +3,21 @@ using System.IO;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+
+using Catalog.Domain;
+
+using GIT;
+
 using GitHubAction.Domain.Entities;
 using GitHubAction.Factories;
 using GitHubAction.Presenters;
+
 using Microsoft.Extensions.Logging;
+
 using Moq;
+
 using NUnit.Framework;
+
 using Package.Builder;
 using Package.Domain.Enums;
 using Package.Domain.Exceptions;
@@ -27,7 +36,7 @@ namespace GitHubAction.UnitTest
         private GitHubAction _gitHubAction = null!;
         private Mock<ISourceUriService> _uriServiceMock;
         private Mock<IOutputPathProvider> _outputPathProvider;
-
+        private Mock<IGITInfo> _gitInfo;
         [SetUp]
         public void Setup()
         {
@@ -38,8 +47,9 @@ namespace GitHubAction.UnitTest
             _inputParserMock = new Mock<IInputFactory>();
             _loggerMock = new Mock<ILogger<GitHubAction>>();
             _outputPathProvider = new Mock<IOutputPathProvider>();
+            _gitInfo = new Mock<IGITInfo>();
 
-            _gitHubAction = new GitHubAction(_packageServiceMock.Object, _inputParserMock.Object, _packagePresenterMock.Object, _outputPresenterMock.Object, TimeSpan.Zero, TimeSpan.Zero, _uriServiceMock.Object, _outputPathProvider.Object);
+            _gitHubAction = new GitHubAction(_packageServiceMock.Object, _inputParserMock.Object, _packagePresenterMock.Object, _outputPresenterMock.Object, TimeSpan.Zero, TimeSpan.Zero, _uriServiceMock.Object, _outputPathProvider.Object, _gitInfo.Object);
         }
 
         [Test]
@@ -106,8 +116,18 @@ namespace GitHubAction.UnitTest
                 .Setup(createPackageAsync)
                 .ReturnsAsync(createdPackage);
 
+            CatalogData catalog = new CatalogData()
+            {
+                Version = version,
+                Branch = String.Empty,
+                ContentType = "type",
+                Identifier = String.Empty,
+                IsPreRelease = false,
+                Name = packageName
+            };
+
             Expression<Func<IPackageService, Task<UploadedPackage>>> uploadPackageAsync = s =>
-                s.UploadPackageAsync(It.IsAny<CreatedPackage>(), version, key);
+                s.UploadPackageAsync(It.IsAny<CreatedPackage>(), key, catalog);
 
             var uploadedPackage = new UploadedPackage(id);
 
@@ -228,8 +248,18 @@ namespace GitHubAction.UnitTest
                 .Setup(createPackageAsync)
                 .ReturnsAsync(createdPackage);
 
+            CatalogData catalog = new CatalogData()
+            {
+                Version = version,
+                Branch = String.Empty,
+                ContentType = "type",
+                Identifier = String.Empty,
+                IsPreRelease = false,
+                Name = packageName
+            };
+
             Expression<Func<IPackageService, Task<UploadedPackage>>> uploadPackageAsync = s =>
-                s.UploadPackageAsync(It.IsAny<CreatedPackage>(), version, key);
+                s.UploadPackageAsync(It.IsAny<CreatedPackage>(), key, catalog);
 
             var uploadedPackage = new UploadedPackage(id);
 
@@ -425,8 +455,18 @@ namespace GitHubAction.UnitTest
                 .Setup(createPackageAsync)
                 .ReturnsAsync(createdPackage);
 
+            CatalogData catalog = new CatalogData()
+            {
+                Version = version,
+                Branch = String.Empty,
+                ContentType = "type",
+                Identifier = String.Empty,
+                IsPreRelease = false,
+                Name = packageName
+            };
+
             Expression<Func<IPackageService, Task<UploadedPackage>>> uploadPackageAsync = s =>
-                s.UploadPackageAsync(It.IsAny<CreatedPackage>(), version, key);
+                s.UploadPackageAsync(It.IsAny<CreatedPackage>(), key, catalog);
 
             var uploadedPackage = new UploadedPackage(id);
 
@@ -500,7 +540,7 @@ namespace GitHubAction.UnitTest
                 solutionFile,
                 packageName,
                 version,
-                SolutionType.DmScript, 
+                SolutionType.DmScript,
                 sourceUri);
 
             var args = new string[]
@@ -537,7 +577,7 @@ namespace GitHubAction.UnitTest
 
             _inputParserMock.Setup(parseInputs).Returns(inputs);
 
-            _gitHubAction = new GitHubAction(_packageServiceMock.Object, _inputParserMock.Object, _packagePresenterMock.Object, _outputPresenterMock.Object, TimeSpan.FromMilliseconds(1), TimeSpan.FromMilliseconds(2), _uriServiceMock.Object, _outputPathProvider.Object);
+            _gitHubAction = new GitHubAction(_packageServiceMock.Object, _inputParserMock.Object, _packagePresenterMock.Object, _outputPresenterMock.Object, TimeSpan.FromMilliseconds(1), TimeSpan.FromMilliseconds(2), _uriServiceMock.Object, _outputPathProvider.Object, _gitInfo.Object);
 
             Expression<Func<IPackageService, Task<CreatedPackage>>> createPackageAsync = s =>
                 s.CreatePackageAsync(It.Is<LocalPackageConfig>(config => compareLocalPackageConfig(localPackageConfig, config)));
@@ -548,8 +588,18 @@ namespace GitHubAction.UnitTest
                 .Setup(createPackageAsync)
                 .ReturnsAsync(createdPackage);
 
+            CatalogData catalog = new CatalogData()
+            {
+                Version = version,
+                Branch = String.Empty,
+                ContentType = "type",
+                Identifier = String.Empty,
+                IsPreRelease = false,
+                Name = packageName
+            };
+
             Expression<Func<IPackageService, Task<UploadedPackage>>> uploadPackageAsync = s =>
-                s.UploadPackageAsync(It.IsAny<CreatedPackage>(), version, key);
+                s.UploadPackageAsync(It.IsAny<CreatedPackage>(), key, catalog);
 
             var uploadedPackage = new UploadedPackage(id);
 
@@ -667,7 +717,7 @@ namespace GitHubAction.UnitTest
 
             _inputParserMock.Setup(parseInputs).Returns(inputs);
 
-            _gitHubAction = new GitHubAction(_packageServiceMock.Object, _inputParserMock.Object, _packagePresenterMock.Object, _outputPresenterMock.Object, TimeSpan.FromMilliseconds(1), TimeSpan.FromMilliseconds(2), _uriServiceMock.Object, _outputPathProvider.Object);
+            _gitHubAction = new GitHubAction(_packageServiceMock.Object, _inputParserMock.Object, _packagePresenterMock.Object, _outputPresenterMock.Object, TimeSpan.FromMilliseconds(1), TimeSpan.FromMilliseconds(2), _uriServiceMock.Object, _outputPathProvider.Object, _gitInfo.Object);
 
             Expression<Func<IPackageService, Task<CreatedPackage>>> createPackageAsync = s =>
                 s.CreatePackageAsync(It.Is<LocalPackageConfig>(config => compareLocalPackageConfig(localPackageConfig, config)));
@@ -678,8 +728,18 @@ namespace GitHubAction.UnitTest
                 .Setup(createPackageAsync)
                 .ReturnsAsync(createdPackage);
 
+            CatalogData catalog = new CatalogData()
+            {
+                Version = version,
+                Branch = String.Empty,
+                ContentType = "type",
+                Identifier = String.Empty,
+                IsPreRelease = false,
+                Name = packageName
+            };
+
             Expression<Func<IPackageService, Task<UploadedPackage>>> uploadPackageAsync = s =>
-                s.UploadPackageAsync(It.IsAny<CreatedPackage>(), version, key);
+                s.UploadPackageAsync(It.IsAny<CreatedPackage>(), key, catalog);
 
             var uploadedPackage = new UploadedPackage(id);
 
@@ -796,7 +856,7 @@ namespace GitHubAction.UnitTest
 
             _inputParserMock.Setup(parseInputs).Returns(inputs);
 
-            _gitHubAction = new GitHubAction(_packageServiceMock.Object, _inputParserMock.Object, _packagePresenterMock.Object, _outputPresenterMock.Object, TimeSpan.FromMilliseconds(1), TimeSpan.FromMilliseconds(2), _uriServiceMock.Object, _outputPathProvider.Object);
+            _gitHubAction = new GitHubAction(_packageServiceMock.Object, _inputParserMock.Object, _packagePresenterMock.Object, _outputPresenterMock.Object, TimeSpan.FromMilliseconds(1), TimeSpan.FromMilliseconds(2), _uriServiceMock.Object, _outputPathProvider.Object, _gitInfo.Object);
 
             Expression<Func<IPackageService, Task<CreatedPackage>>> createPackageAsync = s =>
                 s.CreatePackageAsync(It.Is<LocalPackageConfig>(config => compareLocalPackageConfig(localPackageConfig, config)));
@@ -807,8 +867,18 @@ namespace GitHubAction.UnitTest
                 .Setup(createPackageAsync)
                 .ReturnsAsync(createdPackage);
 
+            CatalogData catalog = new CatalogData()
+            {
+                Version = version,
+                Branch = String.Empty,
+                ContentType = "type",
+                Identifier = String.Empty,
+                IsPreRelease = false,
+                Name = packageName
+            };
+
             Expression<Func<IPackageService, Task<UploadedPackage>>> uploadPackageAsync = s =>
-                s.UploadPackageAsync(It.IsAny<CreatedPackage>(), version, key);
+                s.UploadPackageAsync(It.IsAny<CreatedPackage>(), key, catalog);
 
             var uploadedPackage = new UploadedPackage(id);
 
@@ -935,9 +1005,19 @@ namespace GitHubAction.UnitTest
                 .Setup(createPackageAsync)
                 .ReturnsAsync(createdPackage);
 
+            CatalogData catalog = new CatalogData()
+            {
+                Version = version,
+                Branch = String.Empty,
+                ContentType = "type",
+                Identifier = String.Empty,
+                IsPreRelease = false,
+                Name = packageName
+            };
+
             // Mocks
             Expression<Func<IPackageService, Task<UploadedPackage>>> uploadPackageAsync = s =>
-                s.UploadPackageAsync(It.IsAny<CreatedPackage>(), version, key);
+                s.UploadPackageAsync(It.IsAny<CreatedPackage>(), key, catalog);
 
             var uploadedPackage = new UploadedPackage(id);
 
@@ -1044,9 +1124,19 @@ namespace GitHubAction.UnitTest
                 .Setup(createPackageAsync)
                 .ReturnsAsync(createdPackage);
 
+            CatalogData catalog = new CatalogData()
+            {
+                Version = version,
+                Branch = String.Empty,
+                ContentType = "type",
+                Identifier = String.Empty,
+                IsPreRelease = false,
+                Name = packageName
+            };
+
             // Mocks
             Expression<Func<IPackageService, Task<UploadedPackage>>> uploadPackageAsync = s =>
-                s.UploadPackageAsync(It.IsAny<CreatedPackage>(), version, key);
+                s.UploadPackageAsync(It.IsAny<CreatedPackage>(), key, catalog);
 
             var uploadedPackage = new UploadedPackage(id);
 
@@ -1152,9 +1242,19 @@ namespace GitHubAction.UnitTest
                 .Setup(createPackageAsync)
                 .ReturnsAsync(createdPackage);
 
+            CatalogData catalog = new CatalogData()
+            {
+                Version = version,
+                Branch = String.Empty,
+                ContentType = "type",
+                Identifier = String.Empty,
+                IsPreRelease = false,
+                Name = packageName
+            };
+
             // Mocks
             Expression<Func<IPackageService, Task<UploadedPackage>>> uploadPackageAsync = s =>
-                s.UploadPackageAsync(It.IsAny<CreatedPackage>(), version, key);
+                s.UploadPackageAsync(It.IsAny<CreatedPackage>(), key, catalog);
 
             var uploadedPackage = new UploadedPackage(id);
 
@@ -1262,8 +1362,18 @@ namespace GitHubAction.UnitTest
                 .Setup(createPackageAsync)
                 .ReturnsAsync(createdPackage);
 
+            CatalogData catalog = new CatalogData()
+            {
+                Version = version,
+                Branch = String.Empty,
+                ContentType = "type",
+                Identifier = String.Empty,
+                IsPreRelease = false,
+                Name = packageName
+            };
+
             Expression<Func<IPackageService, Task<UploadedPackage>>> uploadPackageAsync = s =>
-                s.UploadPackageAsync(It.IsAny<CreatedPackage>(), version, key);
+                s.UploadPackageAsync(It.IsAny<CreatedPackage>(), key, catalog);
 
             var ex = new UploadPackageException("this should be thrown in the test", new Exception("inner exception"));
 
@@ -1356,8 +1466,18 @@ namespace GitHubAction.UnitTest
                 .Setup(createPackageAsync)
                 .ReturnsAsync(createdPackage);
 
+            CatalogData catalog = new CatalogData()
+            {
+                Version = version,
+                Branch = String.Empty,
+                ContentType = "type",
+                Identifier = String.Empty,
+                IsPreRelease = false,
+                Name = packageName
+            };
+
             Expression<Func<IPackageService, Task<UploadedPackage>>> uploadPackageAsync = s =>
-                s.UploadPackageAsync(It.IsAny<CreatedPackage>(), version, key);
+                s.UploadPackageAsync(It.IsAny<CreatedPackage>(), key, catalog);
 
             _packageServiceMock
                 .Setup(uploadPackageAsync)

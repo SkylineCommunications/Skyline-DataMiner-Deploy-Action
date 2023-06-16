@@ -1,4 +1,8 @@
-﻿using GitHubAction.Domain.Entities;
+﻿using Catalog.Domain;
+
+using GIT;
+
+using GitHubAction.Domain.Entities;
 using GitHubAction.Factories;
 using GitHubAction.Presenters;
 
@@ -11,6 +15,8 @@ using Package.Domain.Services;
 
 using Skyline.DataMiner.CICD.FileSystem;
 
+using System.Text.RegularExpressions;
+
 namespace GitHubAction
 {
     public class GitHubAction
@@ -22,16 +28,17 @@ namespace GitHubAction
         private readonly IInputFactory _inputParserSerivce;
         private readonly TimeSpan _deploymentBackOff;
         private readonly TimeSpan _deploymentMaxBackOff;
+        private readonly IGITInfo _git;
         private ISourceUriService _sourceUriService;
 
-        public GitHubAction(IPackageService packageService, IInputFactory inputParser, IPackagePresenter packagePresenter, IOutputPresenter outputPresenter, ISourceUriService sourceUriService, IOutputPathProvider outputPathProvider)
-            : this(packageService, inputParser, packagePresenter, outputPresenter, TimeSpan.FromSeconds(3), TimeSpan.FromMinutes(2), sourceUriService, outputPathProvider)
+        public GitHubAction(IPackageService packageService, IInputFactory inputParser, IPackagePresenter packagePresenter, IOutputPresenter outputPresenter, ISourceUriService sourceUriService, IOutputPathProvider outputPathProvider, IGITInfo git)
+            : this(packageService, inputParser, packagePresenter, outputPresenter, TimeSpan.FromSeconds(3), TimeSpan.FromMinutes(2), sourceUriService, outputPathProvider, git)
         {
 
         }
 
         public GitHubAction(IPackageService packageService, IInputFactory inputParser, IPackagePresenter packagePresenter,
-            IOutputPresenter outputPresenter, TimeSpan minimumBackOff, TimeSpan maximumBackOff, ISourceUriService sourceUriService, IOutputPathProvider outputPathProvider)
+            IOutputPresenter outputPresenter, TimeSpan minimumBackOff, TimeSpan maximumBackOff, ISourceUriService sourceUriService, IOutputPathProvider outputPathProvider, IGITInfo git)
         {
             _packageService = packageService;
             _inputParserSerivce = inputParser;
@@ -41,6 +48,7 @@ namespace GitHubAction
             _deploymentMaxBackOff = maximumBackOff;
             _sourceUriService = sourceUriService;
             _outputPathProvider = outputPathProvider;
+            _git = git;
         }
 
         public async Task<int> RunAsync(string[] args, CancellationToken cancellationToken)
@@ -73,7 +81,8 @@ namespace GitHubAction
                     var createdPackage = await CreatePackageAsync(localPackageConfig);
                     if (createdPackage == null) return 4;
 
-                    uploadedPackage = await UploadPackageAsync(inputs.ApiKey, inputs.Version ?? "0.0.0", createdPackage);
+                    var catalog = CatalogDataFactory.Create(inputs, createdPackage, _git);
+                    uploadedPackage = await UploadPackageAsync(inputs.ApiKey, createdPackage, catalog);
                     if (uploadedPackage == null) return 5;
                     _outputPresenter.PresentOutputVariable("ARTIFACT_ID", uploadedPackage.ArtifactId);
                 }
@@ -170,14 +179,14 @@ namespace GitHubAction
             return deployingPackage;
         }
 
-        private async Task<UploadedPackage?> UploadPackageAsync(string key, string catalogVersion, CreatedPackage createdPackage)
+        private async Task<UploadedPackage?> UploadPackageAsync(string key, CreatedPackage createdPackage, CatalogData catalog)
         {
             _packagePresenter.PresentStartingPackageUpload();
 
             UploadedPackage uploadedPackage;
             try
             {
-                uploadedPackage = await _packageService.UploadPackageAsync(createdPackage, catalogVersion, key);
+                uploadedPackage = await _packageService.UploadPackageAsync(createdPackage, key, catalog);
             }
             catch (UploadPackageException e)
             {
