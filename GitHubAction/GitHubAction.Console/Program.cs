@@ -1,4 +1,6 @@
-﻿using GitHubAction.Console.Extensions;
+﻿using GIT;
+
+using GitHubAction.Console.Extensions;
 using GitHubAction.Console.Options;
 using GitHubAction.Factories;
 using GitHubAction.Factories.Impl;
@@ -78,6 +80,7 @@ public class Program
                 services.AddScoped<IPackageService, PackageService>();
                 services.AddScoped<IPackageGateway, HttpPackageGateway>();
                 services.AddScoped<IPackageBuilder, PackageBuilder>();
+                services.AddScoped<IGITInfo, GITInfo>();
                 services.AddScoped<IFileSystem, FileSystem>();
                 services.AddScoped<IInputFactory, InputFactory>();
                 services.AddScoped<IInputFactoryPresenter, InputFactoryPresenter>();
