@@ -15,23 +15,40 @@ namespace GIT
         {
         }
 
-        public string GetCurrentBranch()
+        public string GetCurrentBranch(string tag)
         {
 
             using (PowerShell powershell = PowerShell.Create())
             {
-                powershell.AddScript("git branch --show - current");
+                powershell.AddScript($"git branch --remotes --contains {tag}");
                 var results = powershell.Invoke();
-                string resultString = String.Join(',', results);
+                string resultString = $"From git branch --remotes --contains {tag}: " + String.Join(',', results);
                 if (String.IsNullOrWhiteSpace(resultString))
                 {
                     powershell.Commands.Clear();
                     powershell.AddScript("git rev-parse --abbrev-ref HEAD");
                     results = powershell.Invoke();
-                    resultString = String.Join(',', results);
+                    resultString = $"From git rev-parse --abbrev-ref HEAD: " + String.Join(',', results);
                 }
 
-                return resultString;
+                if (String.IsNullOrWhiteSpace(resultString))
+                {
+                    powershell.Commands.Clear();
+                    powershell.AddScript($"git rev-parse tags/{tag}~0");
+                    var commitId = powershell.Invoke();
+                    powershell.Commands.Clear();
+                    powershell.AddScript($"git branch --contains {commitId}");
+                    results = powershell.Invoke();
+                    resultString = $"From : git branch --contains {commitId}: " + String.Join(',', results);
+                }
+
+
+                if (String.IsNullOrWhiteSpace(resultString))
+                {
+                    resultString = "No GIT Commands Returned Data.";
+                }
+
+                    return resultString;
             }
 
             //using (Repository localRepo = new Repository(Directory.GetCurrentDirectory().TrimEnd('/')))
