@@ -23,7 +23,7 @@ namespace GIT
                 powershell.AddScript($"git branch --remotes --contains {tag}");
                 var results = powershell.Invoke();
                 string resultString = $"From git branch --remotes --contains {tag}: " + String.Join(',', results);
-                if (String.IsNullOrWhiteSpace(resultString))
+                if (String.IsNullOrWhiteSpace(String.Join(',', results)))
                 {
                     powershell.Commands.Clear();
                     powershell.AddScript("git rev-parse --abbrev-ref HEAD");
@@ -31,7 +31,7 @@ namespace GIT
                     resultString = $"From git rev-parse --abbrev-ref HEAD: " + String.Join(',', results);
                 }
 
-                if (String.IsNullOrWhiteSpace(resultString))
+                if (String.IsNullOrWhiteSpace(String.Join(',', results)))
                 {
                     powershell.Commands.Clear();
                     powershell.AddScript($"git rev-parse tags/{tag}~0");
@@ -43,7 +43,7 @@ namespace GIT
                 }
 
 
-                if (String.IsNullOrWhiteSpace(resultString))
+                if (String.IsNullOrWhiteSpace(String.Join(',', results)))
                 {
                     resultString = "No GIT Commands Returned Data.";
                 }
