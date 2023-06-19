@@ -22,9 +22,18 @@ namespace GIT
             {
                 powershell.AddScript("git branch --show - current");
                 var results = powershell.Invoke();
-                return String.Join(',', results);
+                string resultString = String.Join(',', results);
+                if (String.IsNullOrWhiteSpace(resultString))
+                {
+                    powershell.Commands.Clear();
+                    powershell.AddScript("git rev-parse --abbrev-ref HEAD");
+                    results = powershell.Invoke();
+                    resultString = String.Join(',', results);
+                }
+
+                return resultString;
             }
-            
+
             //using (Repository localRepo = new Repository(Directory.GetCurrentDirectory().TrimEnd('/')))
             //{
             //    var thisBranch = localRepo.Head;
