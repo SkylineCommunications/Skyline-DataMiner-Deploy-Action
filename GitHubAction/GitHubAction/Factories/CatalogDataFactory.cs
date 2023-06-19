@@ -22,7 +22,7 @@
 
             if (string.IsNullOrWhiteSpace(branch) || branch == inputs.Version)
             {
-                branch = git.GetCurrentBranch();
+                branch = git.GetCurrentBranch(inputs.Version);
             }
 
             CatalogData catalog = new CatalogData()

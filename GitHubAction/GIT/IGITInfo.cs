@@ -2,7 +2,7 @@
 {
     public interface IGITInfo
     {
-        string GetCurrentBranch();
+        string GetCurrentBranch(string tag);
         string GetSourceUrl();
     }
 }
