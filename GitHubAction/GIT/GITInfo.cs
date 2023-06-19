@@ -13,21 +13,23 @@ namespace GIT
 
         public GITInfo()
         {
-            // git config --global --add safe.directory "$GITHUB_WORKSPACE"
-            using (PowerShell powershell = PowerShell.Create())
-            {
-                powershell.AddScript($"git config --global --add safe.directory \"{Directory.GetCurrentDirectory()}\"");
-                powershell.Invoke();
-            }
         }
 
         public string GetCurrentBranch()
         {
-            using (Repository localRepo = new Repository(Directory.GetCurrentDirectory().TrimEnd('/')))
+
+            using (PowerShell powershell = PowerShell.Create())
             {
-                var thisBranch = localRepo.Head;
-                return thisBranch.FriendlyName;
+                powershell.AddScript("git branch --show - current");
+                var results = powershell.Invoke();
+                return String.Join(',', results);
             }
+            
+            //using (Repository localRepo = new Repository(Directory.GetCurrentDirectory().TrimEnd('/')))
+            //{
+            //    var thisBranch = localRepo.Head;
+            //    return thisBranch.FriendlyName;
+            //}
         }
 
         public string GetSourceUrl()
