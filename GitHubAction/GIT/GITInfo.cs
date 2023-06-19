@@ -20,6 +20,9 @@ namespace GIT
 
             using (PowerShell powershell = PowerShell.Create())
             {
+                powershell.AddScript($"git fetch --all");
+                powershell.Invoke();
+                powershell.Commands.Clear();
                 powershell.AddScript($"git branch --remotes --contains {tag}");
                 var results = powershell.Invoke();
                 string resultString = $"From git branch --remotes --contains {tag}: " + String.Join(',', results);
