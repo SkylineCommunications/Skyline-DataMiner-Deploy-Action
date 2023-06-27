@@ -13,11 +13,24 @@ namespace GIT
 
         public GITInfo()
         {
+            AllowWritesOnDirectory(Directory.GetCurrentDirectory());
+        }
+
+
+        private void AllowWritesOnDirectory(string path)
+        {
+            if (String.IsNullOrWhiteSpace(path))
+                return;
+
+            var directory = new DirectoryInfo(path) { Attributes = System.IO.FileAttributes.Normal };
+            foreach (var info in directory.GetFileSystemInfos("*", System.IO.SearchOption.AllDirectories))
+            {
+                info.Attributes = System.IO.FileAttributes.Normal;
+            }
         }
 
         public string GetCurrentBranch(string tag)
         {
-
             using (PowerShell powershell = PowerShell.Create())
             {
                 powershell.AddScript($"git fetch --all");
