@@ -62,9 +62,13 @@ namespace GIT
                 if (String.IsNullOrWhiteSpace(String.Join(',', results)))
                 {
                     resultString = "No GIT Commands Returned Data.";
+                    if (powershell.HadErrors)
+                    {
+                        resultString += "errors: " + powershell.Streams.Error.ReadAll();
+                    }
                 }
 
-                    return resultString;
+                return resultString;
             }
 
             //using (Repository localRepo = new Repository(Directory.GetCurrentDirectory().TrimEnd('/')))
