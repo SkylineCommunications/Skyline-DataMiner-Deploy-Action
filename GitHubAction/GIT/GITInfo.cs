@@ -66,6 +66,10 @@ namespace GIT
                     {
                         resultString += "errors: " + powershell.Streams.Error.ReadAll();
                     }
+                    else
+                    {
+                        resultString += "no errors";
+                    }
                 }
 
                 return resultString;
