@@ -11,4 +11,6 @@ RUN dotnet publish ./GitHubAction/GitHubAction.Console/GitHubAction.Console.cspr
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
 COPY --from=build-env /app/out .
 COPY --from=build-env /app/InstallScript ./InstallScript
+RUN apt-get -y update
+RUN apt-get -y install git
 ENTRYPOINT [ "dotnet", "/GitHubAction.Console.dll" ]
