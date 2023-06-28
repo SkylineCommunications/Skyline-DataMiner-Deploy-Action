@@ -20,6 +20,10 @@ namespace GIT
                 var gitVersion = powershell.Invoke().FirstOrDefault()?.ToString();
                 powershell.Commands.Clear();
 
+                powershell.AddScript($"git config --global --add safe.directory {Directory.GetCurrentDirectory()}");
+                powershell.Invoke();
+                powershell.Commands.Clear();
+
                 powershell.AddScript("$PSVersionTable.PSVersion");
                 var version = String.Join(",", powershell.Invoke());
                 powershell.Commands.Clear();
