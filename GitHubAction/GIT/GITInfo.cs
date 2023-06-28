@@ -35,7 +35,7 @@ namespace GIT
                     powershell.Commands.Clear();
 
                     string resultString = "errors: " + String.Join(",", powershell.Streams.Error.ReadAll());
-                    throw new InvalidOperationException("GIT Initial Setup Failed with PowerShell Errors: " + resultString + Environment.NewLine + " ps version: " + version + " OS: " + checkOS + " git version:" + gitVersion "--end");
+                    throw new InvalidOperationException("GIT Initial Setup Failed with PowerShell Errors: " + resultString + Environment.NewLine + " ps version: " + version + " OS: " + checkOS + " git version:" + gitVersion + "--end");
                 }
             }
         }
