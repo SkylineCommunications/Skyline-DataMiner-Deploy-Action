@@ -14,6 +14,18 @@ namespace GIT
         public GITInfo()
         {
             AllowWritesOnDirectory(Directory.GetCurrentDirectory());
+            using (PowerShell powershell = PowerShell.Create())
+            {
+                powershell.AddScript("winget install --id Git. Git -e --source winget");
+                powershell.Invoke();
+                powershell.Commands.Clear();
+
+                if (powershell.HadErrors)
+                {
+                    string resultString = "errors: " + String.Join(",", powershell.Streams.Error.ReadAll());
+                    throw new InvalidOperationException("GIT Install Failed: " + resultString);
+                }
+            }
         }
 
 
@@ -33,10 +45,6 @@ namespace GIT
         {
             using (PowerShell powershell = PowerShell.Create())
             {
-                powershell.AddScript("winget install --id Git. Git -e --source winget");
-                powershell.Invoke();
-                powershell.Commands.Clear();
-
                 powershell.AddScript($"git fetch --all");
                 powershell.Invoke();
                 powershell.Commands.Clear();
@@ -47,7 +55,7 @@ namespace GIT
 
                 string resultString = $"From git branch --remotes --contains {tag}: " + String.Join(',', results);
                 if (String.IsNullOrWhiteSpace(String.Join(',', results)))
-                {               
+                {
                     powershell.AddScript("git rev-parse --abbrev-ref HEAD");
                     results = powershell.Invoke();
                     powershell.Commands.Clear();
