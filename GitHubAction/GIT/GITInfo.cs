@@ -28,8 +28,8 @@ namespace GIT
                 var content = String.Join(",", powershell.Invoke());
                 powershell.Commands.Clear();
 
-                powershell.AddScript("Get-PSRepository");
-                var checkRegistration = String.Join(",", powershell.Invoke());
+                powershell.AddScript("$PSVersionTable.Platform");
+                var checkOS = String.Join(",", powershell.Invoke());
                 powershell.Commands.Clear();
 
                 if (String.IsNullOrWhiteSpace(gitVersion))
@@ -43,7 +43,7 @@ namespace GIT
                 if (powershell.HadErrors)
                 {
                     string resultString = "errors: " + String.Join(",", powershell.Streams.Error.ReadAll());
-                    throw new InvalidOperationException("GIT Install Failed: " + resultString + Environment.NewLine + "Known modules: " + content + " ps version: " + version + " Registration: " + checkRegistration + "--end");
+                    throw new InvalidOperationException("GIT Install Failed: " + resultString + Environment.NewLine + "Known modules: " + content + " ps version: " + version + " OS: " + checkOS + "--end");
                 }
             }
         }
