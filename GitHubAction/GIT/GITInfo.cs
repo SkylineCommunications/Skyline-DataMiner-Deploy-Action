@@ -32,6 +32,11 @@ namespace GIT
                 var checkOS = String.Join(",", powershell.Invoke());
                 powershell.Commands.Clear();
 
+                powershell.AddScript("Get-Command -Noun 'Module'");
+                var allCmds = String.Join(",", powershell.Invoke());
+                powershell.Commands.Clear();
+
+
                 if (String.IsNullOrWhiteSpace(gitVersion))
                 {
                     powershell.AddScript("Install-Module PowerShellGet -Force -SkipPublisherCheck");
@@ -43,7 +48,7 @@ namespace GIT
                 if (powershell.HadErrors)
                 {
                     string resultString = "errors: " + String.Join(",", powershell.Streams.Error.ReadAll());
-                    throw new InvalidOperationException("GIT Install Failed: " + resultString + Environment.NewLine + "Known modules: " + content + " ps version: " + version + " OS: " + checkOS + "--end");
+                    throw new InvalidOperationException("GIT Install Failed: " + resultString + Environment.NewLine + "Known modules: " + content + " ps version: " + version + " OS: " + checkOS + " allCmds: " + allCmds + "--end");
                 }
             }
         }
