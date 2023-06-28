@@ -43,16 +43,35 @@ namespace GIT
 
                 if (String.IsNullOrWhiteSpace(gitVersion))
                 {
-                    powershell.AddScript("Install-Module PowerShellGet -Force -SkipPublisherCheck");
-                    powershell.AddScript("Install-Module posh-git -Scope CurrentUser -AllowPrerelease -Force");
-                    powershell.Invoke();
-                    powershell.Commands.Clear();
+                    if (checkOS.Contains("Linux"))
+                    {
+                        powershell.AddScript("apt-get install git");
+                        powershell.Invoke();
+                        powershell.Commands.Clear();
+                    }
+                    else
+                    {
+
+                        powershell.AddScript("Install-Module PowerShellGet -Force -SkipPublisherCheck");
+                        powershell.AddScript("Install-Module posh-git -Scope CurrentUser -AllowPrerelease -Force");
+                        powershell.Invoke();
+                        powershell.Commands.Clear();
+                    }
                 }
+
+                powershell.AddScript("git --version");
+                gitVersion = powershell.Invoke().FirstOrDefault()?.ToString();
+                powershell.Commands.Clear();
 
                 if (powershell.HadErrors)
                 {
                     string resultString = "errors: " + String.Join(",", powershell.Streams.Error.ReadAll());
-                    throw new InvalidOperationException("GIT Install Failed: " + resultString + Environment.NewLine + "Known modules: " + content + " ps version: " + version + " OS: " + checkOS + " allCmds: " + allCmds + "--end");
+                    throw new InvalidOperationException("GIT Install Failed with PowerShell Errors: " + resultString + Environment.NewLine + "Known modules: " + content + " ps version: " + version + " OS: " + checkOS + " allCmds: " + allCmds + "--end");
+                }
+
+                if (String.IsNullOrWhiteSpace(gitVersion))
+                {
+                    throw new InvalidOperationException("GIT Install Failed: Known modules: " + content + " ps version: " + version + " OS: " + checkOS + " allCmds: " + allCmds + "--end");
                 }
             }
         }
