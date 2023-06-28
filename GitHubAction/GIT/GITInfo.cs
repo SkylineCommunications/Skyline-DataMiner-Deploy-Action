@@ -16,9 +16,17 @@ namespace GIT
             AllowWritesOnDirectory(Directory.GetCurrentDirectory());
             using (PowerShell powershell = PowerShell.Create())
             {
-                powershell.AddScript("winget install --id Git. Git -e --source winget");
-                powershell.Invoke();
+                powershell.AddScript("git --version");
+                var gitVersion = powershell.Invoke().FirstOrDefault()?.ToString();
                 powershell.Commands.Clear();
+
+                if (String.IsNullOrWhiteSpace(gitVersion))
+                {
+                    powershell.AddScript("Install-Module PowerShellGet -Force -SkipPublisherCheck");
+                    powershell.AddScript("Install-Module posh-git -Scope CurrentUser -AllowPrerelease -Force");
+                    powershell.Invoke();
+                    powershell.Commands.Clear();
+                }
 
                 if (powershell.HadErrors)
                 {
