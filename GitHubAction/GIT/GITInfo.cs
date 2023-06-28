@@ -24,18 +24,18 @@ namespace GIT
                 powershell.Invoke();
                 powershell.Commands.Clear();
 
-                powershell.AddScript("$PSVersionTable.PSVersion");
-                var version = String.Join(",", powershell.Invoke());
-                powershell.Commands.Clear();
-
-                powershell.AddScript("$PSVersionTable.Platform");
-                var checkOS = String.Join(",", powershell.Invoke());
-                powershell.Commands.Clear();
-
                 if (powershell.HadErrors)
                 {
+                    powershell.AddScript("$PSVersionTable.PSVersion");
+                    var version = String.Join(",", powershell.Invoke());
+                    powershell.Commands.Clear();
+
+                    powershell.AddScript("$PSVersionTable.Platform");
+                    var checkOS = String.Join(",", powershell.Invoke());
+                    powershell.Commands.Clear();
+
                     string resultString = "errors: " + String.Join(",", powershell.Streams.Error.ReadAll());
-                    throw new InvalidOperationException("GIT Install Failed with PowerShell Errors: " + resultString + Environment.NewLine + " ps version: " + version + " OS: " + checkOS + "--end");
+                    throw new InvalidOperationException("GIT Initial Setup Failed with PowerShell Errors: " + resultString + Environment.NewLine + " ps version: " + version + " OS: " + checkOS + " git version:" + gitVersion "--end");
                 }
             }
         }
@@ -65,48 +65,21 @@ namespace GIT
                 var results = powershell.Invoke();
                 powershell.Commands.Clear();
 
-                string resultString = $"From git branch --remotes --contains {tag}: " + String.Join(',', results);
-                if (String.IsNullOrWhiteSpace(String.Join(',', results)))
-                {
-                    powershell.AddScript("git rev-parse --abbrev-ref HEAD");
-                    results = powershell.Invoke();
-                    powershell.Commands.Clear();
-                    resultString = $"From git rev-parse --abbrev-ref HEAD: " + String.Join(',', results);
-                }
+                string resultString = String.Join(',', results).Replace("origin/", "");
 
                 if (String.IsNullOrWhiteSpace(String.Join(',', results)))
                 {
-                    powershell.AddScript($"git rev-parse tags/{tag}~0");
-                    var commitId = powershell.Invoke();
-                    powershell.Commands.Clear();
-                    powershell.AddScript($"git branch --contains {commitId}");
-                    results = powershell.Invoke();
-                    powershell.Commands.Clear();
-                    resultString = $"From : git branch --contains {commitId}: " + String.Join(',', results);
-                }
-
-
-                if (String.IsNullOrWhiteSpace(String.Join(',', results)))
-                {
-                    resultString = "No GIT Commands Returned Data.";
+                    resultString = "GIT Branch Commands Returned Data.";
                     if (powershell.HadErrors)
                     {
                         resultString += "errors: " + String.Join(",", powershell.Streams.Error.ReadAll());
                     }
-                    else
-                    {
-                        resultString += "no errors";
-                    }
+
+                    throw new InvalidOperationException("Getting Current Branch through Git failed with errors:" + resultString);
                 }
 
                 return resultString;
             }
-
-            //using (Repository localRepo = new Repository(Directory.GetCurrentDirectory().TrimEnd('/')))
-            //{
-            //    var thisBranch = localRepo.Head;
-            //    return thisBranch.FriendlyName;
-            //}
         }
 
         public string GetSourceUrl()
