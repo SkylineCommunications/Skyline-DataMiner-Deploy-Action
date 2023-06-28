@@ -42,19 +42,24 @@ public class HttpArtifactUploadApi : IArtifactUploadApi, IDisposable
         string logInfo = $"--name {name} --version {catalog.Version} --contentType {catalog.ContentType} --branch {catalog.Branch} --identifier {catalog.Identifier} --isprerelease {catalog.IsPreRelease} --file {Path.GetFileName(fileStream.Name)}";
         presenter.LogInformation("HTTP Post with info: " + logInfo);
 
-        var response = await _httpClient.PostAsync(UploadPath, formData, cancellationToken);
+        // TODO, ENABLE AGAIN FOR DEBUGGING DISABLED
+        //var response = await _httpClient.PostAsync(UploadPath, formData, cancellationToken);
 
-        if (response.IsSuccessStatusCode)
-        {
-            return JsonConvert.DeserializeObject<PrivateArtifactModel>(await response.Content.ReadAsStringAsync(cancellationToken));
-        }
+        //if (response.IsSuccessStatusCode)
+        //{
+        //    return JsonConvert.DeserializeObject<PrivateArtifactModel>(await response.Content.ReadAsStringAsync(cancellationToken));
+        //}
 
-        if (response.StatusCode is HttpStatusCode.Forbidden or HttpStatusCode.Unauthorized)
-        {
-            throw new KeyException($"The upload api returned a {response.StatusCode} response. Body: {response.Content}");
-        }
+        //if (response.StatusCode is HttpStatusCode.Forbidden or HttpStatusCode.Unauthorized)
+        //{
+        //    throw new KeyException($"The upload api returned a {response.StatusCode} response. Body: {response.Content}");
+        //}
 
-        throw new UploadPackageException($"The upload api returned a {response.StatusCode} response. Body: {response.Content}");
+        //throw new UploadPackageException($"The upload api returned a {response.StatusCode} response. Body: {response.Content}");
+
+        // TODO
+
+        return null;
     }
 
     public void Dispose()

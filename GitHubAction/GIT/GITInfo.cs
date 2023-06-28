@@ -64,7 +64,7 @@ namespace GIT
                     resultString = "No GIT Commands Returned Data.";
                     if (powershell.HadErrors)
                     {
-                        resultString += "errors: " + powershell.Streams.Error.ReadAll();
+                        resultString += "errors: " + String.Join(",", powershell.Streams.Error.ReadAll());
                     }
                     else
                     {
