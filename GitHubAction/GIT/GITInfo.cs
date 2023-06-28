@@ -20,6 +20,10 @@ namespace GIT
                 var gitVersion = powershell.Invoke().FirstOrDefault()?.ToString();
                 powershell.Commands.Clear();
 
+                powershell.AddScript("Import-Module -Name PowerShellGet -MinimumVersion 2.0.0");
+                powershell.Invoke().FirstOrDefault()?.ToString();
+                powershell.Commands.Clear();
+
                 powershell.AddScript("$PSVersionTable.PSVersion");
                 var version = String.Join(",", powershell.Invoke());
                 powershell.Commands.Clear();
