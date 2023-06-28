@@ -33,28 +33,35 @@ namespace GIT
         {
             using (PowerShell powershell = PowerShell.Create())
             {
+                powershell.AddScript("winget install --id Git. Git -e --source winget");
+                powershell.Invoke();
+                powershell.Commands.Clear();
+
                 powershell.AddScript($"git fetch --all");
                 powershell.Invoke();
                 powershell.Commands.Clear();
+
                 powershell.AddScript($"git branch --remotes --contains {tag}");
                 var results = powershell.Invoke();
+                powershell.Commands.Clear();
+
                 string resultString = $"From git branch --remotes --contains {tag}: " + String.Join(',', results);
                 if (String.IsNullOrWhiteSpace(String.Join(',', results)))
-                {
-                    powershell.Commands.Clear();
+                {               
                     powershell.AddScript("git rev-parse --abbrev-ref HEAD");
                     results = powershell.Invoke();
+                    powershell.Commands.Clear();
                     resultString = $"From git rev-parse --abbrev-ref HEAD: " + String.Join(',', results);
                 }
 
                 if (String.IsNullOrWhiteSpace(String.Join(',', results)))
                 {
-                    powershell.Commands.Clear();
                     powershell.AddScript($"git rev-parse tags/{tag}~0");
                     var commitId = powershell.Invoke();
                     powershell.Commands.Clear();
                     powershell.AddScript($"git branch --contains {commitId}");
                     results = powershell.Invoke();
+                    powershell.Commands.Clear();
                     resultString = $"From : git branch --contains {commitId}: " + String.Join(',', results);
                 }
 
