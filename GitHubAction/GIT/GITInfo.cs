@@ -39,7 +39,7 @@
             string mail = "";
             using (PowerShell powershell = PowerShell.Create())
             {
-                powershell.AddScript($"git fetch --all");
+                powershell.AddScript($"git fetch --all --force");
                 powershell.Invoke();
                 powershell.Commands.Clear();
 
