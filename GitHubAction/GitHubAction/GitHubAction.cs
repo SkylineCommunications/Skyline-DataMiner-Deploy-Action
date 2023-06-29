@@ -1,40 +1,37 @@
-﻿using Catalog.Domain;
-
-using GIT;
-
-using GitHubAction.Domain.Entities;
-using GitHubAction.Factories;
-using GitHubAction.Presenters;
-
-using Package.Builder;
-using Package.Builder.Exceptions;
-using Package.Domain.Enums;
-using Package.Domain.Exceptions;
-using Package.Domain.Models;
-using Package.Domain.Services;
-
-using Skyline.DataMiner.CICD.FileSystem;
-
-using System.Text.RegularExpressions;
-
-namespace GitHubAction
+﻿namespace GitHubAction
 {
+    using Catalog.Domain;
+
+    using Domain.Entities;
+
+    using Factories;
+
+    using GIT;
+
+    using Package.Builder;
+    using Package.Builder.Exceptions;
+    using Package.Domain.Enums;
+    using Package.Domain.Exceptions;
+    using Package.Domain.Models;
+    using Package.Domain.Services;
+
+    using Presenters;
+
     public class GitHubAction
     {
-        private readonly IPackageService _packageService;
-        private readonly IPackagePresenter _packagePresenter;
-        private readonly IOutputPresenter _outputPresenter;
-        private readonly IOutputPathProvider _outputPathProvider;
-        private readonly IInputFactory _inputParserSerivce;
         private readonly TimeSpan _deploymentBackOff;
         private readonly TimeSpan _deploymentMaxBackOff;
-        private readonly IGITInfo _git;
         private readonly IEnvironmentVariableService _EnvVarService;
+        private readonly IGITInfo _git;
+        private readonly IInputFactory _inputParserSerivce;
+        private readonly IOutputPathProvider _outputPathProvider;
+        private readonly IOutputPresenter _outputPresenter;
+        private readonly IPackagePresenter _packagePresenter;
+        private readonly IPackageService _packageService;
 
         public GitHubAction(IPackageService packageService, IInputFactory inputParser, IPackagePresenter packagePresenter, IOutputPresenter outputPresenter, IEnvironmentVariableService sourceUriService, IOutputPathProvider outputPathProvider, IGITInfo git)
             : this(packageService, inputParser, packagePresenter, outputPresenter, TimeSpan.FromSeconds(3), TimeSpan.FromMinutes(2), sourceUriService, outputPathProvider, git)
         {
-
         }
 
         public GitHubAction(IPackageService packageService, IInputFactory inputParser, IPackagePresenter packagePresenter,
@@ -104,7 +101,6 @@ namespace GitHubAction
                     if (deployedPackage == null) return 7;
                     _packagePresenter.PresentPackageDeploymentFinished(deployedPackage.Status);
                 }
-
             }
             catch (KeyException)
             {
@@ -159,6 +155,29 @@ namespace GitHubAction
             return deployedPackage;
         }
 
+        private async Task<CreatedPackage?> CreatePackageAsync(LocalPackageConfig localPackageConfig)
+        {
+            _packagePresenter.PresentStartCreatingPackage();
+            CreatedPackage createdPackage;
+            try
+            {
+                createdPackage = await _packageService.CreatePackageAsync(localPackageConfig);
+            }
+            catch (CreatePackageException e)
+            {
+                _packagePresenter.PresentPackageCreationFailed(e);
+                return null;
+            }
+            catch (UnsupportedSolutionException)
+            {
+                _packagePresenter.PresentUnsupportedSolutionType();
+                return null;
+            }
+
+            _packagePresenter.PresentPackageCreationSucceeded();
+            return createdPackage;
+        }
+
         private async Task<DeployingPackage?> DeployPackageAsync(string key, UploadedPackage uploadedPackage)
         {
             _packagePresenter.PresentStartingPackageDeployment();
@@ -199,29 +218,6 @@ namespace GitHubAction
 
             _packagePresenter.PresentPackageUploadSucceeded();
             return uploadedPackage;
-        }
-
-        private async Task<CreatedPackage?> CreatePackageAsync(LocalPackageConfig localPackageConfig)
-        {
-            _packagePresenter.PresentStartCreatingPackage();
-            CreatedPackage createdPackage;
-            try
-            {
-                createdPackage = await _packageService.CreatePackageAsync(localPackageConfig);
-            }
-            catch (CreatePackageException e)
-            {
-                _packagePresenter.PresentPackageCreationFailed(e);
-                return null;
-            }
-            catch (UnsupportedSolutionException)
-            {
-                _packagePresenter.PresentUnsupportedSolutionType();
-                return null;
-            }
-
-            _packagePresenter.PresentPackageCreationSucceeded();
-            return createdPackage;
         }
     }
 }
