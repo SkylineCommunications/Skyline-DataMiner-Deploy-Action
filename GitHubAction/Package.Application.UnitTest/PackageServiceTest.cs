@@ -41,7 +41,7 @@ namespace Package.Application.UnitTest
                 solutionFile,
                 packageName,
                 version,
-                SolutionType.DmScript,
+                ArtifactContentType.DmScript,
                 null);
 
             Expression<Func<IPackageBuilder, Task<CreatedPackage>>> createPackageAsync = s =>

@@ -72,7 +72,7 @@ namespace GitHubAction.UnitTest
                 solutionFile,
                 packageName,
                 version,
-                SolutionType.DmScript,
+                ArtifactContentType.DmScript,
                 sourceUri);
 
             var args = new string[]
@@ -205,7 +205,7 @@ namespace GitHubAction.UnitTest
                 solutionFile,
                 packageName,
                 version,
-                SolutionType.DmScript,
+                ArtifactContentType.DmScript,
                 sourceUri);
 
             var args = new string[]
@@ -414,7 +414,7 @@ namespace GitHubAction.UnitTest
                 solutionFile,
                 packageName,
                 version,
-                SolutionType.DmScript,
+                ArtifactContentType.DmScript,
                 sourceUri);
 
             var args = new string[]
@@ -546,7 +546,7 @@ namespace GitHubAction.UnitTest
                 solutionFile,
                 packageName,
                 version,
-                SolutionType.DmScript,
+                ArtifactContentType.DmScript,
                 sourceUri);
 
             var args = new string[]
@@ -687,7 +687,7 @@ namespace GitHubAction.UnitTest
                 solutionFile,
                 packageName,
                 version,
-                SolutionType.DmScript,
+                ArtifactContentType.DmScript,
                 sourceUri);
 
             var args = new string[]
@@ -827,7 +827,7 @@ namespace GitHubAction.UnitTest
                 solutionFile,
                 packageName,
                 version,
-                SolutionType.DmScript,
+                ArtifactContentType.DmScript,
                 sourceUri);
 
             var args = new string[]
@@ -968,7 +968,7 @@ namespace GitHubAction.UnitTest
                 solutionFile,
                 packageName,
                 version,
-                SolutionType.DmScript,
+                ArtifactContentType.DmScript,
                 sourceUri);
 
             var args = new string[]
@@ -1088,7 +1088,7 @@ namespace GitHubAction.UnitTest
                 solutionFile,
                 packageName,
                 version,
-                SolutionType.DmScript,
+                ArtifactContentType.DmScript,
                 sourceUri);
 
             var args = new string[]
@@ -1207,7 +1207,7 @@ namespace GitHubAction.UnitTest
                 solutionFile,
                 packageName,
                 version,
-                SolutionType.DmScript,
+                ArtifactContentType.DmScript,
                 sourceUri);
 
             var args = new string[]
@@ -1328,7 +1328,7 @@ namespace GitHubAction.UnitTest
                 solutionFile,
                 packageName,
                 version,
-                SolutionType.DmScript,
+                ArtifactContentType.DmScript,
                 sourceUri);
 
             var args = new string[]
@@ -1434,7 +1434,7 @@ namespace GitHubAction.UnitTest
                 solutionFile,
                 packageName,
                 version,
-                SolutionType.DmScript,
+                ArtifactContentType.DmScript,
                 sourceUri);
 
             var args = new string[]
@@ -1538,7 +1538,7 @@ namespace GitHubAction.UnitTest
                 solutionFile,
                 packageName,
                 version,
-                SolutionType.DmScript,
+                ArtifactContentType.DmScript,
                 sourceUri);
 
             var args = new string[]

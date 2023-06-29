@@ -77,7 +77,7 @@ namespace GitHubAction
                         new FileInfo(inputs.SolutionPath!),
                         inputs.PackageName!,
                         inputs.Version!,
-                        SolutionType.DmScript,
+                        ArtifactContentType.DmScript,
                         sourceUri,
                         inputs.BuildNumber!);
 
