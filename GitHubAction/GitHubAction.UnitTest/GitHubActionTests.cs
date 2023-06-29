@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq.Expressions;
+using System.Runtime;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -118,6 +119,7 @@ namespace GitHubAction.UnitTest
                 .Setup(createPackageAsync)
                 .ReturnsAsync(createdPackage);
 
+            _gitInfo.Setup(p => p.GetCommitterMail()).Returns("");
             CatalogData catalog = new CatalogData()
             {
                 Version = version,
@@ -125,7 +127,9 @@ namespace GitHubAction.UnitTest
                 ContentType = "type",
                 Identifier = sourceUri.ToString(),
                 IsPreRelease = false,
-                Name = packageName
+                Name = packageName,
+                CommitterMail = "",
+                ReleaseUri = ""
             };
 
             Expression<Func<IPackageService, Task<UploadedPackage>>> uploadPackageAsync = s =>
@@ -251,6 +255,7 @@ namespace GitHubAction.UnitTest
                 .Setup(createPackageAsync)
                 .ReturnsAsync(createdPackage);
 
+            _gitInfo.Setup(p => p.GetCommitterMail()).Returns("");
             CatalogData catalog = new CatalogData()
             {
                 Version = version,
@@ -258,7 +263,9 @@ namespace GitHubAction.UnitTest
                 ContentType = "type",
                 Identifier = sourceUri.ToString(),
                 IsPreRelease = false,
-                Name = packageName
+                Name = packageName,
+                CommitterMail = "",
+                ReleaseUri = "",
             };
 
             Expression<Func<IPackageService, Task<UploadedPackage>>> uploadPackageAsync = s =>
@@ -460,6 +467,7 @@ namespace GitHubAction.UnitTest
                 .Setup(createPackageAsync)
                 .ReturnsAsync(createdPackage);
 
+            _gitInfo.Setup(p => p.GetCommitterMail()).Returns("");
             CatalogData catalog = new CatalogData()
             {
                 Version = version,
@@ -467,7 +475,9 @@ namespace GitHubAction.UnitTest
                 ContentType = "type",
                 Identifier = sourceUri.ToString(),
                 IsPreRelease = false,
-                Name = packageName
+                Name = packageName,
+                CommitterMail = "",
+                ReleaseUri = "",
             };
 
             Expression<Func<IPackageService, Task<UploadedPackage>>> uploadPackageAsync = s =>
@@ -594,6 +604,7 @@ namespace GitHubAction.UnitTest
                 .Setup(createPackageAsync)
                 .ReturnsAsync(createdPackage);
 
+            _gitInfo.Setup(p => p.GetCommitterMail()).Returns("");
             CatalogData catalog = new CatalogData()
             {
                 Version = version,
@@ -601,7 +612,9 @@ namespace GitHubAction.UnitTest
                 ContentType = "type",
                 Identifier = sourceUri.ToString(),
                 IsPreRelease = false,
-                Name = packageName
+                Name = packageName,
+                CommitterMail = "",
+                ReleaseUri = "",
             };
 
             Expression<Func<IPackageService, Task<UploadedPackage>>> uploadPackageAsync = s =>
@@ -735,6 +748,7 @@ namespace GitHubAction.UnitTest
                 .Setup(createPackageAsync)
                 .ReturnsAsync(createdPackage);
 
+            _gitInfo.Setup(p => p.GetCommitterMail()).Returns("");
             CatalogData catalog = new CatalogData()
             {
                 Version = version,
@@ -742,7 +756,9 @@ namespace GitHubAction.UnitTest
                 ContentType = "type",
                 Identifier = sourceUri.ToString(),
                 IsPreRelease = false,
-                Name = packageName
+                Name = packageName,
+                CommitterMail = "",
+                ReleaseUri = "",
             };
 
             Expression<Func<IPackageService, Task<UploadedPackage>>> uploadPackageAsync = s =>
@@ -875,6 +891,7 @@ namespace GitHubAction.UnitTest
                 .Setup(createPackageAsync)
                 .ReturnsAsync(createdPackage);
 
+            _gitInfo.Setup(p => p.GetCommitterMail()).Returns("");
             CatalogData catalog = new CatalogData()
             {
                 Version = version,
@@ -882,7 +899,9 @@ namespace GitHubAction.UnitTest
                 ContentType = "type",
                 Identifier = sourceUri.ToString(),
                 IsPreRelease = false,
-                Name = packageName
+                Name = packageName,
+                CommitterMail = "",
+                ReleaseUri = "",
             };
 
             Expression<Func<IPackageService, Task<UploadedPackage>>> uploadPackageAsync = s =>
@@ -1014,6 +1033,7 @@ namespace GitHubAction.UnitTest
                 .Setup(createPackageAsync)
                 .ReturnsAsync(createdPackage);
 
+            _gitInfo.Setup(p => p.GetCommitterMail()).Returns("");
             CatalogData catalog = new CatalogData()
             {
                 Version = version,
@@ -1021,7 +1041,9 @@ namespace GitHubAction.UnitTest
                 ContentType = "type",
                 Identifier = sourceUri.ToString(),
                 IsPreRelease = false,
-                Name = packageName
+                Name = packageName,
+                CommitterMail = "",
+                ReleaseUri = "",
             };
 
             // Mocks
@@ -1134,6 +1156,7 @@ namespace GitHubAction.UnitTest
                 .Setup(createPackageAsync)
                 .ReturnsAsync(createdPackage);
 
+            _gitInfo.Setup(p => p.GetCommitterMail()).Returns("");
             CatalogData catalog = new CatalogData()
             {
                 Version = version,
@@ -1141,7 +1164,9 @@ namespace GitHubAction.UnitTest
                 ContentType = "type",
                 Identifier = sourceUri.ToString(),
                 IsPreRelease = false,
-                Name = packageName
+                Name = packageName,
+                CommitterMail = "",
+                ReleaseUri = "",
             };
 
             // Mocks
@@ -1253,6 +1278,7 @@ namespace GitHubAction.UnitTest
                 .Setup(createPackageAsync)
                 .ReturnsAsync(createdPackage);
 
+            _gitInfo.Setup(p => p.GetCommitterMail()).Returns("");
             CatalogData catalog = new CatalogData()
             {
                 Version = version,
@@ -1260,7 +1286,9 @@ namespace GitHubAction.UnitTest
                 ContentType = "type",
                 Identifier = sourceUri.ToString(),
                 IsPreRelease = false,
-                Name = packageName
+                Name = packageName,
+                CommitterMail = "",
+                ReleaseUri = "",
             };
 
             // Mocks
@@ -1374,6 +1402,7 @@ namespace GitHubAction.UnitTest
                 .Setup(createPackageAsync)
                 .ReturnsAsync(createdPackage);
 
+            _gitInfo.Setup(p => p.GetCommitterMail()).Returns("");
             CatalogData catalog = new CatalogData()
             {
                 Version = version,
@@ -1381,7 +1410,9 @@ namespace GitHubAction.UnitTest
                 ContentType = "type",
                 Identifier = sourceUri.ToString(),
                 IsPreRelease = false,
-                Name = packageName
+                Name = packageName,
+                CommitterMail = "",
+                ReleaseUri = "",
             };
 
             Expression<Func<IPackageService, Task<UploadedPackage>>> uploadPackageAsync = s =>
@@ -1480,6 +1511,7 @@ namespace GitHubAction.UnitTest
                 .Setup(createPackageAsync)
                 .ReturnsAsync(createdPackage);
 
+            _gitInfo.Setup(p => p.GetCommitterMail()).Returns("");
             CatalogData catalog = new CatalogData()
             {
                 Version = version,
@@ -1487,7 +1519,9 @@ namespace GitHubAction.UnitTest
                 ContentType = "type",
                 Identifier = sourceUri.ToString(),
                 IsPreRelease = false,
-                Name = packageName
+                Name = packageName,
+                CommitterMail = "",
+                ReleaseUri = "",
             };
 
             Expression<Func<IPackageService, Task<UploadedPackage>>> uploadPackageAsync = s =>

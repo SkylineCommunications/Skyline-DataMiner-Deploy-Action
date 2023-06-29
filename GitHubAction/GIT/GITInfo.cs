@@ -56,6 +56,7 @@
                 }
             }
 
+            if (mail == null) mail = String.Empty;
             return mail;
         }
 
