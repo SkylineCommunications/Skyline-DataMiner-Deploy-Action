@@ -18,6 +18,10 @@
                 powershell.Invoke();
                 powershell.Commands.Clear();
 
+                powershell.AddScript($"git fetch --all --tags --force");
+                powershell.Invoke();
+                powershell.Commands.Clear();
+
                 if (powershell.HadErrors)
                 {
                     powershell.AddScript("$PSVersionTable.PSVersion");
@@ -39,10 +43,6 @@
             string mail = "";
             using (PowerShell powershell = PowerShell.Create())
             {
-                powershell.AddScript($"git fetch --all --force");
-                powershell.Invoke();
-                powershell.Commands.Clear();
-
                 powershell.AddScript($"git show -s --format='%ae'");
                 var result = powershell.Invoke();
                 powershell.Commands.Clear();
@@ -64,10 +64,6 @@
         {
             using (PowerShell powershell = PowerShell.Create())
             {
-                powershell.AddScript($"git fetch --all --tags --force");
-                powershell.Invoke();
-                powershell.Commands.Clear();
-
                 powershell.AddScript($"git branch --remotes --contains {tag}");
                 var results = powershell.Invoke();
                 powershell.Commands.Clear();
