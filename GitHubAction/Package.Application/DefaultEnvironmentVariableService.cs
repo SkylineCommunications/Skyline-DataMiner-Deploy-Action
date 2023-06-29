@@ -10,6 +10,12 @@ public class DefaultEnvironmentVariableService : IEnvironmentVariableService
         return null;
     }
 
+    /// <inheritdoc />
+    public Uri? GetReleaseUri()
+    {
+        return null;
+    }
+
     public string GetBranch()
     {
         return string.Empty;

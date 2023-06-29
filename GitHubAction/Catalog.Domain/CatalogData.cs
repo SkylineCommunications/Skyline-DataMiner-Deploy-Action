@@ -8,6 +8,8 @@
         public string Identifier { get; set; }
         public string Name { get; set; }
         public string ContentType { get; set; }
+        public string CommitterMail { get; set; }
+        public string ReleaseUri { get; set; }
 
         public override bool Equals(object? obj)
         {
@@ -17,12 +19,14 @@
                    IsPreRelease == data.IsPreRelease &&
                    Identifier == data.Identifier &&
                    Name == data.Name &&
+                   CommitterMail == data.CommitterMail &&
+                   ReleaseUri == data.ReleaseUri &&
                    ContentType == data.ContentType;
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Version, Branch, IsPreRelease, Identifier, Name, ContentType);
+            return HashCode.Combine(Version, Branch, IsPreRelease, Identifier, Name, ContentType, CommitterMail, ReleaseUri);
         }
     }
 }

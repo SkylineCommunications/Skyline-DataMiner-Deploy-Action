@@ -1,16 +1,10 @@
-﻿using LibGit2Sharp;
-using LibGit2Sharp.Handlers;
-
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Management.Automation;
-using System.Net;
-
-namespace GIT
+﻿namespace GIT
 {
+    using System.IO;
+    using System.Management.Automation;
+
     public class GITInfo : IGITInfo
     {
-
         public GITInfo()
         {
             AllowWritesOnDirectory(Directory.GetCurrentDirectory());
@@ -40,24 +34,36 @@ namespace GIT
             }
         }
 
-
-        private void AllowWritesOnDirectory(string path)
+        public string GetCommitterMail()
         {
-            if (String.IsNullOrWhiteSpace(path))
-                return;
-
-            var directory = new DirectoryInfo(path) { Attributes = System.IO.FileAttributes.Normal };
-            foreach (var info in directory.GetFileSystemInfos("*", System.IO.SearchOption.AllDirectories))
+            string mail = "";
+            using (PowerShell powershell = PowerShell.Create())
             {
-                info.Attributes = System.IO.FileAttributes.Normal;
+                powershell.AddScript($"git fetch --all");
+                powershell.Invoke();
+                powershell.Commands.Clear();
+
+                powershell.AddScript($"git show -s --format='%ae'");
+                var result = powershell.Invoke();
+                powershell.Commands.Clear();
+
+                mail = String.Join(',', result);
+
+                if (powershell.HadErrors)
+                {
+                    string resultString = "errors: " + String.Join(",", powershell.Streams.Error.ReadAll());
+                    throw new InvalidOperationException("Getting Current Branch through Git failed with errors:" + resultString);
+                }
             }
+
+            return mail;
         }
 
         public string GetCurrentBranch(string tag)
         {
             using (PowerShell powershell = PowerShell.Create())
             {
-                powershell.AddScript($"git fetch --all");
+                powershell.AddScript($"git fetch --all --tags --force");
                 powershell.Invoke();
                 powershell.Commands.Clear();
 
@@ -69,7 +75,7 @@ namespace GIT
 
                 if (String.IsNullOrWhiteSpace(String.Join(',', results)))
                 {
-                    resultString = "GIT Branch Commands Returned Data.";
+                    resultString = "GIT Branch commands returned no Data.";
                     if (powershell.HadErrors)
                     {
                         resultString += "errors: " + String.Join(",", powershell.Streams.Error.ReadAll());
@@ -82,14 +88,16 @@ namespace GIT
             }
         }
 
-        public string GetSourceUrl()
+        private void AllowWritesOnDirectory(string path)
         {
-            using (Repository localRepo = new Repository(Directory.GetCurrentDirectory().TrimEnd('/')))
+            if (String.IsNullOrWhiteSpace(path))
+                return;
+
+            var directory = new DirectoryInfo(path) { Attributes = System.IO.FileAttributes.Normal };
+            foreach (var info in directory.GetFileSystemInfos("*", System.IO.SearchOption.AllDirectories))
             {
-                var remoteURL = localRepo.Network.Remotes.First().Url;
-                return remoteURL;
+                info.Attributes = System.IO.FileAttributes.Normal;
             }
         }
-
     }
 }

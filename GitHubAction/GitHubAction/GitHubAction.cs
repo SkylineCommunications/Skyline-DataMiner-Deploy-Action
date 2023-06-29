@@ -62,6 +62,8 @@ namespace GitHubAction
 
             var sourceUri = _EnvVarService.GetSourceUri();
             var branch = _EnvVarService.GetBranch();
+            var releaseUri = _EnvVarService.GetReleaseUri();
+
             UploadedPackage? uploadedPackage = null;
 
             _outputPathProvider.BasePath = inputs.BasePath ?? Directory.GetCurrentDirectory();
@@ -82,7 +84,7 @@ namespace GitHubAction
                     var createdPackage = await CreatePackageAsync(localPackageConfig);
                     if (createdPackage == null) return 4;
 
-                    var catalog = CatalogDataFactory.Create(inputs, createdPackage, _git, sourceUri?.ToString() ?? "", branch);
+                    var catalog = CatalogDataFactory.Create(inputs, createdPackage, _git, sourceUri?.ToString() ?? "", branch, releaseUri?.ToString() ?? "");
                     uploadedPackage = await UploadPackageAsync(inputs.ApiKey, createdPackage, catalog);
                     if (uploadedPackage == null) return 5;
                     _outputPresenter.PresentOutputVariable("ARTIFACT_ID", uploadedPackage.ArtifactId);

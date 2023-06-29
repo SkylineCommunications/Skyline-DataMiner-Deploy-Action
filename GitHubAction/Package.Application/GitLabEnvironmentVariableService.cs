@@ -18,6 +18,12 @@ public class GitLabEnvironmentVariableService : IEnvironmentVariableService
     }
 
     /// <inheritdoc />
+    public Uri? GetReleaseUri()
+    {
+        return null;
+    }
+
+    /// <inheritdoc />
     public string GetBranch()
     {
         return Environment.GetEnvironmentVariable("CI_COMMIT_REF_NAME") ?? String.Empty;

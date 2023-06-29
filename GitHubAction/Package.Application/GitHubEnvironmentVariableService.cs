@@ -18,8 +18,24 @@ public class GitHubEnvironmentVariableService : IEnvironmentVariableService
         return null;
     }
 
+    /// <inheritdoc />
+    public Uri? GetReleaseUri()
+    {
+        // https://github.com/SkylineCommunications/AutomationScriptTest_SDK_DataAcq/releases/tag/3.0.1-Alpha3
+        var source = GetSourceUri();
+        if (source != null && Environment.GetEnvironmentVariable("GITHUB_REF_TYPE") == "tag")
+        {
+            return new Uri(source, $"releases/tag/{Environment.GetEnvironmentVariable("GITHUB_REF_NAME")}");
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    /// <inheritdoc />
     public string GetBranch()
     {
-        return Environment.GetEnvironmentVariable("GITHUB_REF_NAME")??String.Empty;
+        return Environment.GetEnvironmentVariable("GITHUB_REF_NAME") ?? String.Empty;
     }
 }

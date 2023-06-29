@@ -3,5 +3,6 @@
 public interface IEnvironmentVariableService
 {
     Uri? GetSourceUri();
+    Uri? GetReleaseUri();
     string GetBranch();
 }
