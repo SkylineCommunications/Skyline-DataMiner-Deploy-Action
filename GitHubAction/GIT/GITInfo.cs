@@ -8,6 +8,7 @@
         public GITInfo()
         {
             AllowWritesOnDirectory(Directory.GetCurrentDirectory());
+
             using (PowerShell powershell = PowerShell.Create())
             {
                 powershell.AddScript("git --version");
@@ -18,7 +19,7 @@
                 powershell.Invoke();
                 powershell.Commands.Clear();
 
-                powershell.AddScript($"git fetch --all --tags --force");
+                powershell.AddScript($"git fetch --all --tags --force --quiet");
                 powershell.Invoke();
                 powershell.Commands.Clear();
 
