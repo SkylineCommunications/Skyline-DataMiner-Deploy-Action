@@ -2,16 +2,16 @@
 {
     public class CatalogData
     {
-        public string Version { get; set; }
-        public string Branch { get; set; }
-        public bool IsPreRelease { get; set; }
-        public string Identifier { get; set; }
-        public string Name { get; set; }
-        public string ContentType { get; set; }
-        public string CommitterMail { get; set; }
-        public string ReleaseUri { get; set; }
+		public string Version { get; set; } = "";
+        public string Branch { get; set; } = "";
+		public bool IsPreRelease { get; set; }
+		public string Identifier { get; set; } = "";
+		public string Name { get; set; } = "";
+		public string ContentType { get; set; } = "";
+		public string CommitterMail { get; set; } = "";
+		public string ReleaseUri { get; set; } = "";
 
-        public override bool Equals(object? obj)
+		public override bool Equals(object? obj)
         {
             return obj is CatalogData data &&
                    Version == data.Version &&
