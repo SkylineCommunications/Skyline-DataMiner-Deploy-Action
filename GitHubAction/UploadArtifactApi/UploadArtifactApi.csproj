@@ -11,8 +11,8 @@
     <PackageReference Include="Microsoft.Rest.ClientRuntime" Version="2.3.24" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Package.Domain\Package.Domain.csproj" />
-  </ItemGroup>
-
+	<ItemGroup>
+		<ProjectReference Include="..\Catalog.Domain\Catalog.Domain.csproj" />
+		<ProjectReference Include="..\Package.Domain\Package.Domain.csproj" />
+	</ItemGroup>
 </Project>

@@ -1,9 +1,10 @@
 ﻿using System.Reflection.Metadata.Ecma335;
+
 using Package.Domain.Services;
 
 namespace Package.Application;
 
-public class GitLabSourceUriService : ISourceUriService
+public class GitLabEnvironmentVariableService : IEnvironmentVariableService
 {
     /// <inheritdoc />
     public Uri? GetSourceUri()
@@ -14,5 +15,17 @@ public class GitLabSourceUriService : ISourceUriService
         }
 
         return null;
+    }
+
+    /// <inheritdoc />
+    public Uri? GetReleaseUri()
+    {
+        return null;
+    }
+
+    /// <inheritdoc />
+    public string GetBranch()
+    {
+        return Environment.GetEnvironmentVariable("CI_COMMIT_REF_NAME") ?? String.Empty;
     }
 }

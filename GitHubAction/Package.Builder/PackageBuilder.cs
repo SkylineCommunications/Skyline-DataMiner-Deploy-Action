@@ -62,7 +62,7 @@
         public async Task<CreatedPackage> CreatePackageAsync(
             LocalPackageConfig localPackageConfig)
         {
-            if (localPackageConfig.Type != SolutionType.DmScript)
+            if (localPackageConfig.Type != ArtifactContentType.DmScript)
             {
                 throw new UnsupportedSolutionException($"Solution of type {localPackageConfig.Type} is not supported.");
             }

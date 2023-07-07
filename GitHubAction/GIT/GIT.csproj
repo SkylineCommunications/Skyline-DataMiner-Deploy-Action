@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Catalog.Domain\Catalog.Domain.csproj" />
+    <PackageReference Include="Cake.Powershell" Version="2.0.0" />
   </ItemGroup>
 
 </Project>

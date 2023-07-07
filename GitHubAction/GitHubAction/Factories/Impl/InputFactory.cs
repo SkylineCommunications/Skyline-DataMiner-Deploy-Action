@@ -66,7 +66,6 @@ public class InputFactory : IInputFactory
         if (!givenArgs.TryGetValue(InputArgurments.PackageName, out var packageName))
             _presenter.PresentKeyNotFound($"Argument {InputArgurments.PackageName} not found");
 
-
         bool isVersionPresent = givenArgs.TryGetValue(InputArgurments.Version, out var version);
         bool isBuildNumberPresent = givenArgs.TryGetValue(InputArgurments.BuildNumber, out var buildNumber);
         if (!isVersionPresent && !isBuildNumberPresent)
@@ -75,6 +74,7 @@ public class InputFactory : IInputFactory
         if (!givenArgs.TryGetValue(InputArgurments.ArtifactId, out var artifactId))
             _presenter.PresentKeyNotFound($"Argument {InputArgurments.ArtifactId} not found");
 
+//        if (!ValidateArgumentNotEmpty(InputArgurments.Identifier, identifierString)) return null;
         if (!ValidateArgumentNotEmpty(InputArgurments.Stage, stageString)) return null;
         if (!ValidateArgumentNotEmpty(InputArgurments.ApiKey, apiKey)) return null;
         if (!ValidateArgumentNotEmpty(InputArgurments.Timeout, timeOutString)) return null;

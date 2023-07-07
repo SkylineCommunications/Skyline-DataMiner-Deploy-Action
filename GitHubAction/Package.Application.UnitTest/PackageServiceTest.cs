@@ -2,6 +2,9 @@ using System;
 using System.IO;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+
+using Catalog.Domain;
+
 using Moq;
 using NUnit.Framework;
 using Package.Domain.Enums;
@@ -38,7 +41,7 @@ namespace Package.Application.UnitTest
                 solutionFile,
                 packageName,
                 version,
-                SolutionType.DmScript,
+                ArtifactContentType.DmScript,
                 null);
 
             Expression<Func<IPackageBuilder, Task<CreatedPackage>>> createPackageAsync = s =>
@@ -64,10 +67,15 @@ namespace Package.Application.UnitTest
         {
             // Given
             var createdPackage = new CreatedPackage(new byte[0], "name", "type", "version");
+            CatalogData catalog = new CatalogData()
+            {
+                Version = "version"
+            };
+
             var key = "key";
 
             Expression<Func<IPackageGateway, Task<UploadedPackage>>> uploadPackageAsync = s =>
-                s.UploadPackageAsync(createdPackage, "version", key);
+                s.UploadPackageAsync(createdPackage, key, catalog);
 
             var uploadedPackage = new UploadedPackage(Guid.NewGuid().ToString());
             _packageGatewayMock
@@ -75,7 +83,7 @@ namespace Package.Application.UnitTest
                 .ReturnsAsync(uploadedPackage);
 
             // When
-            var result = await _packageService.UploadPackageAsync(createdPackage,"version", key);
+            var result = await _packageService.UploadPackageAsync(createdPackage, key, catalog);
 
             // Then
             Assert.AreEqual(uploadedPackage, result);

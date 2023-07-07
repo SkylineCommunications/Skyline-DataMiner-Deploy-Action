@@ -1,16 +1,21 @@
-﻿using GitHubAction.Console.Extensions;
+﻿using GIT;
+
+using GitHubAction.Console.Extensions;
 using GitHubAction.Console.Options;
 using GitHubAction.Factories;
 using GitHubAction.Factories.Impl;
 using GitHubAction.Presenters;
 using GitHubAction.Presenters.Impl;
+
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+
 using Package.Application;
 using Package.Builder;
 using Package.Domain.Services;
 using Package.Gateway;
+
 using Serilog;
 using Serilog.Filters;
 
@@ -75,6 +80,7 @@ public class Program
                 services.AddScoped<IPackageService, PackageService>();
                 services.AddScoped<IPackageGateway, HttpPackageGateway>();
                 services.AddScoped<IPackageBuilder, PackageBuilder>();
+                services.AddScoped<IGitInfo, GitInfo>();
                 services.AddScoped<IFileSystem, FileSystem>();
                 services.AddScoped<IInputFactory, InputFactory>();
                 services.AddScoped<IInputFactoryPresenter, InputFactoryPresenter>();
@@ -84,17 +90,17 @@ public class Program
                 var source = Util.GetSourceHost();
                 if (source == Util.SourceHost.GitHub)
                 {
-                    services.AddScoped<ISourceUriService, GitHubSourceUriService>();
+                    services.AddScoped<IEnvironmentVariableService, GitHubEnvironmentVariableService>();
                     services.AddScoped<IOutputPresenter, GitHubOutputPresenter>();
                 }
                 else if (source == Util.SourceHost.GitLab)
                 {
-                    services.AddScoped<ISourceUriService, GitLabSourceUriService>();
+                    services.AddScoped<IEnvironmentVariableService, GitLabEnvironmentVariableService>();
                     services.AddScoped<IOutputPresenter, GitLabOutputPresenter>();
                 }
                 else
                 {
-                    services.AddScoped<ISourceUriService, DefaultSourceUriService>();
+                    services.AddScoped<IEnvironmentVariableService, DefaultEnvironmentVariableService>();
                     services.AddScoped<IOutputPresenter, DefaultOutputPresenter>();
                 }
             })

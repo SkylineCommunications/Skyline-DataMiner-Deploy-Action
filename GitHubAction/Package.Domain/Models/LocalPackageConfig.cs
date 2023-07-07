@@ -7,14 +7,14 @@ namespace Package.Domain.Models
         public FileInfo SolutionFile { get; }
         public string PackageName { get; }
         public string Version { get; }
-        public SolutionType Type { get; }
+        public ArtifactContentType Type { get; }
         public Uri? SourceUri { get; }
         public string BuildNumber { get; }
 
         public LocalPackageConfig(FileInfo solutionFile,
             string packageName,
             string version,
-            SolutionType type,
+            ArtifactContentType type,
             Uri? sourceUri,
             string buildNumber = "")
         {

@@ -3,6 +3,7 @@ using System.Net;
 using Newtonsoft.Json;
 using Package.Domain.Services;
 using System.Text;
+using Catalog.Domain;
 
 namespace UploadArtifactApi;
 
@@ -19,9 +20,8 @@ public class HttpArtifactUploadApi : IArtifactUploadApi, IDisposable
     public async Task<PrivateArtifactModel> ArtifactUploadV11PrivateArtifactPostAsync(
         byte[] package,
         string name,
-        string version,
-        string contentType,
         string key,
+        CatalogData catalog,
         CancellationToken cancellationToken, IPackagePresenter presenter)
     {
         string dmappFilePath = Path.Combine(Environment.GetEnvironmentVariable("GITHUB_WORKSPACE"), name);
@@ -32,11 +32,16 @@ public class HttpArtifactUploadApi : IArtifactUploadApi, IDisposable
         using var formData = new MultipartFormDataContent();
         formData.Headers.Add("Ocp-Apim-Subscription-Key", key);
         formData.Add(new StringContent(name), "name");
-        formData.Add(new StringContent(version), "version");
-        formData.Add(new StringContent(contentType), "contentType");
+        formData.Add(new StringContent(catalog.Version), "version");
+        formData.Add(new StringContent(catalog.ContentType), "contentType");
+        formData.Add(new StringContent(catalog.Branch), "branch");
+        formData.Add(new StringContent(catalog.Identifier), "identifier");
+        formData.Add(new StringContent(catalog.IsPreRelease ? "true" : "false"), "isprerelease");
+        formData.Add(new StringContent(catalog.CommitterMail), "developer");
+        formData.Add(new StringContent(catalog.ReleaseUri), "releasepath");
         formData.Add(new StreamContent(fileStream), "file", Path.GetFileName(fileStream.Name));
 
-        string logInfo = $"--name {name} --version {version} --contentType {contentType} --file {Path.GetFileName(fileStream.Name)}";
+        string logInfo = $"--name {name} --version {catalog.Version} --contentType {catalog.ContentType} --branch {catalog.Branch} --identifier {catalog.Identifier} --isprerelease {catalog.IsPreRelease} --developer {catalog.CommitterMail} --releasepath {catalog.ReleaseUri} --file {Path.GetFileName(fileStream.Name)}";
         presenter.LogInformation("HTTP Post with info: " + logInfo);
 
         var response = await _httpClient.PostAsync(UploadPath, formData, cancellationToken);

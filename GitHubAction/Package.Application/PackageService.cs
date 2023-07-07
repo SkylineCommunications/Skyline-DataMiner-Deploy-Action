@@ -1,12 +1,16 @@
-﻿using Package.Domain.Models;
+﻿using Catalog.Domain;
+
+using Package.Domain.Models;
 using Package.Domain.Services;
+
+using UploadArtifactApi;
 
 namespace Package.Application;
 
 public class PackageService : IPackageService
 {
     private readonly IPackageGateway _packageGateway;
-	private readonly IPackageBuilder _packageBuilder;
+    private readonly IPackageBuilder _packageBuilder;
 
     public PackageService(IPackageGateway packageGateway, IPackageBuilder packageBuilder)
     {
@@ -19,9 +23,9 @@ public class PackageService : IPackageService
         return await _packageBuilder.CreatePackageAsync(localPackageConfig);
     }
 
-    public async Task<UploadedPackage> UploadPackageAsync(CreatedPackage createdPackage, string catalogVersion, string key)
+    public async Task<UploadedPackage> UploadPackageAsync(CreatedPackage createdPackage, string key, CatalogData catalog)
     {
-        return await _packageGateway.UploadPackageAsync(createdPackage,catalogVersion, key);
+        return await _packageGateway.UploadPackageAsync(createdPackage, key, catalog);
     }
 
     public async Task<DeployingPackage> DeployPackageAsync(UploadedPackage uploadedPackage, string key)

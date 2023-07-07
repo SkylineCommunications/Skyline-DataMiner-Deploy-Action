@@ -1,11 +1,13 @@
-﻿using Package.Domain.Models;
+﻿using Catalog.Domain;
+
+using Package.Domain.Models;
 using Package.Domain.Services;
 
 namespace Package.Gateway;
 
 public class MockedPackageGateway : IPackageGateway
 {
-    public Task<UploadedPackage> UploadPackageAsync(CreatedPackage createdPackage, string catalogVersion, string key)
+    public Task<UploadedPackage> UploadPackageAsync(CreatedPackage createdPackage, string key, CatalogData catalog)
     {
         return Task.FromResult(new UploadedPackage(Guid.NewGuid().ToString()));
     }
