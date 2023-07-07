@@ -37,7 +37,7 @@ namespace GitHubAction.UnitTest
         private GitHubAction _gitHubAction = null!;
         private Mock<IEnvironmentVariableService> _uriServiceMock;
         private Mock<IOutputPathProvider> _outputPathProvider;
-        private Mock<IGITInfo> _gitInfo;
+        private Mock<IGitInfo> _gitInfo;
 
         [SetUp]
         public void Setup()
@@ -49,7 +49,7 @@ namespace GitHubAction.UnitTest
             _inputParserMock = new Mock<IInputFactory>();
             _loggerMock = new Mock<ILogger<GitHubAction>>();
             _outputPathProvider = new Mock<IOutputPathProvider>();
-            _gitInfo = new Mock<IGITInfo>();
+            _gitInfo = new Mock<IGitInfo>();
 
             _gitHubAction = new GitHubAction(_packageServiceMock.Object, _inputParserMock.Object, _packagePresenterMock.Object, _outputPresenterMock.Object, TimeSpan.Zero, TimeSpan.Zero, _uriServiceMock.Object, _outputPathProvider.Object, _gitInfo.Object);
         }

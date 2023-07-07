@@ -22,20 +22,20 @@
         private readonly TimeSpan _deploymentBackOff;
         private readonly TimeSpan _deploymentMaxBackOff;
         private readonly IEnvironmentVariableService _EnvVarService;
-        private readonly IGITInfo _git;
+        private readonly IGitInfo _git;
         private readonly IInputFactory _inputParserSerivce;
         private readonly IOutputPathProvider _outputPathProvider;
         private readonly IOutputPresenter _outputPresenter;
         private readonly IPackagePresenter _packagePresenter;
         private readonly IPackageService _packageService;
 
-        public GitHubAction(IPackageService packageService, IInputFactory inputParser, IPackagePresenter packagePresenter, IOutputPresenter outputPresenter, IEnvironmentVariableService sourceUriService, IOutputPathProvider outputPathProvider, IGITInfo git)
+        public GitHubAction(IPackageService packageService, IInputFactory inputParser, IPackagePresenter packagePresenter, IOutputPresenter outputPresenter, IEnvironmentVariableService sourceUriService, IOutputPathProvider outputPathProvider, IGitInfo git)
             : this(packageService, inputParser, packagePresenter, outputPresenter, TimeSpan.FromSeconds(3), TimeSpan.FromMinutes(2), sourceUriService, outputPathProvider, git)
         {
         }
 
         public GitHubAction(IPackageService packageService, IInputFactory inputParser, IPackagePresenter packagePresenter,
-            IOutputPresenter outputPresenter, TimeSpan minimumBackOff, TimeSpan maximumBackOff, IEnvironmentVariableService envVarService, IOutputPathProvider outputPathProvider, IGITInfo git)
+            IOutputPresenter outputPresenter, TimeSpan minimumBackOff, TimeSpan maximumBackOff, IEnvironmentVariableService envVarService, IOutputPathProvider outputPathProvider, IGitInfo git)
         {
             _packageService = packageService;
             _inputParserSerivce = inputParser;

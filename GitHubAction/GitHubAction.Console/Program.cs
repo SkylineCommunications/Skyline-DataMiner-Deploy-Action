@@ -80,7 +80,7 @@ public class Program
                 services.AddScoped<IPackageService, PackageService>();
                 services.AddScoped<IPackageGateway, HttpPackageGateway>();
                 services.AddScoped<IPackageBuilder, PackageBuilder>();
-                services.AddScoped<IGITInfo, GITInfo>();
+                services.AddScoped<IGitInfo, GitInfo>();
                 services.AddScoped<IFileSystem, FileSystem>();
                 services.AddScoped<IInputFactory, InputFactory>();
                 services.AddScoped<IInputFactoryPresenter, InputFactoryPresenter>();

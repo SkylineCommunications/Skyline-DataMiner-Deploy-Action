@@ -12,21 +12,21 @@
 		public string ReleaseUri { get; set; } = "";
 
 		public override bool Equals(object? obj)
-        {
-            return obj is CatalogData data &&
-                   Version == data.Version &&
-                   Branch == data.Branch &&
-                   IsPreRelease == data.IsPreRelease &&
-                   Identifier == data.Identifier &&
-                   Name == data.Name &&
-                   CommitterMail == data.CommitterMail &&
-                   ReleaseUri == data.ReleaseUri &&
-                   ContentType == data.ContentType;
-        }
+		{
+			return obj is CatalogData data &&
+				   Version == data.Version &&
+				   Branch == data.Branch &&
+				   IsPreRelease == data.IsPreRelease &&
+				   Identifier == data.Identifier &&
+				   Name == data.Name &&
+				   CommitterMail == data.CommitterMail &&
+				   ReleaseUri == data.ReleaseUri &&
+				   ContentType == data.ContentType;
+		}
 
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Version, Branch, IsPreRelease, Identifier, Name, ContentType, CommitterMail, ReleaseUri);
-        }
-    }
+		public override int GetHashCode()
+		{
+			return HashCode.Combine(Version, Branch, IsPreRelease, Identifier, Name, ContentType, CommitterMail, ReleaseUri);
+		}
+	}
 }

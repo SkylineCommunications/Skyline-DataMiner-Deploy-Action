@@ -12,7 +12,7 @@
 
     internal class CatalogDataFactory
     {
-        public static CatalogData Create(Inputs inputs, CreatedPackage createdPackage, IGITInfo git, string sourceUri, string branch, string releaseUri)
+        public static CatalogData Create(Inputs inputs, CreatedPackage createdPackage, IGitInfo git, string sourceUri, string branch, string releaseUri)
         {
             if (string.IsNullOrWhiteSpace(branch) || branch == inputs.Version)
             {
