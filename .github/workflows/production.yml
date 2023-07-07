@@ -21,7 +21,11 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: '0'
+      - name: Set Git Security
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
       - name: Log in to the Container registry
         uses: docker/login-action@v2
