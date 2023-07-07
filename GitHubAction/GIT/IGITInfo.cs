@@ -1,6 +1,6 @@
 ﻿namespace GIT
 {
-    public interface IGITInfo
+    public interface IGitInfo
     {
         string GetCurrentBranch(string tag);
         string GetCommitterMail();

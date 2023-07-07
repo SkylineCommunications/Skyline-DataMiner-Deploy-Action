@@ -3,9 +3,9 @@
     using System.IO;
     using System.Management.Automation;
 
-    public class GITInfo : IGITInfo
+    public class GitInfo : IGitInfo
     {
-        public GITInfo()
+        public GitInfo()
         {
             AllowWritesOnDirectory(Directory.GetCurrentDirectory());
 
