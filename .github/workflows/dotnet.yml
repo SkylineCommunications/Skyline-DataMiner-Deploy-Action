@@ -16,6 +16,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+      with:
+        fetch-depth: '0'
+    - name: Set Git Security
+      run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
     - name: Setup .NET
       uses: actions/setup-dotnet@v2
       with:
