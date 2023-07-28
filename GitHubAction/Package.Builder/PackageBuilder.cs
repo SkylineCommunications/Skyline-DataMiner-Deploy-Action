@@ -14,13 +14,16 @@
 
     public class GitHubActionLogger : ILogCollector
     {
-        public IList<string> Logging { get; }
+		private readonly List<string> _logging;
+		private readonly IPackagePresenter _presenter;
+
+		public IReadOnlyList<string> Logging => _logging.ToList();
+
         public bool HasError { get; private set; }
-        private IPackagePresenter _presenter;
 
         public GitHubActionLogger(IPackagePresenter presenter)
         {
-            Logging = new List<string>();
+            _logging = new List<string>();
             HasError = false;
             _presenter = presenter;
         }
@@ -28,20 +31,25 @@
         public void ReportError(string error)
         {
             HasError = true;
-            Logging.Add("ERROR: " + error);
+            _logging.Add("ERROR: " + error);
         }
 
         public void ReportStatus(string status)
         {
-            Logging.Add("STATUS: " + status);
+            _logging.Add("STATUS: " + status);
         }
 
         public void ReportWarning(string warning)
         {
-            Logging.Add("WARNING: " + warning);
-        }
+            _logging.Add("WARNING: " + warning);
+		}
 
-        public void SendToPresenter()
+		public void ReportLog(string message)
+		{
+			_logging.Add(message);
+		}
+
+		public void SendToPresenter()
         {
             foreach (var line in Logging)
             {
