@@ -32,6 +32,9 @@ inputs:
   build-number:
     description: 'The build number of a workflow run. Only required for a development run. Required for stages Upload and All if no version was provided instead.'
     required: false
+  debug:
+    description: 'Option to enable debug logging. Optional'
+    required: false
 outputs:
   artifact-id:
     description: 'The artifact Id of the artifact has been uploaded'
@@ -56,5 +59,7 @@ runs:
     - ${{ inputs.artifact-id }}
     - --build-number
     - ${{ inputs.build-number }}
+    - --debug
+    - ${{ inputs.debug }}
 
 
