@@ -11,4 +11,5 @@ public static class InputArgurments
     public const string Stage = "stage";
     public const string Timeout = "timeout";
     public const string Version = "version";
+	public const string Debug = "debug";
 }

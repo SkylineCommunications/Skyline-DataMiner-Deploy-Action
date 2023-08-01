@@ -9,7 +9,7 @@ using Skyline.DataMiner.CICD.FileSystem;
 namespace GitHubAction.Factories.Impl;
 public class InputFactory : IInputFactory
 {
-    internal static List<string> ValidArgs = new() { InputArgurments.ApiKey, InputArgurments.PackageName, InputArgurments.SolutionPath, InputArgurments.Version, InputArgurments.Timeout, InputArgurments.Stage, InputArgurments.ArtifactId, InputArgurments.BasePath, InputArgurments.BuildNumber };
+    internal static List<string> ValidArgs = new() { InputArgurments.ApiKey, InputArgurments.PackageName, InputArgurments.SolutionPath, InputArgurments.Version, InputArgurments.Timeout, InputArgurments.Stage, InputArgurments.ArtifactId, InputArgurments.BasePath, InputArgurments.BuildNumber, InputArgurments.Debug };
     private readonly IInputFactoryPresenter _presenter;
     private readonly IFileSystem _fileSystem;
     public InputFactory(IInputFactoryPresenter presenter, IFileSystem fileSystem)
@@ -66,7 +66,10 @@ public class InputFactory : IInputFactory
         if (!givenArgs.TryGetValue(InputArgurments.PackageName, out var packageName))
             _presenter.PresentKeyNotFound($"Argument {InputArgurments.PackageName} not found");
 
-        bool isVersionPresent = givenArgs.TryGetValue(InputArgurments.Version, out var version);
+        if (!givenArgs.TryGetValue(InputArgurments.Debug, out var debugString))
+	        _presenter.PresentKeyNotFound($"Argument {InputArgurments.Debug} not found");
+
+		bool isVersionPresent = givenArgs.TryGetValue(InputArgurments.Version, out var version);
         bool isBuildNumberPresent = givenArgs.TryGetValue(InputArgurments.BuildNumber, out var buildNumber);
         if (!isVersionPresent && !isBuildNumberPresent)
             _presenter.PresentKeyNotFound($"Argument {InputArgurments.Version} or {InputArgurments.BuildNumber} not found");
@@ -79,8 +82,9 @@ public class InputFactory : IInputFactory
         if (!ValidateArgumentNotEmpty(InputArgurments.ApiKey, apiKey)) return null;
         if (!ValidateArgumentNotEmpty(InputArgurments.Timeout, timeOutString)) return null;
         if (!ValidateTimeout(timeOutString, out TimeSpan timeOut)) return null;
+        if (!ValidateArgumentNotEmpty(InputArgurments.Debug, debugString)) return null;
 
-        if (!Enum.TryParse(stageString, out Stage stage))
+		if (!Enum.TryParse(stageString, out Stage stage))
         {
             _presenter.PresentInvalidStage();
             return null;
@@ -130,7 +134,8 @@ public class InputFactory : IInputFactory
                     Stage = stage,
                     TimeOut = timeOut,
                     Version = version,
-                    BuildNumber = buildNumber
+                    BuildNumber = buildNumber,
+					Debug = String.Equals(debugString, "true", StringComparison.OrdinalIgnoreCase),
                 };
             case Stage.Deploy:
                 argumentsAreValid &= ValidateArgumentNotEmpty(InputArgurments.ArtifactId, artifactId);
@@ -142,7 +147,8 @@ public class InputFactory : IInputFactory
                     ApiKey = apiKey,
                     ArtifactId = artifactId,
                     TimeOut = timeOut,
-                    Stage = stage
+                    Stage = stage,
+					Debug = String.Equals(debugString, "true", StringComparison.OrdinalIgnoreCase),
                 };
             default:
                 _presenter.PresentStageNotValidated(stage.ToString());

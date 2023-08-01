@@ -61,8 +61,10 @@ public class ParseInputsTest
             "--artifact-id",
             artifactId,
             "--base-path",
-            ""
-        };
+            "",
+            "--debug",
+            "false"
+		};
 
         // When
         var inputs = _inputParserService.ParseAndValidateInputs(args)!;
@@ -79,6 +81,7 @@ public class ParseInputsTest
         Assert.AreEqual(TimeSpan.FromSeconds(int.Parse(timeOut)), inputs.TimeOut);
         Assert.AreEqual(Enum.Parse<Stage>(stage), inputs.Stage);
         Assert.IsNull(inputs.ArtifactId);
+		Assert.IsFalse(inputs.Debug);
     }
 
     [Test]
@@ -110,8 +113,10 @@ public class ParseInputsTest
             "--artifact-id",
             artifactId,
             "--base-path",
-            ""
-        };
+            "",
+            "--debug",
+            "false"
+		};
 
         // When
         var inputs = _inputParserService.ParseAndValidateInputs(args)!;
@@ -128,6 +133,7 @@ public class ParseInputsTest
         Assert.AreEqual(TimeSpan.FromSeconds(int.Parse(timeOut)), inputs.TimeOut);
         Assert.AreEqual(Enum.Parse<Stage>(stage), inputs.Stage);
         Assert.IsNull(inputs.ArtifactId);
+		Assert.IsFalse(inputs.Debug);
     }
 
 
@@ -160,7 +166,9 @@ public class ParseInputsTest
             "--artifact-id",
             artifactId,
             "--base-path",
-            ""
+            "",
+			"--debug",
+			"false"
         };
 
         // When
@@ -177,6 +185,7 @@ public class ParseInputsTest
         Assert.AreEqual(buildNumber, inputs.BuildNumber);
         Assert.AreEqual(TimeSpan.FromSeconds(int.Parse(timeOut)), inputs.TimeOut);
         Assert.AreEqual(Enum.Parse<Stage>(stage), inputs.Stage);
+        Assert.IsFalse(inputs.Debug);
         Assert.IsNull(inputs.ArtifactId);
     }
 
@@ -209,8 +218,10 @@ public class ParseInputsTest
             "--artifact-id",
             artifactId,
             "--base-path",
-            ""
-        };
+            "",
+            "--debug",
+            "true"
+		};
 
         // When
         var inputs = _inputParserService.ParseAndValidateInputs(args)!;
@@ -226,6 +237,7 @@ public class ParseInputsTest
         Assert.AreEqual(buildNumber, inputs.BuildNumber);
         Assert.AreEqual(TimeSpan.FromSeconds(int.Parse(timeOut)), inputs.TimeOut);
         Assert.AreEqual(Enum.Parse<Stage>(stage), inputs.Stage);
+		Assert.IsTrue(inputs.Debug);
         Assert.IsNull(inputs.ArtifactId);
     }
 
@@ -260,8 +272,10 @@ public class ParseInputsTest
             "--artifact-id",
             artifactId,
             "--base-path",
-            ""
-        };
+            "",
+            "--debug",
+            "BLA"
+		};
 
         // When
         var inputs = _inputParserService.ParseAndValidateInputs(args)!;
@@ -278,6 +292,7 @@ public class ParseInputsTest
         Assert.AreEqual(TimeSpan.FromSeconds(int.Parse(timeOut)), inputs.TimeOut);
         Assert.AreEqual(Enum.Parse<Stage>(stage), inputs.Stage);
         Assert.AreEqual(artifactId, inputs.ArtifactId);
+		Assert.IsFalse(inputs.Debug);
     }
 
     [Test]
@@ -318,8 +333,10 @@ public class ParseInputsTest
             "--artifact-id",
             artifactId,
             "--base-path",
-            ""
-        };
+            "",
+            "--debug",
+            "false"
+		};
 
         // When
         var inputs = _inputParserService.ParseAndValidateInputs(args)!;
@@ -330,9 +347,56 @@ public class ParseInputsTest
         _inputParserPresenterMock.VerifyNoOtherCalls();
 
         Assert.IsNull(inputs);
-    }
+	}
 
     [Test]
+    [TestCase("All")]
+    [TestCase("Upload")]
+    [TestCase("Deploy")]
+    public void ParseAndValidateInputs_EmptyDebug(string stage)
+    {
+	    // Given
+	    var key = "some key";
+	    var solutionFile = "solution-path";
+	    var packageName = "TestPackage";
+	    var version = "1.0.2";
+	    var timeOut = "900";
+	    var artifactId = "some string";
+
+	    var args = new string[]
+	    {
+		    "--api-key",
+		    key,
+		    "--solution-path",
+		    solutionFile,
+		    "--artifact-name",
+		    packageName,
+		    "--version",
+		    version,
+		    "--timeout",
+		    timeOut,
+		    "--stage",
+		    stage,
+		    "--artifact-id",
+		    artifactId,
+		    "--base-path",
+		    "",
+		    "--debug",
+		    ""
+	    };
+
+	    // When
+	    var inputs = _inputParserService.ParseAndValidateInputs(args)!;
+
+	    // Then
+	    _inputParserPresenterMock.Verify(p => p.PresentMissingArgument(InputArgurments.Debug), Times.Once);
+	    _inputParserPresenterMock.Verify(p => p.PresentLogging(It.IsAny<string>()), Times.AtMost(100));
+	    _inputParserPresenterMock.VerifyNoOtherCalls();
+
+	    Assert.IsNull(inputs);
+    }
+
+	[Test]
     [TestCase("All")]
     [TestCase("Upload")]
     [TestCase("Deploy")]
@@ -363,8 +427,10 @@ public class ParseInputsTest
             "--artifact-id",
             artifactId,
             "--base-path",
-            ""
-        };
+            "",
+            "--debug",
+            "false"
+		};
 
         // When
         var inputs = _inputParserService.ParseAndValidateInputs(args)!;
@@ -408,8 +474,10 @@ public class ParseInputsTest
             "--artifact-id",
             artifactId,
             "--base-path",
-            ""
-        };
+            "",
+            "--debug",
+            "false"
+		};
 
         // When
         var inputs = _inputParserService.ParseAndValidateInputs(args)!;
@@ -453,8 +521,10 @@ public class ParseInputsTest
             "--artifact-id",
             artifactId,
             "--base-path",
-            ""
-        };
+            "",
+            "--debug",
+            "false"
+		};
 
         // When
         var inputs = _inputParserService.ParseAndValidateInputs(args)!;
@@ -506,8 +576,10 @@ public class ParseInputsTest
             "--artifact-id",
             artifactId,
             "--base-path",
-            ""
-        };
+            "",
+            "--debug",
+            "false"
+		};
 
         // When
         var inputs = _inputParserService.ParseAndValidateInputs(args)!;
@@ -558,8 +630,10 @@ public class ParseInputsTest
             "--artifact-id",
             artifactId,
             "--base-path",
-            ""
-        };
+            "",
+            "--debug",
+            "false"
+		};
 
         // When
         var inputs = _inputParserService.ParseAndValidateInputs(args)!;
@@ -608,8 +682,10 @@ public class ParseInputsTest
             "--artifact-id",
             artifactId,
             "--base-path",
-            ""
-        };
+            "",
+            "--debug",
+            "false"
+		};
 
         // When
         var inputs = _inputParserService.ParseAndValidateInputs(args)!;
@@ -651,8 +727,10 @@ public class ParseInputsTest
             "--artifact-id",
             artifactId,
             "--base-path",
-            ""
-        };
+            "",
+            "--debug",
+            "false"
+		};
 
         // When
         var inputs = _inputParserService.ParseAndValidateInputs(args)!;
@@ -694,8 +772,10 @@ public class ParseInputsTest
             "--artifact-id",
             artifactId,
             "--base-path",
-            ""
-        };
+            "",
+            "--debug",
+            "false"
+		};
 
         // When
         var inputs = _inputParserService.ParseAndValidateInputs(args)!;
@@ -739,8 +819,10 @@ public class ParseInputsTest
             "--artifact-id",
             artifactId,
             "--base-path",
-            ""
-        };
+            "",
+            "--debug",
+            "false"
+		};
 
         // When
         var inputs = _inputParserService.ParseAndValidateInputs(args)!;
@@ -791,8 +873,10 @@ public class ParseInputsTest
             "--base-path",
             "",
             "--some-unknown-key",
-            ""
-        };
+            "",
+            "--debug",
+            "false"
+		};
 
         // When
         var inputs = _inputParserService.ParseAndValidateInputs(args)!;
@@ -832,8 +916,10 @@ public class ParseInputsTest
             "--stage",
             stage,
             "--base-path",
-            ""
-        };
+            "",
+            "--debug",
+            "false"
+		};
 
         // When
         var inputs = _inputParserService.ParseAndValidateInputs(args)!;
@@ -875,8 +961,10 @@ public class ParseInputsTest
             "--artifact-id",
             "",
             "--base-path",
-            ""
-        };
+            "",
+            "--debug",
+            "false"
+		};
 
         // When
         var inputs = _inputParserService.ParseAndValidateInputs(args)!;
