@@ -76,7 +76,8 @@
                         inputs.Version!,
                         ArtifactContentType.DmScript,
                         sourceUri,
-                        inputs.BuildNumber!);
+                        inputs.BuildNumber!,
+                        inputs.Debug == true);
 
                     var createdPackage = await CreatePackageAsync(localPackageConfig);
                     if (createdPackage == null) return 4;

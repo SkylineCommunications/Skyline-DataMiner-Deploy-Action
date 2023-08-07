@@ -11,12 +11,14 @@ namespace Package.Domain.Models
         public Uri? SourceUri { get; }
         public string BuildNumber { get; }
 
+		public bool Debug { get; }
+
         public LocalPackageConfig(FileInfo solutionFile,
             string packageName,
             string version,
             ArtifactContentType type,
             Uri? sourceUri,
-            string buildNumber = "")
+            string buildNumber = "", bool debug = false)
         {
             SolutionFile = new FileInfo(solutionFile.FullName);
             PackageName = packageName;
@@ -24,6 +26,7 @@ namespace Package.Domain.Models
             Type = type;
             SourceUri = sourceUri;
             BuildNumber = buildNumber;
+			Debug = debug;
         }
     }
 }

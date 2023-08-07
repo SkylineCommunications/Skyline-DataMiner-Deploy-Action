@@ -20,4 +20,6 @@ public class Inputs
     public string? ArtifactId { get; init; }
 
     public string? BuildNumber { get; init; }
+
+	public bool? Debug { get; init; }
 }

@@ -32,13 +32,16 @@ inputs:
   build-number:
     description: 'The build number of a workflow run. Only required for a development run. Required for stages Upload and All if no version was provided instead.'
     required: false
+  debug:
+    description: 'Option to enable debug logging. Optional'
+    required: false
 outputs:
   artifact-id:
     description: 'The artifact ID if the artifact has been uploaded'
   
 runs:
   using: 'docker'
-  image: 'docker://ghcr.io/skylinecommunications/skyline-dataminer-deploy-action:1.0.25'
+  image: 'docker://ghcr.io/skylinecommunications/skyline-dataminer-deploy-action:1.0.26'
   args:
     - --api-key
     - ${{ inputs.api-key }}
@@ -56,3 +59,5 @@ runs:
     - ${{ inputs.artifact-id }}
     - --build-number
     - ${{ inputs.build-number }}
+    - --debug
+    - ${{ inputs.debug }}
