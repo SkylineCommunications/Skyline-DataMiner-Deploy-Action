@@ -348,54 +348,7 @@ public class ParseInputsTest
 
         Assert.IsNull(inputs);
 	}
-
-    [Test]
-    [TestCase("All")]
-    [TestCase("Upload")]
-    [TestCase("Deploy")]
-    public void ParseAndValidateInputs_EmptyDebug(string stage)
-    {
-	    // Given
-	    var key = "some key";
-	    var solutionFile = "solution-path";
-	    var packageName = "TestPackage";
-	    var version = "1.0.2";
-	    var timeOut = "900";
-	    var artifactId = "some string";
-
-	    var args = new string[]
-	    {
-		    "--api-key",
-		    key,
-		    "--solution-path",
-		    solutionFile,
-		    "--artifact-name",
-		    packageName,
-		    "--version",
-		    version,
-		    "--timeout",
-		    timeOut,
-		    "--stage",
-		    stage,
-		    "--artifact-id",
-		    artifactId,
-		    "--base-path",
-		    "",
-		    "--debug",
-		    ""
-	    };
-
-	    // When
-	    var inputs = _inputParserService.ParseAndValidateInputs(args)!;
-
-	    // Then
-	    _inputParserPresenterMock.Verify(p => p.PresentMissingArgument(InputArgurments.Debug), Times.Once);
-	    _inputParserPresenterMock.Verify(p => p.PresentLogging(It.IsAny<string>()), Times.AtMost(100));
-	    _inputParserPresenterMock.VerifyNoOtherCalls();
-
-	    Assert.IsNull(inputs);
-    }
-
+	
 	[Test]
     [TestCase("All")]
     [TestCase("Upload")]

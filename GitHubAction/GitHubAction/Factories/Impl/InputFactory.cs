@@ -82,7 +82,6 @@ public class InputFactory : IInputFactory
         if (!ValidateArgumentNotEmpty(InputArgurments.ApiKey, apiKey)) return null;
         if (!ValidateArgumentNotEmpty(InputArgurments.Timeout, timeOutString)) return null;
         if (!ValidateTimeout(timeOutString, out TimeSpan timeOut)) return null;
-        if (!ValidateArgumentNotEmpty(InputArgurments.Debug, debugString)) return null;
 
 		if (!Enum.TryParse(stageString, out Stage stage))
         {
