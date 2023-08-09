@@ -94,7 +94,7 @@
 				{
 					version = DMAppVersion.FromDataMinerVersion(localPackageConfig.Version);
 				}
-				else if (Regex.IsMatch(localPackageConfig.Version, "[0-9]+.[0-9]+.[0-9]+.[0-9]$"))
+				else if (Regex.IsMatch(localPackageConfig.Version, "[0-9]+.[0-9]+.[0-9]+.[0-9]+$"))
 				{
 					version = DMAppVersion.FromProtocolVersion(localPackageConfig.Version);
 				}
