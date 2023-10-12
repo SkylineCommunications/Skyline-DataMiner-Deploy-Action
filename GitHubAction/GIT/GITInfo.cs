@@ -7,6 +7,7 @@
     {
         public GitInfo()
         {
+            Console.WriteLine("Creating GitInfo");
             AllowWritesOnDirectory(Directory.GetCurrentDirectory());
 
             using (PowerShell powershell = PowerShell.Create())
@@ -37,6 +38,8 @@
                     throw new InvalidOperationException($"GIT Initial Setup Failed with PowerShell Errors: {resultString} {Environment.NewLine} ps version: {version} OS: {checkOS} git version: {gitVersion} --end");
                 }
             }
+
+            Console.WriteLine("Finished creating GitInfo");
         }
 
         public string GetCommitterMail()
