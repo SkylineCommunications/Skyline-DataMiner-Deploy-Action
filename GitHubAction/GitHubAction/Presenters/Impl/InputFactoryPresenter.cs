@@ -9,6 +9,7 @@ public class InputFactoryPresenter : IInputFactoryPresenter
 
     public InputFactoryPresenter(ILogger<InputFactoryPresenter> logger)
     {
+	    Console.WriteLine("Creating InputFactoryPresenter");
         _logger = logger;
     }
 

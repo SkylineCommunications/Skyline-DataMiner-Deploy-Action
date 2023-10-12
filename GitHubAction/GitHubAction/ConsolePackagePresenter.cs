@@ -13,6 +13,7 @@ public class ConsolePackagePresenter : IPackagePresenter
 
     public ConsolePackagePresenter(ILogger<ConsolePackagePresenter> logger)
     {
+        Console.WriteLine("Creating ConsolePackagePresenter");
         _logger = logger;
     }
 

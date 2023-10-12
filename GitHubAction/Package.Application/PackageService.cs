@@ -14,6 +14,7 @@ public class PackageService : IPackageService
 
     public PackageService(IPackageGateway packageGateway, IPackageBuilder packageBuilder)
     {
+	    Console.WriteLine("Creating PackageService");
         _packageGateway = packageGateway;
         _packageBuilder = packageBuilder;
     }

@@ -37,6 +37,7 @@
         public GitHubAction(IPackageService packageService, IInputFactory inputParser, IPackagePresenter packagePresenter,
             IOutputPresenter outputPresenter, TimeSpan minimumBackOff, TimeSpan maximumBackOff, IEnvironmentVariableService envVarService, IOutputPathProvider outputPathProvider, IGitInfo git)
         {
+	        Console.WriteLine("Creating GitHubAction");
             _packageService = packageService;
             _inputParserSerivce = inputParser;
             _packagePresenter = packagePresenter;

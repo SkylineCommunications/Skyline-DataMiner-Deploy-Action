@@ -11,6 +11,7 @@ public class GitHubOutputPresenter : IOutputPresenter
     private readonly ILogger _logger;
     public GitHubOutputPresenter(ILogger<GitHubOutputPresenter> logger)
     {
+	    Console.WriteLine("Creating GitHubOutputPresenter");
         _logger = logger;
     }
 

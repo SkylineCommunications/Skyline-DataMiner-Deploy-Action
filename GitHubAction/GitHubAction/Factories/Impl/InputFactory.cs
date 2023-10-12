@@ -14,6 +14,7 @@ public class InputFactory : IInputFactory
     private readonly IFileSystem _fileSystem;
     public InputFactory(IInputFactoryPresenter presenter, IFileSystem fileSystem)
     {
+	    Console.WriteLine("Creating InputFactory");
         _presenter = presenter;
         _fileSystem = fileSystem;
     }
