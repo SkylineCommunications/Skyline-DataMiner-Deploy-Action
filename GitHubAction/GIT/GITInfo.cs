@@ -16,7 +16,7 @@
                 Console.WriteLine("Finished AllowWritesOnDirectory");
             }
 
-            var currentDirectory = Directory.GetCurrentDirectory();
+            var currentDirectory = Directory.GetCurrentDirectory() + "mnt/";
             Console.WriteLine($"Current Directory: {currentDirectory}");
             string[] subDirectories = Directory.GetDirectories(currentDirectory);
             Console.WriteLine($"#SubDirectories: {subDirectories.Length}");
