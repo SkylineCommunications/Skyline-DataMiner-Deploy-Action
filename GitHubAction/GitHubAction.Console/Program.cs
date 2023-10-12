@@ -29,26 +29,25 @@ public class Program
 {
     public static async Task Main(string[] args)
     {
+	    Console.WriteLine("MAIN|STARTING");
         Log.Logger = new LoggerConfiguration()
             .WriteTo.Console().CreateLogger();
         int exitCode = 1; //fail by default unless it ran successfully
         try
         {
-            Log.Debug("Inside the try");
-            Console.WriteLine("Inside the try with console");
             var host = CreateHostBuilder(args).Build();
-            var presenter = host.Services.GetService<IOutputPresenter>();
-            presenter?.PresentOutputVariable("Testing", "from the main method");
             var gitHubAction = host.Services.GetRequiredService<GitHubAction>();
             exitCode = await gitHubAction.RunAsync(args, new CancellationToken());
         }
         catch (Exception ex)
         {
+            Console.WriteLine($"MAIN|Exception: {ex}");
             Log.Fatal(ex, "An unhandled exception occurred");
         }
         finally
         {
-            Log.CloseAndFlush();
+            Console.WriteLine("MAIN|ENDING");
+	        Log.CloseAndFlush();
             Environment.Exit(exitCode);
         }
     }

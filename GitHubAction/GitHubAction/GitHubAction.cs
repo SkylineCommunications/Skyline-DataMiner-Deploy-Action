@@ -51,6 +51,7 @@
         public async Task<int> RunAsync(string[] args, CancellationToken cancellationToken)
         {
             var inputs = _inputParserSerivce.ParseAndValidateInputs(args);
+            Console.WriteLine($"Inputs are null: {inputs == null}");
             if (inputs == null)
             {
                 _outputPresenter.PresentInvalidArguments();
@@ -64,7 +65,7 @@
             UploadedPackage? uploadedPackage = null;
 
             _outputPathProvider.BasePath = inputs.BasePath ?? Directory.GetCurrentDirectory();
-
+            Console.WriteLine($"BasePath: {_outputPathProvider.BasePath}");
             try
             {
                 // Upload
@@ -78,12 +79,17 @@
                         sourceUri,
                         inputs.BuildNumber!,
                         inputs.Debug == true);
-
+                    Console.WriteLine("Before CreatePackageAsync");
                     var createdPackage = await CreatePackageAsync(localPackageConfig);
+                    Console.WriteLine($"After CreatePackageAsync (is null): {createdPackage == null}");
                     if (createdPackage == null) return 4;
 
+                    Console.WriteLine("Before CatalogDataFactory.Create");
                     var catalog = CatalogDataFactory.Create(inputs, createdPackage, _git, sourceUri?.ToString() ?? "", branch, releaseUri?.ToString() ?? "");
+                    Console.WriteLine("After CatalogDataFactory.Create");
+                    Console.WriteLine("Before UploadPackageAsync");
                     uploadedPackage = await UploadPackageAsync(inputs.ApiKey, createdPackage, catalog);
+                    Console.WriteLine($"After UploadPackageAsync (is null): {uploadedPackage == null}");
 
                     if (uploadedPackage == null) return 5;
                     _outputPresenter.PresentOutputVariable("ARTIFACT_ID", uploadedPackage.ArtifactId);
