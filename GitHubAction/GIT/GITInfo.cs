@@ -9,23 +9,30 @@
         {
             Console.WriteLine("Creating GitInfo");
             AllowWritesOnDirectory(Directory.GetCurrentDirectory());
-
+            Console.WriteLine("Finished AllowWritesOnDirectory");
             using (PowerShell powershell = PowerShell.Create())
             {
                 powershell.AddScript("git --version");
+                Console.WriteLine("Invoking 'git --version'");
                 var gitVersion = powershell.Invoke().FirstOrDefault()?.ToString();
+                Console.WriteLine("Finished 'git --version'");
                 powershell.Commands.Clear();
 
                 powershell.AddScript($"git config --global --add safe.directory {Directory.GetCurrentDirectory()}");
+                Console.WriteLine("Invoking 'git config ...'");
                 powershell.Invoke();
+                Console.WriteLine("Finished 'git config ...");
                 powershell.Commands.Clear();
 
                 powershell.AddScript($"git fetch --all --tags --force --quiet");
+                Console.WriteLine("Invoking 'git fetch ...'");
                 powershell.Invoke();
+                Console.WriteLine("Finished 'git fetch ...'");
                 powershell.Commands.Clear();
 
                 if (powershell.HadErrors)
                 {
+	                Console.WriteLine("PowerShell had errors");
                     powershell.AddScript("$PSVersionTable.PSVersion");
                     var version = String.Join(",", powershell.Invoke());
                     powershell.Commands.Clear();
@@ -35,6 +42,7 @@
                     powershell.Commands.Clear();
 
                     string resultString = "errors: " + String.Join(",", powershell.Streams.Error.ReadAll());
+                    Console.Write($"Throwing exception: {resultString}");
                     throw new InvalidOperationException($"GIT Initial Setup Failed with PowerShell Errors: {resultString} {Environment.NewLine} ps version: {version} OS: {checkOS} git version: {gitVersion} --end");
                 }
             }
