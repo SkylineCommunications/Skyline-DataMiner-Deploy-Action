@@ -23,16 +23,22 @@ using Skyline.DataMiner.CICD.FileSystem;
 
 namespace GitHubAction.Console;
 
+using Console = System.Console;
+
 public class Program
 {
     public static async Task Main(string[] args)
     {
         Log.Logger = new LoggerConfiguration()
             .WriteTo.Console().CreateLogger();
-        int exitCode = 1; //fail by default unless it ran succesfully
+        int exitCode = 1; //fail by default unless it ran successfully
         try
         {
+            Log.Debug("Inside the try");
+            Console.WriteLine("Inside the try with console");
             var host = CreateHostBuilder(args).Build();
+            var presenter = host.Services.GetService<IOutputPresenter>();
+            presenter?.PresentOutputVariable("Testing", "from the main method");
             var gitHubAction = host.Services.GetRequiredService<GitHubAction>();
             exitCode = await gitHubAction.RunAsync(args, new CancellationToken());
         }
