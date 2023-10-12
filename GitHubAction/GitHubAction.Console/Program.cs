@@ -95,7 +95,6 @@ public class Program
                 services.AddSingleton<IOutputPathProvider, OutputPathProvider>();
 
                 var source = Util.GetSourceHost();
-                Console.WriteLine($"Source: {source}");
                 if (source == Util.SourceHost.GitHub)
                 {
                     services.AddScoped<IEnvironmentVariableService, GitHubEnvironmentVariableService>();
