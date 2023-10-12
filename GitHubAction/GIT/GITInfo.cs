@@ -5,28 +5,33 @@
 
     public class GitInfo : IGitInfo
     {
-        public GitInfo()
-        {
-            Console.WriteLine("Creating GitInfo");
+        private bool _isGitLab;
+        private string currentDirectory;
 
-            string currentDirectory = Directory.GetCurrentDirectory();
-            if (Environment.GetEnvironmentVariable("CI_PROJECT_URL") == null)
-            {
-                AllowWritesOnDirectory(currentDirectory);
-            }
-            else
-            {
-                currentDirectory += "mnt/";
-            }
+	    public GitInfo()
+        {
+        }
+
+	    public void Initialize(string basePath)
+	    {
+		    if (!String.IsNullOrWhiteSpace(basePath))
+		    {
+			    _isGitLab = true;
+		    }
             
-            using (PowerShell powershell = PowerShell.Create())
+		    if (_isGitLab)
+		    {
+			    currentDirectory = basePath;
+		    }
+		    else
+		    {
+			    currentDirectory = Directory.GetCurrentDirectory();
+			    AllowWritesOnDirectory(currentDirectory);
+		    }
+
+		    using (PowerShell powershell = PowerShell.Create())
             {
-                if (Environment.GetEnvironmentVariable("CI_PROJECT_URL") != null)
-                {
-                    powershell.AddScript("cd mnt/");
-                    powershell.Invoke();
-                    powershell.Commands.Clear();
-                }
+                MoveToCorrectLocation(powershell);
 
                 powershell.AddScript("git --version");
                 var gitVersion = powershell.Invoke().FirstOrDefault()?.ToString();
@@ -56,11 +61,13 @@
             }
         }
 
-        public string GetCommitterMail()
+	    public string GetCommitterMail()
         {
             string mail = "";
             using (PowerShell powershell = PowerShell.Create())
             {
+	            MoveToCorrectLocation(powershell);
+
                 powershell.AddScript($"git show -s --format='%ae'");
                 var result = powershell.Invoke();
                 powershell.Commands.Clear();
@@ -82,6 +89,8 @@
         {
             using (PowerShell powershell = PowerShell.Create())
             {
+	            MoveToCorrectLocation(powershell);
+
                 powershell.AddScript($"git branch --remotes --contains {tag}");
                 var results = powershell.Invoke();
                 powershell.Commands.Clear();
@@ -101,6 +110,16 @@
 
                 return resultString;
             }
+        }
+
+        private void MoveToCorrectLocation(PowerShell powershell)
+        {
+	        if (_isGitLab)
+	        {
+		        powershell.AddScript($"cd {currentDirectory}");
+		        powershell.Invoke();
+		        powershell.Commands.Clear();
+	        }
         }
 
         private void AllowWritesOnDirectory(string path)

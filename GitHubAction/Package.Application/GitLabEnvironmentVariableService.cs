@@ -20,6 +20,7 @@ public class GitLabEnvironmentVariableService : IEnvironmentVariableService
     /// <inheritdoc />
     public Uri? GetReleaseUri()
     {
+        // TODO: Figure out where the artifacts are stored
         return null;
     }
 

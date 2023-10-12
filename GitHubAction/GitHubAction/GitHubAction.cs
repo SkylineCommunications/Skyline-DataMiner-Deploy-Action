@@ -66,8 +66,10 @@
 
             UploadedPackage? uploadedPackage = null;
 
-            _outputPathProvider.BasePath = inputs.BasePath ?? Directory.GetCurrentDirectory();
-            Console.WriteLine($"BasePath: {_outputPathProvider.BasePath}");
+            string basePath = inputs.BasePath ?? Directory.GetCurrentDirectory();
+            _outputPathProvider.BasePath = basePath;
+            _git.Initialize(basePath);
+
             try
             {
                 // Upload
