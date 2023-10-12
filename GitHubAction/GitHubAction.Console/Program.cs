@@ -36,7 +36,9 @@ public class Program
         try
         {
             var host = CreateHostBuilder(args).Build();
+            Console.WriteLine($"Host created: {host != null}");
             var gitHubAction = host.Services.GetRequiredService<GitHubAction>();
+            Console.WriteLine($"Found Service: {gitHubAction != null}");
             exitCode = await gitHubAction.RunAsync(args, new CancellationToken());
         }
         catch (Exception ex)

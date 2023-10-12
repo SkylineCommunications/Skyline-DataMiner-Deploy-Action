@@ -50,6 +50,7 @@
 
         public async Task<int> RunAsync(string[] args, CancellationToken cancellationToken)
         {
+            Console.WriteLine("Parsing inputs");
             var inputs = _inputParserSerivce.ParseAndValidateInputs(args);
             Console.WriteLine($"Inputs are null: {inputs == null}");
             if (inputs == null)
