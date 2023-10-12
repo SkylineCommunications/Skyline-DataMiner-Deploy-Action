@@ -8,6 +8,8 @@
         public GitInfo()
         {
             Console.WriteLine("Creating GitInfo");
+
+            Console.WriteLine("Starting 'AllowWritesOnDirectory'");
             AllowWritesOnDirectory(Directory.GetCurrentDirectory());
             Console.WriteLine("Finished AllowWritesOnDirectory");
             using (PowerShell powershell = PowerShell.Create())
@@ -99,10 +101,13 @@
 
         private void AllowWritesOnDirectory(string path)
         {
+	        Console.WriteLine($"AllowWritesOnDirectory|Path: {path}");
             if (String.IsNullOrWhiteSpace(path))
                 return;
 
+            Console.WriteLine("Creating DirectoryInfo");
             var directory = new DirectoryInfo(path) { Attributes = System.IO.FileAttributes.Normal };
+            Console.WriteLine("Getting FileSystemInfos");
             FileSystemInfo[] fileSystemInfos = directory.GetFileSystemInfos("*", System.IO.SearchOption.AllDirectories);
             Console.WriteLine($"#FileSystemInfos: {fileSystemInfos.Length}");
             foreach (var info in fileSystemInfos)
