@@ -20,8 +20,15 @@
             Console.WriteLine($"Current Directory: {currentDirectory}");
             string[] subDirectories = Directory.GetDirectories(currentDirectory);
             Console.WriteLine($"#SubDirectories: {subDirectories.Length}");
+            foreach (string subDirectory in subDirectories)
+            {
+	            Console.WriteLine($"SubDirectory: {subDirectory}");
+            }
+
             string[] files = Directory.GetFiles(currentDirectory);
-            Console.WriteLine($"#Files: {files}");
+            Console.WriteLine($"#Files: {files.Length}");
+            string[] entries = Directory.GetFileSystemEntries(currentDirectory);
+            Console.WriteLine($"#FileEntries: {entries.Length}");
 
             Console.WriteLine("Starting PowerShell");
             using (PowerShell powershell = PowerShell.Create())
