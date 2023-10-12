@@ -12,16 +12,13 @@
             string currentDirectory = Directory.GetCurrentDirectory();
             if (Environment.GetEnvironmentVariable("CI_PROJECT_URL") == null)
             {
-                Console.WriteLine("Starting 'AllowWritesOnDirectory'");
                 AllowWritesOnDirectory(currentDirectory);
-                Console.WriteLine("Finished AllowWritesOnDirectory");
             }
             else
             {
                 currentDirectory += "mnt/";
             }
-
-            Console.WriteLine("Starting PowerShell");
+            
             using (PowerShell powershell = PowerShell.Create())
             {
                 if (Environment.GetEnvironmentVariable("CI_PROJECT_URL") != null)
@@ -57,8 +54,6 @@
                     throw new InvalidOperationException($"GIT Initial Setup Failed with PowerShell Errors: {resultString} {Environment.NewLine} ps version: {version} OS: {checkOS} git version: {gitVersion} --end");
                 }
             }
-
-            Console.WriteLine("Finished creating GitInfo");
         }
 
         public string GetCommitterMail()
@@ -110,15 +105,11 @@
 
         private void AllowWritesOnDirectory(string path)
         {
-            Console.WriteLine($"AllowWritesOnDirectory|Path: {path}");
             if (String.IsNullOrWhiteSpace(path))
                 return;
-
-            Console.WriteLine("Creating DirectoryInfo");
+            
             var directory = new DirectoryInfo(path) { Attributes = System.IO.FileAttributes.Normal };
-            Console.WriteLine("Getting FileSystemInfos");
             FileSystemInfo[] fileSystemInfos = directory.GetFileSystemInfos("*", System.IO.SearchOption.AllDirectories);
-            Console.WriteLine($"#FileSystemInfos: {fileSystemInfos.Length}");
             foreach (var info in fileSystemInfos)
             {
                 info.Attributes = System.IO.FileAttributes.Normal;

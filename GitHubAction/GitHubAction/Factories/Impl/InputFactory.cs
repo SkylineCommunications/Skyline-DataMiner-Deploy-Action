@@ -14,7 +14,7 @@ public class InputFactory : IInputFactory
     private readonly IFileSystem _fileSystem;
     public InputFactory(IInputFactoryPresenter presenter, IFileSystem fileSystem)
     {
-	    Console.WriteLine("Creating InputFactory");
+        Console.WriteLine("Creating InputFactory");
         _presenter = presenter;
         _fileSystem = fileSystem;
     }
@@ -68,9 +68,9 @@ public class InputFactory : IInputFactory
             _presenter.PresentKeyNotFound($"Argument {InputArgurments.PackageName} not found");
 
         if (!givenArgs.TryGetValue(InputArgurments.Debug, out var debugString))
-	        _presenter.PresentKeyNotFound($"Argument {InputArgurments.Debug} not found");
+            _presenter.PresentKeyNotFound($"Argument {InputArgurments.Debug} not found");
 
-		bool isVersionPresent = givenArgs.TryGetValue(InputArgurments.Version, out var version);
+        bool isVersionPresent = givenArgs.TryGetValue(InputArgurments.Version, out var version);
         bool isBuildNumberPresent = givenArgs.TryGetValue(InputArgurments.BuildNumber, out var buildNumber);
         if (!isVersionPresent && !isBuildNumberPresent)
             _presenter.PresentKeyNotFound($"Argument {InputArgurments.Version} or {InputArgurments.BuildNumber} not found");
@@ -78,13 +78,13 @@ public class InputFactory : IInputFactory
         if (!givenArgs.TryGetValue(InputArgurments.ArtifactId, out var artifactId))
             _presenter.PresentKeyNotFound($"Argument {InputArgurments.ArtifactId} not found");
 
-//        if (!ValidateArgumentNotEmpty(InputArgurments.Identifier, identifierString)) return null;
+        //        if (!ValidateArgumentNotEmpty(InputArgurments.Identifier, identifierString)) return null;
         if (!ValidateArgumentNotEmpty(InputArgurments.Stage, stageString)) return null;
         if (!ValidateArgumentNotEmpty(InputArgurments.ApiKey, apiKey)) return null;
         if (!ValidateArgumentNotEmpty(InputArgurments.Timeout, timeOutString)) return null;
         if (!ValidateTimeout(timeOutString, out TimeSpan timeOut)) return null;
 
-		if (!Enum.TryParse(stageString, out Stage stage))
+        if (!Enum.TryParse(stageString, out Stage stage))
         {
             _presenter.PresentInvalidStage();
             return null;
@@ -95,11 +95,17 @@ public class InputFactory : IInputFactory
             case Stage.All:
             case Stage.Upload:
                 argumentsAreValid &= ValidateArgumentNotEmpty(InputArgurments.SolutionPath, solutionPath);
+
+                if (!argumentsAreValid) return null;
+
+                if (!String.IsNullOrEmpty(basePath))
+                    solutionPath = Path.Combine(basePath, solutionPath);
+
                 string workSpace = _fileSystem.File.GetParentDirectory(solutionPath);
-                _presenter.PresentLogging("Workspace: "+ workSpace);
+                _presenter.PresentLogging("Workspace: " + workSpace);
                 _fileSystem.Directory.AllowWritesOnDirectory(workSpace);
 
-                if (solutionPath!= null && !_fileSystem.File.Exists(solutionPath))
+                if (solutionPath != null && !_fileSystem.File.Exists(solutionPath))
                 {
                     _presenter.PresentSolutionNotFound(solutionPath);
                     argumentsAreValid &= false;
@@ -107,7 +113,7 @@ public class InputFactory : IInputFactory
 
                 argumentsAreValid &= ValidateArgumentNotEmpty(InputArgurments.PackageName, packageName);
 
-                if(String.IsNullOrWhiteSpace(version) && String.IsNullOrWhiteSpace(buildNumber))
+                if (String.IsNullOrWhiteSpace(version) && String.IsNullOrWhiteSpace(buildNumber))
                 {
                     _presenter.PresentMissingArgument(InputArgurments.Version + " or " + InputArgurments.BuildNumber);
                     argumentsAreValid &= false;
@@ -119,9 +125,6 @@ public class InputFactory : IInputFactory
                 //    argumentsAreValid &= ValidateVersion(InputArgurments.Version, version);
 
                 if (!argumentsAreValid) return null;
-
-                if (!string.IsNullOrEmpty(basePath))
-                    solutionPath = Path.Combine(basePath, solutionPath);
 
                 string cleanPackageName = CleanPackageName(packageName);
 
@@ -135,7 +138,7 @@ public class InputFactory : IInputFactory
                     TimeOut = timeOut,
                     Version = version,
                     BuildNumber = buildNumber,
-					Debug = String.Equals(debugString, "true", StringComparison.OrdinalIgnoreCase),
+                    Debug = String.Equals(debugString, "true", StringComparison.OrdinalIgnoreCase),
                 };
             case Stage.Deploy:
                 argumentsAreValid &= ValidateArgumentNotEmpty(InputArgurments.ArtifactId, artifactId);
@@ -148,7 +151,7 @@ public class InputFactory : IInputFactory
                     ArtifactId = artifactId,
                     TimeOut = timeOut,
                     Stage = stage,
-					Debug = String.Equals(debugString, "true", StringComparison.OrdinalIgnoreCase),
+                    Debug = String.Equals(debugString, "true", StringComparison.OrdinalIgnoreCase),
                 };
             default:
                 _presenter.PresentStageNotValidated(stage.ToString());
