@@ -103,7 +103,9 @@
                 return;
 
             var directory = new DirectoryInfo(path) { Attributes = System.IO.FileAttributes.Normal };
-            foreach (var info in directory.GetFileSystemInfos("*", System.IO.SearchOption.AllDirectories))
+            FileSystemInfo[] fileSystemInfos = directory.GetFileSystemInfos("*", System.IO.SearchOption.AllDirectories);
+            Console.WriteLine($"#FileSystemInfos: {fileSystemInfos.Length}");
+            foreach (var info in fileSystemInfos)
             {
                 info.Attributes = System.IO.FileAttributes.Normal;
             }
