@@ -9,9 +9,14 @@
         {
             Console.WriteLine("Creating GitInfo");
 
-            Console.WriteLine("Starting 'AllowWritesOnDirectory'");
-            AllowWritesOnDirectory(Directory.GetCurrentDirectory());
-            Console.WriteLine("Finished AllowWritesOnDirectory");
+            if (Environment.GetEnvironmentVariable("CI_PROJECT_URL") == null)
+            {
+	            Console.WriteLine("Starting 'AllowWritesOnDirectory'");
+                AllowWritesOnDirectory(Directory.GetCurrentDirectory());
+                Console.WriteLine("Finished AllowWritesOnDirectory");
+            }
+
+            Console.WriteLine("Starting PowerShell");
             using (PowerShell powershell = PowerShell.Create())
             {
                 powershell.AddScript("git --version");
