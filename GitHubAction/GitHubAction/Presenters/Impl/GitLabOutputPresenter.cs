@@ -8,7 +8,6 @@ public class GitLabOutputPresenter : IOutputPresenter
     private readonly ILogger _logger;
     public GitLabOutputPresenter(IOutputPathProvider pathProvider, ILogger<GitLabOutputPresenter> logger)
     {
-	    Console.WriteLine("Creating GitLabOutputPresenter");
         _pathProvider = pathProvider;
         _logger = logger;
     }

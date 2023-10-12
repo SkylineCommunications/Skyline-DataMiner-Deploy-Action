@@ -41,7 +41,6 @@ public class Program
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"MAIN|Exception: {ex}");
             Log.Fatal(ex, "An unhandled exception occurred");
         }
         finally

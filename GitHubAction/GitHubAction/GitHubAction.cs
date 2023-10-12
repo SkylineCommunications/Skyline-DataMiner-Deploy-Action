@@ -37,7 +37,6 @@
         public GitHubAction(IPackageService packageService, IInputFactory inputParser, IPackagePresenter packagePresenter,
             IOutputPresenter outputPresenter, TimeSpan minimumBackOff, TimeSpan maximumBackOff, IEnvironmentVariableService envVarService, IOutputPathProvider outputPathProvider, IGitInfo git)
         {
-	        Console.WriteLine("Creating GitHubAction");
             _packageService = packageService;
             _inputParserSerivce = inputParser;
             _packagePresenter = packagePresenter;
@@ -51,9 +50,7 @@
 
         public async Task<int> RunAsync(string[] args, CancellationToken cancellationToken)
         {
-            Console.WriteLine("Parsing inputs");
             var inputs = _inputParserSerivce.ParseAndValidateInputs(args);
-            Console.WriteLine($"Inputs are null: {inputs == null}");
             if (inputs == null)
             {
                 _outputPresenter.PresentInvalidArguments();
@@ -87,17 +84,12 @@
                         sourceUri,
                         inputs.BuildNumber!,
                         inputs.Debug == true);
-                    Console.WriteLine("Before CreatePackageAsync");
-                    var createdPackage = await CreatePackageAsync(localPackageConfig);
-                    Console.WriteLine($"After CreatePackageAsync (is null): {createdPackage == null}");
-                    if (createdPackage == null) return 4;
 
-                    Console.WriteLine("Before CatalogDataFactory.Create");
+                    var createdPackage = await CreatePackageAsync(localPackageConfig);
+                    if (createdPackage == null) return 4;
+                    
                     var catalog = CatalogDataFactory.Create(inputs, createdPackage, _git, sourceUri?.ToString() ?? "", branch, releaseUri?.ToString() ?? "");
-                    Console.WriteLine("After CatalogDataFactory.Create");
-                    Console.WriteLine("Before UploadPackageAsync");
                     uploadedPackage = await UploadPackageAsync(inputs.ApiKey, createdPackage, catalog);
-                    Console.WriteLine($"After UploadPackageAsync (is null): {uploadedPackage == null}");
 
                     if (uploadedPackage == null) return 5;
                     _outputPresenter.PresentOutputVariable("ARTIFACT_ID", uploadedPackage.ArtifactId);

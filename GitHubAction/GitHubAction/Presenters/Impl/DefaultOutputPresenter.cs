@@ -7,7 +7,6 @@ public class DefaultOutputPresenter : IOutputPresenter
     private readonly ILogger _logger;
     public DefaultOutputPresenter(ILogger<DefaultOutputPresenter> logger)
     {
-        Console.WriteLine("Creating DefaultOutputPresenter");
         _logger = logger;
     }
 

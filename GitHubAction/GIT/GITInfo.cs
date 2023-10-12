@@ -8,11 +8,7 @@
         private bool _isGitLab;
         private string currentDirectory;
 
-	    public GitInfo()
-        {
-        }
-
-	    public void Initialize(string basePath)
+        public void Initialize(string basePath)
 	    {
 		    if (!String.IsNullOrWhiteSpace(basePath))
 		    {
