@@ -9,35 +9,33 @@
         {
             Console.WriteLine("Creating GitInfo");
 
+            string currentDirectory = Directory.GetCurrentDirectory();
             if (Environment.GetEnvironmentVariable("CI_PROJECT_URL") == null)
             {
-	            Console.WriteLine("Starting 'AllowWritesOnDirectory'");
-                AllowWritesOnDirectory(Directory.GetCurrentDirectory());
+                Console.WriteLine("Starting 'AllowWritesOnDirectory'");
+                AllowWritesOnDirectory(currentDirectory);
                 Console.WriteLine("Finished AllowWritesOnDirectory");
             }
-
-            var currentDirectory = Directory.GetCurrentDirectory() + "mnt/";
-            Console.WriteLine($"Current Directory: {currentDirectory}");
-            string[] subDirectories = Directory.GetDirectories(currentDirectory);
-            Console.WriteLine($"#SubDirectories: {subDirectories.Length}");
-            foreach (string subDirectory in subDirectories)
+            else
             {
-	            Console.WriteLine($"SubDirectory: {subDirectory}");
+                currentDirectory += "mnt/";
             }
-
-            string[] files = Directory.GetFiles(currentDirectory);
-            Console.WriteLine($"#Files: {files.Length}");
-            string[] entries = Directory.GetFileSystemEntries(currentDirectory);
-            Console.WriteLine($"#FileEntries: {entries.Length}");
 
             Console.WriteLine("Starting PowerShell");
             using (PowerShell powershell = PowerShell.Create())
             {
+                if (Environment.GetEnvironmentVariable("CI_PROJECT_URL") != null)
+                {
+                    powershell.AddScript("cd mnt/");
+                    powershell.Invoke();
+                    powershell.Commands.Clear();
+                }
+
                 powershell.AddScript("git --version");
                 var gitVersion = powershell.Invoke().FirstOrDefault()?.ToString();
                 powershell.Commands.Clear();
 
-                powershell.AddScript($"git config --global --add safe.directory {Directory.GetCurrentDirectory()}");
+                powershell.AddScript($"git config --global --add safe.directory {currentDirectory}");
                 powershell.Invoke();
                 powershell.Commands.Clear();
 
@@ -112,7 +110,7 @@
 
         private void AllowWritesOnDirectory(string path)
         {
-	        Console.WriteLine($"AllowWritesOnDirectory|Path: {path}");
+            Console.WriteLine($"AllowWritesOnDirectory|Path: {path}");
             if (String.IsNullOrWhiteSpace(path))
                 return;
 
