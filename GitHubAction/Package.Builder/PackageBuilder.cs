@@ -74,7 +74,6 @@
 
 		public PackageBuilder(IPackagePresenter presenter)
 		{
-			Console.WriteLine("Creating PackageBuilder");
 			_presenter = presenter;
 		}
 

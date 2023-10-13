@@ -21,6 +21,7 @@ public class GitLabEnvironmentVariableService : IEnvironmentVariableService
     public Uri? GetReleaseUri()
     {
 	    var tagName = Environment.GetEnvironmentVariable("CI_COMMIT_TAG");
+	    Console.WriteLine($"GetReleaseUri|TagName: {tagName}");
         if (String.IsNullOrWhiteSpace(tagName))
         {
             // No tag name
@@ -28,14 +29,15 @@ public class GitLabEnvironmentVariableService : IEnvironmentVariableService
         }
 
         // https://gitlab.com/data-acq/DeployAction
-        var githubServerUrl = Environment.GetEnvironmentVariable("CI_PROJECT_URL");
-        if (String.IsNullOrWhiteSpace(githubServerUrl))
+        var repoUrl = GetSourceUri();
+        Console.WriteLine($"GetReleaseUri|ProjectUrl: {repoUrl}");
+        if (repoUrl == null)
         {
 	        return null;
         }
 
         // https://gitlab.com/data-acq/DeployAction/-/tags/1.0.1
-        return new Uri(new Uri(githubServerUrl), $"-/tags/{tagName}");
+        return new Uri(repoUrl, $"-/tags/{tagName}");
     }
 
     /// <inheritdoc />
