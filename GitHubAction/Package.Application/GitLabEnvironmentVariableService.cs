@@ -41,14 +41,6 @@ public class GitLabEnvironmentVariableService : IEnvironmentVariableService
     /// <inheritdoc />
     public string GetBranch()
     {
-	    var branchName = Environment.GetEnvironmentVariable("CI_COMMIT_BRANCH");
-	    var branchOrTagName = Environment.GetEnvironmentVariable("CI_COMMIT_REF_NAME");
-	    var tagName = Environment.GetEnvironmentVariable("CI_COMMIT_TAG");
-
-        Console.WriteLine($"Branch Name: {branchName}");
-        Console.WriteLine($"BranchOrTag Name: {branchOrTagName}");
-        Console.WriteLine($"Tag Name: {tagName}");
-
-        return Environment.GetEnvironmentVariable("CI_COMMIT_REF_NAME") ?? String.Empty;
+	    return Environment.GetEnvironmentVariable("CI_COMMIT_REF_NAME") ?? String.Empty;
     }
 }

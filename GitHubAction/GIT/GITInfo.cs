@@ -12,7 +12,6 @@
 	    {
 		    if (!String.IsNullOrWhiteSpace(basePath))
 		    {
-			    Console.WriteLine($"BasePath: {basePath}");
 			    _isGitLab = true;
 		    }
             
@@ -112,25 +111,9 @@
         {
 	        if (_isGitLab)
 	        {
-                Console.WriteLine($"Current Directory: {currentDirectory}");
-		        string[] directories = Directory.GetDirectories(currentDirectory);
-		        foreach (string directory in directories)
-		        {
-			        Console.WriteLine($"SubDirectory: {directory}");
-		        }
-
 		        powershell.AddScript($"cd {currentDirectory}");
 		        powershell.Invoke();
 		        powershell.Commands.Clear();
-
-                Console.WriteLine("------");
-
-		        Console.WriteLine($"Current Directory: {currentDirectory}");
-		        directories = Directory.GetDirectories(currentDirectory);
-		        foreach (string directory in directories)
-		        {
-			        Console.WriteLine($"SubDirectory: {directory}");
-		        }
             }
         }
 
