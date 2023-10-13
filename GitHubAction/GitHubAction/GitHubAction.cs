@@ -61,10 +61,6 @@
             var branch = _EnvVarService.GetBranch();
             var releaseUri = _EnvVarService.GetReleaseUri();
 
-            Console.WriteLine($"Source URI: {sourceUri}");
-            Console.WriteLine($"Branch: {branch}");
-            Console.WriteLine($"Release URI: {releaseUri}");
-
             UploadedPackage? uploadedPackage = null;
 
             string basePath = inputs.BasePath ?? Directory.GetCurrentDirectory();
