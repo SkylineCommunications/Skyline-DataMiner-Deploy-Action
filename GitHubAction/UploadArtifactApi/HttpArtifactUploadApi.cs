@@ -27,9 +27,9 @@ public class HttpArtifactUploadApi : IArtifactUploadApi, IDisposable
     //    string dmappFilePath = Path.Combine(Environment.GetEnvironmentVariable("GITHUB_WORKSPACE"), name);
     //    File.WriteAllBytes(dmappFilePath, package);
     //    FileStream fileStream = new FileStream(dmappFilePath, FileMode.Open, FileAccess.Read, FileShare.None);
-
-    MemoryStream ms = new MemoryStream();
-    ms.Write(package, 0, package.Length);
+    
+    //MemoryStream ms = new MemoryStream();
+    //ms.Write(package, 0, package.Length);
 
     using var formData = new MultipartFormDataContent();
         formData.Headers.Add("Ocp-Apim-Subscription-Key", key);
@@ -41,7 +41,8 @@ public class HttpArtifactUploadApi : IArtifactUploadApi, IDisposable
         formData.Add(new StringContent(catalog.IsPreRelease ? "true" : "false"), "isprerelease");
         formData.Add(new StringContent(catalog.CommitterMail), "developer");
         formData.Add(new StringContent(catalog.ReleaseUri), "releasepath");
-        formData.Add(new StreamContent(ms), "file", name);
+        //formData.Add(new StreamContent(ms), "file", name);
+        formData.Add(new ByteArrayContent(package), "file", name);
 
         string logInfo = $"--name {name} --version {catalog.Version} --contentType {catalog.ContentType} --branch {catalog.Branch} --identifier {catalog.Identifier} --isprerelease {catalog.IsPreRelease} --developer {catalog.CommitterMail} --releasepath {catalog.ReleaseUri} --file {name}";
         presenter.LogInformation("HTTP Post with info: " + logInfo);
