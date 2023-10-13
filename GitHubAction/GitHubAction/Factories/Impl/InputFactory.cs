@@ -148,6 +148,7 @@ public class InputFactory : IInputFactory
                 {
                     ApiKey = apiKey,
                     ArtifactId = artifactId,
+                    BasePath = basePath,
                     TimeOut = timeOut,
                     Stage = stage,
                     Debug = String.Equals(debugString, "true", StringComparison.OrdinalIgnoreCase),
