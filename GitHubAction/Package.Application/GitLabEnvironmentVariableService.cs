@@ -20,27 +20,35 @@ public class GitLabEnvironmentVariableService : IEnvironmentVariableService
     /// <inheritdoc />
     public Uri? GetReleaseUri()
     {
-        // TODO: Figure out where the artifacts are stored
-        return null;
-
-        // TODO: Figure out if the pipeline runs for a regular push or a tag.
-
-        // https://gitlab.com/data-acq/DeployAction/-/tags/1.0.1
-
-        var githubServerUrl = Environment.GetEnvironmentVariable("CI_PROJECT_URL");
-        if (githubServerUrl != null /*&& Environment.GetEnvironmentVariable("GITHUB_REF_TYPE") == "tag"*/)
+	    var tagName = Environment.GetEnvironmentVariable("CI_COMMIT_TAG");
+        if (String.IsNullOrWhiteSpace(tagName))
         {
-	        return new Uri(new Uri(githubServerUrl), $"-/tags/{Environment.GetEnvironmentVariable("CI_COMMIT_REF_NAME")}");
+            // No tag name
+	        return null;
         }
-        else
+
+        // https://gitlab.com/data-acq/DeployAction
+        var githubServerUrl = Environment.GetEnvironmentVariable("CI_PROJECT_URL");
+        if (String.IsNullOrWhiteSpace(githubServerUrl))
         {
 	        return null;
         }
+
+        // https://gitlab.com/data-acq/DeployAction/-/tags/1.0.1
+        return new Uri(new Uri(githubServerUrl), $"-/tags/{tagName}");
     }
 
     /// <inheritdoc />
     public string GetBranch()
     {
+	    var branchName = Environment.GetEnvironmentVariable("CI_COMMIT_BRANCH");
+	    var branchOrTagName = Environment.GetEnvironmentVariable("CI_COMMIT_REF_NAME");
+	    var tagName = Environment.GetEnvironmentVariable("CI_COMMIT_TAG");
+
+        Console.WriteLine($"Branch Name: {branchName}");
+        Console.WriteLine($"BranchOrTag Name: {branchOrTagName}");
+        Console.WriteLine($"Tag Name: {tagName}");
+
         return Environment.GetEnvironmentVariable("CI_COMMIT_REF_NAME") ?? String.Empty;
     }
 }

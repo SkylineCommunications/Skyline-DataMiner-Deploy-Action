@@ -12,6 +12,7 @@
 	    {
 		    if (!String.IsNullOrWhiteSpace(basePath))
 		    {
+			    Console.WriteLine($"BasePath: {basePath}");
 			    _isGitLab = true;
 		    }
             
@@ -59,12 +60,12 @@
 
 	    public string GetCommitterMail()
         {
-            string mail = "";
+            string mail;
             using (PowerShell powershell = PowerShell.Create())
             {
 	            MoveToCorrectLocation(powershell);
 
-                powershell.AddScript($"git show -s --format='%ae'");
+                powershell.AddScript("git show -s --format='%ae'");
                 var result = powershell.Invoke();
                 powershell.Commands.Clear();
 
@@ -76,8 +77,7 @@
                     throw new InvalidOperationException("Getting Current Branch through Git failed with errors:" + resultString);
                 }
             }
-
-            if (mail == null) mail = String.Empty;
+            
             return mail;
         }
 
@@ -112,10 +112,26 @@
         {
 	        if (_isGitLab)
 	        {
+                Console.WriteLine($"Current Directory: {currentDirectory}");
+		        string[] directories = Directory.GetDirectories(currentDirectory);
+		        foreach (string directory in directories)
+		        {
+			        Console.WriteLine($"SubDirectory: {directory}");
+		        }
+
 		        powershell.AddScript($"cd {currentDirectory}");
 		        powershell.Invoke();
 		        powershell.Commands.Clear();
-	        }
+
+                Console.WriteLine("------");
+
+		        Console.WriteLine($"Current Directory: {currentDirectory}");
+		        directories = Directory.GetDirectories(currentDirectory);
+		        foreach (string directory in directories)
+		        {
+			        Console.WriteLine($"SubDirectory: {directory}");
+		        }
+            }
         }
 
         private void AllowWritesOnDirectory(string path)

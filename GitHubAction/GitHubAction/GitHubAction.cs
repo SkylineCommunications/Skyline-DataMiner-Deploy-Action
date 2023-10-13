@@ -98,10 +98,8 @@
                 // Deploy
                 if (inputs is { Stage: Stage.All or Stage.Deploy })
                 {
-                    if (uploadedPackage == null)
-                    {
-                        uploadedPackage = new UploadedPackage(inputs.ArtifactId!);
-                    }
+                    uploadedPackage ??= new UploadedPackage(inputs.ArtifactId!);
+
                     var deployingPackage = await DeployPackageAsync(inputs.ApiKey, uploadedPackage);
                     if (deployingPackage == null) return 6;
 
