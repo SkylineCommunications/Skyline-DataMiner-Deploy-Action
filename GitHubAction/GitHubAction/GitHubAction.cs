@@ -85,7 +85,7 @@
 
                     var createdPackage = await CreatePackageAsync(localPackageConfig);
                     if (createdPackage == null) return 4;
-                    
+
                     var catalog = CatalogDataFactory.Create(inputs, createdPackage, _git, sourceUri?.ToString() ?? "", branch, releaseUri?.ToString() ?? "");
                     uploadedPackage = await UploadPackageAsync(inputs.ApiKey, createdPackage, catalog);
 

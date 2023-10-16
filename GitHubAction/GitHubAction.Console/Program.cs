@@ -23,8 +23,6 @@ using Skyline.DataMiner.CICD.FileSystem;
 
 namespace GitHubAction.Console;
 
-using Console = System.Console;
-
 public class Program
 {
     public static async Task Main(string[] args)
@@ -44,7 +42,7 @@ public class Program
         }
         finally
         {
-	        Log.CloseAndFlush();
+            Log.CloseAndFlush();
             Environment.Exit(exitCode);
         }
     }

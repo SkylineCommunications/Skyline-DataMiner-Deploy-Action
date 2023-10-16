@@ -1,9 +1,11 @@
-﻿using Package.Domain.Exceptions;
-using System.Net;
-using Newtonsoft.Json;
-using Package.Domain.Services;
-using System.Text;
+﻿using System.Net;
+
 using Catalog.Domain;
+
+using Newtonsoft.Json;
+
+using Package.Domain.Exceptions;
+using Package.Domain.Services;
 
 namespace UploadArtifactApi;
 
@@ -24,7 +26,7 @@ public class HttpArtifactUploadApi : IArtifactUploadApi, IDisposable
         CatalogData catalog,
         CancellationToken cancellationToken, IPackagePresenter presenter)
     {
-	    using var formData = new MultipartFormDataContent();
+        using var formData = new MultipartFormDataContent();
         formData.Headers.Add("Ocp-Apim-Subscription-Key", key);
         formData.Add(new StringContent(name), "name");
         formData.Add(new StringContent(catalog.Version), "version");
