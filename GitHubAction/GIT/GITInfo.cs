@@ -6,7 +6,7 @@
     public class GitInfo : IGitInfo
     {
         private bool _isGitLab;
-        private string currentDirectory;
+        private string _currentDirectory = null!;
 
         public void Initialize(string basePath)
 	    {
@@ -17,12 +17,12 @@
             
 		    if (_isGitLab)
 		    {
-			    currentDirectory = basePath;
+			    _currentDirectory = basePath;
 		    }
 		    else
 		    {
-			    currentDirectory = Directory.GetCurrentDirectory();
-			    AllowWritesOnDirectory(currentDirectory);
+			    _currentDirectory = Directory.GetCurrentDirectory();
+			    AllowWritesOnDirectory(_currentDirectory);
 		    }
 
 		    using (PowerShell powershell = PowerShell.Create())
@@ -33,7 +33,7 @@
                 var gitVersion = powershell.Invoke().FirstOrDefault()?.ToString();
                 powershell.Commands.Clear();
 
-                powershell.AddScript($"git config --global --add safe.directory {currentDirectory}");
+                powershell.AddScript($"git config --global --add safe.directory {_currentDirectory}");
                 powershell.Invoke();
                 powershell.Commands.Clear();
 
@@ -109,9 +109,14 @@
 
         private void MoveToCorrectLocation(PowerShell powershell)
         {
+	        if (_currentDirectory == null)
+	        {
+		        throw new InvalidOperationException("GITINFO|Current directory is null.");
+	        }
+
 	        if (_isGitLab)
 	        {
-		        powershell.AddScript($"cd {currentDirectory}");
+		        powershell.AddScript($"cd {_currentDirectory}");
 		        powershell.Invoke();
 		        powershell.Commands.Clear();
             }

@@ -95,21 +95,23 @@ public class InputFactory : IInputFactory
             case Stage.Upload:
                 argumentsAreValid &= ValidateArgumentNotEmpty(InputArgurments.SolutionPath, solutionPath);
 
-                if (!argumentsAreValid) return null;
-
-                if (!String.IsNullOrEmpty(basePath))
-                    solutionPath = Path.Combine(basePath, solutionPath);
-
-                string workSpace = _fileSystem.File.GetParentDirectory(solutionPath);
-                _presenter.PresentLogging("Workspace: " + workSpace);
-                _fileSystem.Directory.AllowWritesOnDirectory(workSpace);
-
-                if (solutionPath != null && !_fileSystem.File.Exists(solutionPath))
+                if (argumentsAreValid)
                 {
-                    _presenter.PresentSolutionNotFound(solutionPath);
-                    argumentsAreValid &= false;
-                }
+	                // Only applicable for GitLab environments
+	                if (!String.IsNullOrEmpty(basePath))
+		                solutionPath = Path.Combine(basePath, solutionPath!);
 
+	                string workSpace = _fileSystem.File.GetParentDirectory(solutionPath);
+	                _presenter.PresentLogging("Workspace: " + workSpace);
+	                _fileSystem.Directory.AllowWritesOnDirectory(workSpace);
+                }
+                
+                if (!argumentsAreValid || !_fileSystem.File.Exists(solutionPath))
+                {
+	                _presenter.PresentSolutionNotFound(solutionPath!);
+                    return null;
+                }
+                
                 argumentsAreValid &= ValidateArgumentNotEmpty(InputArgurments.PackageName, packageName);
 
                 if (String.IsNullOrWhiteSpace(version) && String.IsNullOrWhiteSpace(buildNumber))
@@ -125,11 +127,11 @@ public class InputFactory : IInputFactory
 
                 if (!argumentsAreValid) return null;
 
-                string cleanPackageName = CleanPackageName(packageName);
+                string cleanPackageName = CleanPackageName(packageName!);
 
                 return new Inputs()
                 {
-                    ApiKey = apiKey,
+                    ApiKey = apiKey!,
                     PackageName = cleanPackageName,
                     SolutionPath = solutionPath,
                     BasePath = basePath,
@@ -146,7 +148,7 @@ public class InputFactory : IInputFactory
 
                 return new Inputs()
                 {
-                    ApiKey = apiKey,
+                    ApiKey = apiKey!,
                     ArtifactId = artifactId,
                     BasePath = basePath,
                     TimeOut = timeOut,
@@ -171,7 +173,7 @@ public class InputFactory : IInputFactory
 
     private bool ValidateArgumentNotEmpty(string key, string? value)
     {
-        if (string.IsNullOrWhiteSpace(value))
+        if (String.IsNullOrWhiteSpace(value))
         {
             _presenter.PresentMissingArgument(key);
             return false;

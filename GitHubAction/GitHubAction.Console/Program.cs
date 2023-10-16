@@ -29,7 +29,6 @@ public class Program
 {
     public static async Task Main(string[] args)
     {
-	    Console.WriteLine("MAIN|STARTING");
         Log.Logger = new LoggerConfiguration()
             .WriteTo.Console().CreateLogger();
         int exitCode = 1; //fail by default unless it ran successfully
@@ -45,7 +44,6 @@ public class Program
         }
         finally
         {
-            Console.WriteLine("MAIN|ENDING");
 	        Log.CloseAndFlush();
             Environment.Exit(exitCode);
         }

@@ -65,6 +65,8 @@
 
             string basePath = inputs.BasePath ?? Directory.GetCurrentDirectory();
             _outputPathProvider.BasePath = basePath;
+
+            // Initialize GitInfo so that it can deal with the base path.
             _git.Initialize(basePath);
 
             try
