@@ -33,7 +33,7 @@ public class GitLabEnvironmentVariableService : IEnvironmentVariableService
         }
 
         // https://gitlab.com/data-acq/DeployAction/-/tags/1.0.1
-        return new Uri($"{repoUrl}/-/tags/{tagName}"));
+        return new Uri($"{repoUrl}/-/tags/{tagName}");
     }
 
     /// <inheritdoc />
