@@ -1,10 +1,11 @@
 ﻿namespace GITTest
 {
+    using System;
+    using System.Threading.Tasks;
+
     using GIT;
 
     using NUnit.Framework;
-
-    using System.Threading.Tasks;
 
     public class GITInfoTest
     {

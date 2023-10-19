@@ -76,8 +76,7 @@ public class InputFactory : IInputFactory
 
         if (!givenArgs.TryGetValue(InputArgurments.ArtifactId, out var artifactId))
             _presenter.PresentKeyNotFound($"Argument {InputArgurments.ArtifactId} not found");
-
-        //        if (!ValidateArgumentNotEmpty(InputArgurments.Identifier, identifierString)) return null;
+        
         if (!ValidateArgumentNotEmpty(InputArgurments.Stage, stageString)) return null;
         if (!ValidateArgumentNotEmpty(InputArgurments.ApiKey, apiKey)) return null;
         if (!ValidateArgumentNotEmpty(InputArgurments.Timeout, timeOutString)) return null;
@@ -119,11 +118,6 @@ public class InputFactory : IInputFactory
                     _presenter.PresentMissingArgument(InputArgurments.Version + " or " + InputArgurments.BuildNumber);
                     argumentsAreValid &= false;
                 }
-
-                if (!argumentsAreValid) return null;
-
-                //if(isVersionPresent)
-                //    argumentsAreValid &= ValidateVersion(InputArgurments.Version, version);
 
                 if (!argumentsAreValid) return null;
 
