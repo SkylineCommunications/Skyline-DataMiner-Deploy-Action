@@ -13,7 +13,7 @@
         public async Task GitInfoTest_GetCurrentBranch_HappyFlow()
         {
             GitInfo info = new GitInfo();
-            info.Initialize("");
+            info.Initialize(String.Empty);
             var result = info.GetCurrentBranch("v1.0.20");
             Assert.IsNotNull(result);
         }
