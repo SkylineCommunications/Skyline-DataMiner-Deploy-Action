@@ -22,7 +22,7 @@
         public async Task GitInfoTest_GetCommitterMail_HappyFlow()
         {
             GitInfo info = new GitInfo();
-            info.Initialize("");
+            info.Initialize(String.Empty);
             var result = info.GetCommitterMail();
             Assert.IsNotNull(result);
         }

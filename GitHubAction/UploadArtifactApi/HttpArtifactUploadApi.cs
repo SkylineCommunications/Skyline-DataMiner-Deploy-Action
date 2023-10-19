@@ -44,7 +44,7 @@ public class HttpArtifactUploadApi : IArtifactUploadApi, IDisposable
         ms.Position = 0;
         formData.Add(new StreamContent(ms), "file", name);
 
-        string logInfo = $"--name {name} --version {catalog.Version} --contentType {catalog.ContentType} --branch {catalog.Branch} --identifier {catalog.Identifier} --isprerelease {catalog.IsPreRelease} --developer {catalog.CommitterMail} --releasepath {catalog.ReleaseUri} --file {name}";
+        string logInfo = $"--name {name} --version {catalog.Version} --contentType {catalog.ContentType} --branch {catalog.Branch} --identifier {catalog.Identifier} --isPrerelease {catalog.IsPreRelease} --developer {catalog.CommitterMail} --releasepath {catalog.ReleaseUri} --file {name}";
         presenter.LogInformation("HTTP Post with info: " + logInfo);
 
         var response = await _httpClient.PostAsync(UploadPath, formData, cancellationToken);
