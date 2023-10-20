@@ -63,7 +63,11 @@
 
             UploadedPackage? uploadedPackage = null;
 
-            _outputPathProvider.BasePath = inputs.BasePath ?? Directory.GetCurrentDirectory();
+            string basePath = inputs.BasePath ?? Directory.GetCurrentDirectory();
+            _outputPathProvider.BasePath = basePath;
+
+            // Initialize GitInfo so that it can deal with the base path.
+            _git.Initialize(basePath);
 
             try
             {
@@ -92,10 +96,8 @@
                 // Deploy
                 if (inputs is { Stage: Stage.All or Stage.Deploy })
                 {
-                    if (uploadedPackage == null)
-                    {
-                        uploadedPackage = new UploadedPackage(inputs.ArtifactId!);
-                    }
+                    uploadedPackage ??= new UploadedPackage(inputs.ArtifactId!);
+
                     var deployingPackage = await DeployPackageAsync(inputs.ApiKey, uploadedPackage);
                     if (deployingPackage == null) return 6;
 

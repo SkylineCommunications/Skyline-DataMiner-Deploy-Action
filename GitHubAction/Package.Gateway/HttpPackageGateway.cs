@@ -86,11 +86,12 @@ public class HttpPackageGateway : IPackageGateway
             throw new KeyException($"The deploy API returned a response with status code {res.Response.StatusCode}");
         }
 
-        var responseContent = string.Empty;
+        var responseContent = String.Empty;
         if (res.Response.Content != null)
         {
             responseContent = await res.Response.Content.ReadAsStringAsync().ConfigureAwait(false);
         }
+
         throw new DeployPackageException($"The deploy API returned a response with status code {res.Response.StatusCode}, content: {responseContent}");
     }
 

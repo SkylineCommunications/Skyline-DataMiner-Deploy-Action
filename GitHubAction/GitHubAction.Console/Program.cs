@@ -29,7 +29,7 @@ public class Program
     {
         Log.Logger = new LoggerConfiguration()
             .WriteTo.Console().CreateLogger();
-        int exitCode = 1; //fail by default unless it ran succesfully
+        int exitCode = 1; // fail by default unless it ran successfully
         try
         {
             var host = CreateHostBuilder(args).Build();
