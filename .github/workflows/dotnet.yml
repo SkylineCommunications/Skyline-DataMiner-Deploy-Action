@@ -53,6 +53,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: |
-          dotnet sonarscanner begin /k:"SkylineCommunications_Skyline-DataMiner-Deploy-Action" /o:"skylinecommunications" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="**/TestResults/**/coverage.opencover.xml" /d:sonar.cs.vstest.reportsPaths="**/TestResults/**.trx"
+          dotnet sonarscanner begin /k:"SkylineCommunications_Skyline-DataMiner-Deploy-Action" /o:"skylinecommunications" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="**/TestResults/**/coverage.opencover.xml" /d:sonar.cs.vstest.reportsPaths="**/TestResults/**.trx"
           dotnet build "./GitHubAction.sln" --configuration Release -nodeReuse:false
           dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
