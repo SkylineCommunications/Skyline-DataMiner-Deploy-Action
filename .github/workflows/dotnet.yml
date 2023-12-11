@@ -28,7 +28,7 @@ jobs:
       run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
       
     - name: Setup .NET
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 6.0.x
         
