@@ -11,6 +11,6 @@ updates:
       interval: "weekly"
       
   - package-ecosystem: "nuget"
-    directory: "/"
+    directory: "/GitHubAction/"
     schedule:
       interval: "weekly"
