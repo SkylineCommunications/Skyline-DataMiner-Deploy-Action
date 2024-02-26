@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Cake.Powershell" Version="2.0.0" />
+    <PackageReference Include="Cake.Powershell" Version="3.0.0" />
   </ItemGroup>
 
 </Project>
