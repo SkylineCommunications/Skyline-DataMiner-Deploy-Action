@@ -1,6 +1,8 @@
 namespace GitHubAction.Console.UnitTest
 {
-    public class UtilTest
+	using NUnit.Framework.Legacy;
+
+	public class UtilTest
     {
         private Dictionary<string, string?> _envVariables = new();
 
@@ -39,7 +41,7 @@ namespace GitHubAction.Console.UnitTest
             Environment.SetEnvironmentVariable("GITHUB_SERVER_URL", "SomeGitHubUrl");
 
             // Then
-            Assert.AreEqual(Util.SourceHost.GitHub, Util.GetSourceHost());
+            ClassicAssert.AreEqual(Util.SourceHost.GitHub, Util.GetSourceHost());
         }
 
         [Test]
@@ -49,7 +51,7 @@ namespace GitHubAction.Console.UnitTest
             Environment.SetEnvironmentVariable("CI_PROJECT_URL", "SomeGitLabUrl");
 
             // Then
-            Assert.AreEqual(Util.SourceHost.GitLab, Util.GetSourceHost());
+            ClassicAssert.AreEqual(Util.SourceHost.GitLab, Util.GetSourceHost());
         }
 
         [Test]
@@ -58,7 +60,7 @@ namespace GitHubAction.Console.UnitTest
             // When Nothing
 
             // Then
-            Assert.AreEqual(Util.SourceHost.Undefined, Util.GetSourceHost());
+            ClassicAssert.AreEqual(Util.SourceHost.Undefined, Util.GetSourceHost());
         }
     }
 }

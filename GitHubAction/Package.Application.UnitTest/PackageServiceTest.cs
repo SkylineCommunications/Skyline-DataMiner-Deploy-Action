@@ -13,7 +13,9 @@ using Package.Domain.Services;
 
 namespace Package.Application.UnitTest
 {
-    public class PackageServiceTest
+	using NUnit.Framework.Legacy;
+
+	public class PackageServiceTest
     {
         private Mock<IPackageGateway> _packageGatewayMock = null!;
         private Mock<IPackageBuilder> _packageBuilderMock = null!;
@@ -56,7 +58,7 @@ namespace Package.Application.UnitTest
             var result = await _packageService.CreatePackageAsync(localPackageConfig);
 
             // Then
-            Assert.AreEqual(createdPackage, result);
+            ClassicAssert.AreEqual(createdPackage, result);
 
             _packageBuilderMock.Verify(createPackageAsync, Times.Once);
             _packageGatewayMock.VerifyNoOtherCalls();
@@ -86,7 +88,7 @@ namespace Package.Application.UnitTest
             var result = await _packageService.UploadPackageAsync(createdPackage, key, catalog);
 
             // Then
-            Assert.AreEqual(uploadedPackage, result);
+            ClassicAssert.AreEqual(uploadedPackage, result);
 
             _packageGatewayMock.Verify(uploadPackageAsync, Times.Once);
             _packageGatewayMock.VerifyNoOtherCalls();
@@ -112,7 +114,7 @@ namespace Package.Application.UnitTest
             var result = await _packageService.DeployPackageAsync(uploadedPackage, key);
 
             // Then
-            Assert.AreEqual(deployingPackage, result);
+            ClassicAssert.AreEqual(deployingPackage, result);
 
             _packageGatewayMock.Verify(deployPackageAsync, Times.Once());
             _packageGatewayMock.VerifyNoOtherCalls();
@@ -138,7 +140,7 @@ namespace Package.Application.UnitTest
             var result = await _packageService.GetDeployedPackageAsync(deployingPackage, key);
 
             // Then
-            Assert.AreEqual(deployedPackage, result);
+            ClassicAssert.AreEqual(deployedPackage, result);
 
             _packageGatewayMock.Verify(getDeployedPackageAsync, Times.Once);
             _packageGatewayMock.VerifyNoOtherCalls();

@@ -6,6 +6,7 @@
     using GIT;
 
     using NUnit.Framework;
+    using NUnit.Framework.Legacy;
 
     public class GITInfoTest
     {
@@ -16,7 +17,7 @@
             GitInfo info = new GitInfo();
             info.Initialize(String.Empty);
             var result = info.GetCurrentBranch("v1.0.20");
-            Assert.IsNotNull(result);
+            ClassicAssert.IsNotNull(result);
         }
 
         [Test]
@@ -25,7 +26,7 @@
             GitInfo info = new GitInfo();
             info.Initialize(String.Empty);
             var result = info.GetCommitterMail();
-            Assert.IsNotNull(result);
+            ClassicAssert.IsNotNull(result);
         }
     }
 }

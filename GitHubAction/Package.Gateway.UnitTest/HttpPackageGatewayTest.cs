@@ -27,7 +27,9 @@ using ValidationException = Microsoft.Rest.ValidationException;
 
 namespace Package.Gateway.UnitTest
 {
-    [TestFixture]
+	using NUnit.Framework.Legacy;
+
+	[TestFixture]
     public class HttpPackageGatewayTest
     {
         private Mock<IDeployArtifactAPI> _deployArtifactApi = null!;
@@ -74,9 +76,9 @@ namespace Package.Gateway.UnitTest
             } // Then
             catch (Exception e)
             {
-                Assert.IsTrue(e.GetType() == typeof(DeployPackageException));
+                ClassicAssert.IsTrue(e.GetType() == typeof(DeployPackageException));
                 var exceptionMessage = e.Message;
-                Assert.IsTrue(exceptionMessage.StartsWith(expectedText));
+                ClassicAssert.IsTrue(exceptionMessage.StartsWith(expectedText));
             }
         }
 
@@ -102,9 +104,9 @@ namespace Package.Gateway.UnitTest
             } // Then
             catch (Exception e)
             {
-                Assert.IsTrue(e.GetType() == typeof(DeployPackageException));
+                ClassicAssert.IsTrue(e.GetType() == typeof(DeployPackageException));
                 var exceptionMessage = e.Message;
-                Assert.IsTrue(exceptionMessage.StartsWith(expectedText));
+                ClassicAssert.IsTrue(exceptionMessage.StartsWith(expectedText));
             }
         }
 
@@ -136,9 +138,9 @@ namespace Package.Gateway.UnitTest
             } // Then
             catch (Exception e)
             {
-                Assert.IsTrue(e.GetType() == typeof(DeployPackageException));
+                ClassicAssert.IsTrue(e.GetType() == typeof(DeployPackageException));
                 var exceptionMessage = e.Message;
-                Assert.IsTrue(exceptionMessage.StartsWith(expectedText));
+                ClassicAssert.IsTrue(exceptionMessage.StartsWith(expectedText));
             }
         }
 
@@ -168,9 +170,9 @@ namespace Package.Gateway.UnitTest
             } // Then
             catch (Exception e)
             {
-                Assert.IsTrue(e.GetType() == typeof(KeyException));
+                ClassicAssert.IsTrue(e.GetType() == typeof(KeyException));
                 var exceptionMessage = e.Message;
-                Assert.IsTrue(exceptionMessage.StartsWith(expectedText));
+                ClassicAssert.IsTrue(exceptionMessage.StartsWith(expectedText));
             }
         }
 
@@ -198,8 +200,8 @@ namespace Package.Gateway.UnitTest
             var deployPackage = await httpGateway.DeployPackageAsync(_uploadedPackage, _key);
 
             // Then
-            Assert.IsTrue(deployPackage.ArtifactId.Equals(_uploadedPackage.ArtifactId));
-            Assert.IsTrue(deployPackage.DeploymentId.Equals(deploymentId));
+            ClassicAssert.IsTrue(deployPackage.ArtifactId.Equals(_uploadedPackage.ArtifactId));
+            ClassicAssert.IsTrue(deployPackage.DeploymentId.Equals(deploymentId));
         }
 
         [Test]
@@ -224,9 +226,9 @@ namespace Package.Gateway.UnitTest
             // Then
             catch (Exception e)
             {
-                Assert.IsTrue(e.GetType() == typeof(GetDeploymentPackageException));
+                ClassicAssert.IsTrue(e.GetType() == typeof(GetDeploymentPackageException));
                 var exceptionMessage = e.Message;
-                Assert.IsTrue(exceptionMessage.StartsWith(expectedText));
+                ClassicAssert.IsTrue(exceptionMessage.StartsWith(expectedText));
             }
         }
 
@@ -259,9 +261,9 @@ namespace Package.Gateway.UnitTest
             // Then
             catch (Exception e)
             {
-                Assert.IsTrue(e.GetType() == typeof(GetDeploymentPackageException));
+                ClassicAssert.IsTrue(e.GetType() == typeof(GetDeploymentPackageException));
                 var exceptionMessage = e.Message;
-                Assert.IsTrue(exceptionMessage.StartsWith(expectedText));
+                ClassicAssert.IsTrue(exceptionMessage.StartsWith(expectedText));
             }
         }
 
@@ -295,9 +297,9 @@ namespace Package.Gateway.UnitTest
             // Then
             catch (Exception e)
             {
-                Assert.IsTrue(e.GetType() == typeof(KeyException));
+                ClassicAssert.IsTrue(e.GetType() == typeof(KeyException));
                 var exceptionMessage = e.Message;
-                Assert.IsTrue(exceptionMessage.StartsWith(expectedText));
+                ClassicAssert.IsTrue(exceptionMessage.StartsWith(expectedText));
             }
         }
 
@@ -329,7 +331,7 @@ namespace Package.Gateway.UnitTest
             var deployedPackage = await httpGateway.GetDeployedPackageAsync(_deployingPackage, _key);
 
             // Then
-            Assert.IsTrue(deployedPackage.ArtifactId.Equals(deploymentInfo.ArtifactId));
+            ClassicAssert.IsTrue(deployedPackage.ArtifactId.Equals(deploymentInfo.ArtifactId));
         }
     }
 }

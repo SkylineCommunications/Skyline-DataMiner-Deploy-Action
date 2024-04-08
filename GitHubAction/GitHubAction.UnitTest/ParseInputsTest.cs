@@ -10,6 +10,8 @@ using Skyline.DataMiner.CICD.FileSystem;
 
 namespace GitHubAction.UnitTest;
 
+using NUnit.Framework.Legacy;
+
 public class ParseInputsTest
 {
     private Mock<IInputFactoryPresenter> _inputParserPresenterMock = null!;
@@ -73,15 +75,15 @@ public class ParseInputsTest
         _inputParserPresenterMock.Verify(p => p.PresentLogging(It.IsAny<string>()), Times.AtMost(100));
         _inputParserPresenterMock.VerifyNoOtherCalls();
 
-        Assert.IsNotNull(inputs);
-        Assert.AreEqual(key, inputs.ApiKey);
-        Assert.AreEqual(solutionFile, inputs.SolutionPath);
-        Assert.AreEqual(packageName, inputs.PackageName);
-        Assert.AreEqual(version, inputs.Version);
-        Assert.AreEqual(TimeSpan.FromSeconds(int.Parse(timeOut)), inputs.TimeOut);
-        Assert.AreEqual(Enum.Parse<Stage>(stage), inputs.Stage);
-        Assert.IsNull(inputs.ArtifactId);
-		Assert.IsFalse(inputs.Debug);
+        ClassicAssert.IsNotNull(inputs);
+        ClassicAssert.AreEqual(key, inputs.ApiKey);
+        ClassicAssert.AreEqual(solutionFile, inputs.SolutionPath);
+        ClassicAssert.AreEqual(packageName, inputs.PackageName);
+        ClassicAssert.AreEqual(version, inputs.Version);
+        ClassicAssert.AreEqual(TimeSpan.FromSeconds(int.Parse(timeOut)), inputs.TimeOut);
+        ClassicAssert.AreEqual(Enum.Parse<Stage>(stage), inputs.Stage);
+        ClassicAssert.IsNull(inputs.ArtifactId);
+		ClassicAssert.IsFalse(inputs.Debug);
     }
 
     [Test]
@@ -125,15 +127,15 @@ public class ParseInputsTest
         _inputParserPresenterMock.Verify(p => p.PresentLogging(It.IsAny<string>()), Times.AtMost(100));
         _inputParserPresenterMock.VerifyNoOtherCalls();
 
-        Assert.IsNotNull(inputs);
-        Assert.AreEqual(key, inputs.ApiKey);
-        Assert.AreEqual(solutionFile, inputs.SolutionPath);
-        Assert.AreEqual(packageName, inputs.PackageName);
-        Assert.AreEqual(version, inputs.Version);
-        Assert.AreEqual(TimeSpan.FromSeconds(int.Parse(timeOut)), inputs.TimeOut);
-        Assert.AreEqual(Enum.Parse<Stage>(stage), inputs.Stage);
-        Assert.IsNull(inputs.ArtifactId);
-		Assert.IsFalse(inputs.Debug);
+        ClassicAssert.IsNotNull(inputs);
+        ClassicAssert.AreEqual(key, inputs.ApiKey);
+        ClassicAssert.AreEqual(solutionFile, inputs.SolutionPath);
+        ClassicAssert.AreEqual(packageName, inputs.PackageName);
+        ClassicAssert.AreEqual(version, inputs.Version);
+        ClassicAssert.AreEqual(TimeSpan.FromSeconds(int.Parse(timeOut)), inputs.TimeOut);
+        ClassicAssert.AreEqual(Enum.Parse<Stage>(stage), inputs.Stage);
+        ClassicAssert.IsNull(inputs.ArtifactId);
+		ClassicAssert.IsFalse(inputs.Debug);
     }
 
 
@@ -178,15 +180,15 @@ public class ParseInputsTest
         _inputParserPresenterMock.Verify(p => p.PresentLogging(It.IsAny<string>()), Times.AtMost(100));
         _inputParserPresenterMock.VerifyNoOtherCalls();
 
-        Assert.IsNotNull(inputs);
-        Assert.AreEqual(key, inputs.ApiKey);
-        Assert.AreEqual(solutionFile, inputs.SolutionPath);
-        Assert.AreEqual(packageName, inputs.PackageName);
-        Assert.AreEqual(buildNumber, inputs.BuildNumber);
-        Assert.AreEqual(TimeSpan.FromSeconds(int.Parse(timeOut)), inputs.TimeOut);
-        Assert.AreEqual(Enum.Parse<Stage>(stage), inputs.Stage);
-        Assert.IsFalse(inputs.Debug);
-        Assert.IsNull(inputs.ArtifactId);
+        ClassicAssert.IsNotNull(inputs);
+        ClassicAssert.AreEqual(key, inputs.ApiKey);
+        ClassicAssert.AreEqual(solutionFile, inputs.SolutionPath);
+        ClassicAssert.AreEqual(packageName, inputs.PackageName);
+        ClassicAssert.AreEqual(buildNumber, inputs.BuildNumber);
+        ClassicAssert.AreEqual(TimeSpan.FromSeconds(int.Parse(timeOut)), inputs.TimeOut);
+        ClassicAssert.AreEqual(Enum.Parse<Stage>(stage), inputs.Stage);
+        ClassicAssert.IsFalse(inputs.Debug);
+        ClassicAssert.IsNull(inputs.ArtifactId);
     }
 
     [Test]
@@ -230,15 +232,15 @@ public class ParseInputsTest
         _inputParserPresenterMock.Verify(p => p.PresentLogging(It.IsAny<string>()), Times.AtMost(100));
         _inputParserPresenterMock.VerifyNoOtherCalls();
 
-        Assert.IsNotNull(inputs);
-        Assert.AreEqual(key, inputs.ApiKey);
-        Assert.AreEqual(solutionFile, inputs.SolutionPath);
-        Assert.AreEqual(packageName, inputs.PackageName);
-        Assert.AreEqual(buildNumber, inputs.BuildNumber);
-        Assert.AreEqual(TimeSpan.FromSeconds(int.Parse(timeOut)), inputs.TimeOut);
-        Assert.AreEqual(Enum.Parse<Stage>(stage), inputs.Stage);
-		Assert.IsTrue(inputs.Debug);
-        Assert.IsNull(inputs.ArtifactId);
+        ClassicAssert.IsNotNull(inputs);
+        ClassicAssert.AreEqual(key, inputs.ApiKey);
+        ClassicAssert.AreEqual(solutionFile, inputs.SolutionPath);
+        ClassicAssert.AreEqual(packageName, inputs.PackageName);
+        ClassicAssert.AreEqual(buildNumber, inputs.BuildNumber);
+        ClassicAssert.AreEqual(TimeSpan.FromSeconds(int.Parse(timeOut)), inputs.TimeOut);
+        ClassicAssert.AreEqual(Enum.Parse<Stage>(stage), inputs.Stage);
+		ClassicAssert.IsTrue(inputs.Debug);
+        ClassicAssert.IsNull(inputs.ArtifactId);
     }
 
     [Test]
@@ -284,15 +286,15 @@ public class ParseInputsTest
         _inputParserPresenterMock.Verify(p => p.PresentLogging(It.IsAny<string>()), Times.AtMost(100));
         _inputParserPresenterMock.VerifyNoOtherCalls();
 
-        Assert.IsNotNull(inputs);
-        Assert.AreEqual(key, inputs.ApiKey);
-        Assert.IsNull(inputs.SolutionPath);
-        Assert.IsNull(inputs.PackageName);
-        Assert.IsNull(inputs.Version);
-        Assert.AreEqual(TimeSpan.FromSeconds(int.Parse(timeOut)), inputs.TimeOut);
-        Assert.AreEqual(Enum.Parse<Stage>(stage), inputs.Stage);
-        Assert.AreEqual(artifactId, inputs.ArtifactId);
-		Assert.IsFalse(inputs.Debug);
+        ClassicAssert.IsNotNull(inputs);
+        ClassicAssert.AreEqual(key, inputs.ApiKey);
+        ClassicAssert.IsNull(inputs.SolutionPath);
+        ClassicAssert.IsNull(inputs.PackageName);
+        ClassicAssert.IsNull(inputs.Version);
+        ClassicAssert.AreEqual(TimeSpan.FromSeconds(int.Parse(timeOut)), inputs.TimeOut);
+        ClassicAssert.AreEqual(Enum.Parse<Stage>(stage), inputs.Stage);
+        ClassicAssert.AreEqual(artifactId, inputs.ArtifactId);
+		ClassicAssert.IsFalse(inputs.Debug);
     }
 
     [Test]
@@ -301,7 +303,7 @@ public class ParseInputsTest
         // Given
         string[] args = null!;
 
-        Assert.Throws<ArgumentNullException>(delegate { _inputParserService.ParseAndValidateInputs(args); });
+        ClassicAssert.Throws<ArgumentNullException>(delegate { _inputParserService.ParseAndValidateInputs(args); });
     }
 
     [Test]
@@ -346,7 +348,7 @@ public class ParseInputsTest
         _inputParserPresenterMock.Verify(p => p.PresentLogging(It.IsAny<string>()), Times.AtMost(100));
         _inputParserPresenterMock.VerifyNoOtherCalls();
 
-        Assert.IsNull(inputs);
+        ClassicAssert.IsNull(inputs);
 	}
 	
 	[Test]
@@ -393,7 +395,7 @@ public class ParseInputsTest
         _inputParserPresenterMock.Verify(p => p.PresentLogging(It.IsAny<string>()), Times.AtMost(100));
         _inputParserPresenterMock.VerifyNoOtherCalls();
 
-        Assert.IsNull(inputs);
+        ClassicAssert.IsNull(inputs);
     }
 
     [Test]
@@ -440,7 +442,7 @@ public class ParseInputsTest
         _inputParserPresenterMock.Verify(p => p.PresentLogging(It.IsAny<string>()), Times.AtMost(100));
         _inputParserPresenterMock.VerifyNoOtherCalls();
 
-        Assert.IsNull(inputs);
+        ClassicAssert.IsNull(inputs);
     }
 
     [Test]
@@ -490,11 +492,11 @@ public class ParseInputsTest
 
         if (required)
         {
-            Assert.IsNull(inputs);
+            ClassicAssert.IsNull(inputs);
         }
         else
         {
-            Assert.IsNotNull(inputs);
+            ClassicAssert.IsNotNull(inputs);
         }
     }
 
@@ -544,11 +546,11 @@ public class ParseInputsTest
 
         if (required)
         {
-            Assert.IsNull(inputs);
+            ClassicAssert.IsNull(inputs);
         }
         else
         {
-            Assert.IsNotNull(inputs);
+            ClassicAssert.IsNotNull(inputs);
         }
     }
 
@@ -598,11 +600,11 @@ public class ParseInputsTest
 
         if (required)
         {
-            Assert.IsNull(inputs);
+            ClassicAssert.IsNull(inputs);
         }
         else
         {
-            Assert.IsNotNull(inputs);
+            ClassicAssert.IsNotNull(inputs);
         }
     }
 
@@ -648,7 +650,7 @@ public class ParseInputsTest
         _inputParserPresenterMock.Verify(p => p.PresentLogging(It.IsAny<string>()), Times.AtMost(100));
         _inputParserPresenterMock.VerifyNoOtherCalls();
 
-        Assert.IsNull(inputs);
+        ClassicAssert.IsNull(inputs);
     }
 
     [Test]
@@ -693,7 +695,7 @@ public class ParseInputsTest
         _inputParserPresenterMock.Verify(p => p.PresentLogging(It.IsAny<string>()), Times.AtMost(100));
         _inputParserPresenterMock.VerifyNoOtherCalls();
 
-        Assert.IsNull(inputs);
+        ClassicAssert.IsNull(inputs);
     }
 
     [Test]
@@ -738,7 +740,7 @@ public class ParseInputsTest
         _inputParserPresenterMock.Verify(p => p.PresentLogging(It.IsAny<string>()), Times.AtMost(100));
         _inputParserPresenterMock.VerifyNoOtherCalls();
 
-        Assert.IsNull(inputs);
+        ClassicAssert.IsNull(inputs);
     }
 
     [Test]
@@ -787,11 +789,11 @@ public class ParseInputsTest
 
         if (required)
         {
-            Assert.IsNull(inputs);
+            ClassicAssert.IsNull(inputs);
         }
         else
         {
-            Assert.IsNotNull(inputs);
+            ClassicAssert.IsNotNull(inputs);
         }
     }
 
@@ -839,7 +841,7 @@ public class ParseInputsTest
         _inputParserPresenterMock.Verify(p => p.PresentLogging(It.IsAny<string>()), Times.AtMost(100));
         _inputParserPresenterMock.VerifyNoOtherCalls();
 
-        Assert.IsNotNull(inputs);
+        ClassicAssert.IsNotNull(inputs);
 
     }
 
@@ -882,7 +884,7 @@ public class ParseInputsTest
         _inputParserPresenterMock.Verify(p => p.PresentLogging(It.IsAny<string>()), Times.AtMost(100));
         _inputParserPresenterMock.VerifyNoOtherCalls();
 
-        Assert.IsNotNull(inputs);
+        ClassicAssert.IsNotNull(inputs);
 
     }
 
@@ -927,6 +929,6 @@ public class ParseInputsTest
         _inputParserPresenterMock.Verify(p => p.PresentLogging(It.IsAny<string>()), Times.AtMost(100));
         _inputParserPresenterMock.VerifyNoOtherCalls();
 
-        Assert.IsNull(inputs);
+        ClassicAssert.IsNull(inputs);
     }
 }

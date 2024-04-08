@@ -5,6 +5,8 @@ using NUnit.Framework;
 
 namespace Package.Application.UnitTest;
 
+using NUnit.Framework.Legacy;
+
 [TestFixture]
 public class GitHubSourceUriServiceTest
 {
@@ -46,8 +48,8 @@ public class GitHubSourceUriServiceTest
         Environment.SetEnvironmentVariable("GITHUB_REPOSITORY", "ZiineCorp/Paris-IP-Flow-Management");
         var uri = _service.GetSourceUri();
 
-        Assert.IsNotNull(uri);
-        Assert.AreEqual("https://github.com/ZiineCorp/Paris-IP-Flow-Management", uri.AbsoluteUri);
+        ClassicAssert.IsNotNull(uri);
+        ClassicAssert.AreEqual("https://github.com/ZiineCorp/Paris-IP-Flow-Management", uri.AbsoluteUri);
     }
 
     [Test]
@@ -58,6 +60,6 @@ public class GitHubSourceUriServiceTest
 
         var uri = _service.GetSourceUri();
 
-        Assert.IsNull(uri);
+        ClassicAssert.IsNull(uri);
     }
 }

@@ -27,7 +27,9 @@ using Package.Domain.Services;
 
 namespace GitHubAction.UnitTest
 {
-    public class GitHubActionTests
+	using NUnit.Framework.Legacy;
+
+	public class GitHubActionTests
     {
         private Mock<IPackageService> _packageServiceMock = null!;
         private Mock<IPackagePresenter> _packagePresenterMock = null!;
@@ -168,7 +170,7 @@ namespace GitHubAction.UnitTest
             var exitCode = await _gitHubAction.RunAsync(args, CancellationToken.None);
 
             // Then
-            Assert.AreEqual(0, exitCode);
+            ClassicAssert.AreEqual(0, exitCode);
 
             _packagePresenterMock.Verify(p => p.PresentStartCreatingPackage(), Times.Once);
             _packageServiceMock.Verify(createPackageAsync, Times.Once);
@@ -304,7 +306,7 @@ namespace GitHubAction.UnitTest
             var exitCode = await _gitHubAction.RunAsync(args, CancellationToken.None);
 
             // Then
-            Assert.AreEqual(0, exitCode);
+            ClassicAssert.AreEqual(0, exitCode);
 
             _packagePresenterMock.Verify(p => p.PresentStartCreatingPackage(), Times.Once);
             _packageServiceMock.Verify(createPackageAsync, Times.Once);
@@ -389,7 +391,7 @@ namespace GitHubAction.UnitTest
             var exitCode = await _gitHubAction.RunAsync(args, CancellationToken.None);
 
             // Then
-            Assert.AreEqual(0, exitCode);
+            ClassicAssert.AreEqual(0, exitCode);
 
             _packagePresenterMock.Verify(p => p.PresentStartingPackageDeployment(), Times.Once);
             _packageServiceMock.Verify(deployPackageAsync, Times.Once);
@@ -515,7 +517,7 @@ namespace GitHubAction.UnitTest
             var exitCode = await _gitHubAction.RunAsync(args, CancellationToken.None);
 
             // Then
-            Assert.AreEqual(8, exitCode);
+            ClassicAssert.AreEqual(8, exitCode);
 
             _packagePresenterMock.Verify(p => p.PresentStartCreatingPackage(), Times.Once);
             _packageServiceMock.Verify(createPackageAsync, Times.Once);
@@ -658,7 +660,7 @@ namespace GitHubAction.UnitTest
             var exitCode = await _gitHubAction.RunAsync(args, CancellationToken.None);
 
             // Then
-            Assert.AreEqual(0, exitCode);
+            ClassicAssert.AreEqual(0, exitCode);
 
             _packagePresenterMock.Verify(p => p.PresentStartCreatingPackage(), Times.Once);
             _packageServiceMock.Verify(createPackageAsync, Times.Once);
@@ -799,7 +801,7 @@ namespace GitHubAction.UnitTest
             var exitCode = await _gitHubAction.RunAsync(args, CancellationToken.None);
 
             // Then
-            Assert.AreEqual(8, exitCode);
+            ClassicAssert.AreEqual(8, exitCode);
 
             _packagePresenterMock.Verify(p => p.PresentStartCreatingPackage(), Times.Once);
             _packageServiceMock.Verify(createPackageAsync, Times.Once);
@@ -944,7 +946,7 @@ namespace GitHubAction.UnitTest
             var exitCode = await _gitHubAction.RunAsync(args, CancellationToken.None);
 
             // Then
-            Assert.AreEqual(7, exitCode);
+            ClassicAssert.AreEqual(7, exitCode);
 
             _packagePresenterMock.Verify(p => p.PresentStartCreatingPackage(), Times.Once);
             _packageServiceMock.Verify(createPackageAsync, Times.Once);
@@ -1070,7 +1072,7 @@ namespace GitHubAction.UnitTest
             var exitCode = await _gitHubAction.RunAsync(args, CancellationToken.None);
 
             // Then
-            Assert.AreEqual(6, exitCode);
+            ClassicAssert.AreEqual(6, exitCode);
 
             _packagePresenterMock.Verify(p => p.PresentStartCreatingPackage(), Times.Once);
             _packageServiceMock.Verify(createPackageAsync, Times.Once);
@@ -1193,7 +1195,7 @@ namespace GitHubAction.UnitTest
             var exitCode = await _gitHubAction.RunAsync(args, CancellationToken.None);
 
             // Then
-            Assert.AreEqual(8, exitCode);
+            ClassicAssert.AreEqual(8, exitCode);
 
             _packagePresenterMock.Verify(p => p.PresentStartCreatingPackage(), Times.Once);
             _packageServiceMock.Verify(createPackageAsync, Times.Once);
@@ -1317,7 +1319,7 @@ namespace GitHubAction.UnitTest
             var exitCode = await _gitHubAction.RunAsync(args, CancellationToken.None);
 
             // Then
-            Assert.AreEqual(6, exitCode);
+            ClassicAssert.AreEqual(6, exitCode);
 
             _packagePresenterMock.Verify(p => p.PresentStartCreatingPackage(), Times.Once);
             _packageServiceMock.Verify(createPackageAsync, Times.Once);
@@ -1431,7 +1433,7 @@ namespace GitHubAction.UnitTest
             var exitCode = await _gitHubAction.RunAsync(args, CancellationToken.None);
 
             // Then
-            Assert.AreEqual(5, exitCode);
+            ClassicAssert.AreEqual(5, exitCode);
 
             _packagePresenterMock.Verify(p => p.PresentStartCreatingPackage(), Times.Once);
             _packageServiceMock.Verify(createPackageAsync, Times.Once);
@@ -1538,7 +1540,7 @@ namespace GitHubAction.UnitTest
             var exitCode = await _gitHubAction.RunAsync(args, CancellationToken.None);
 
             // Then
-            Assert.AreEqual(8, exitCode);
+            ClassicAssert.AreEqual(8, exitCode);
 
             _packagePresenterMock.Verify(p => p.PresentStartCreatingPackage(), Times.Once);
             _packageServiceMock.Verify(createPackageAsync, Times.Once);
@@ -1624,7 +1626,7 @@ namespace GitHubAction.UnitTest
             var exitCode = await _gitHubAction.RunAsync(args, CancellationToken.None);
 
             // Then
-            Assert.AreEqual(4, exitCode);
+            ClassicAssert.AreEqual(4, exitCode);
 
             _packagePresenterMock.Verify(p => p.PresentStartCreatingPackage(), Times.Once);
             _packageServiceMock.Verify(createPackageAsync, Times.Once);
@@ -1666,7 +1668,7 @@ namespace GitHubAction.UnitTest
             var exitCode = await _gitHubAction.RunAsync(args, CancellationToken.None);
 
             // Then
-            Assert.AreEqual(3, exitCode);
+            ClassicAssert.AreEqual(3, exitCode);
 
             _outputPresenterMock.Verify(p => p.PresentInvalidArguments());
 

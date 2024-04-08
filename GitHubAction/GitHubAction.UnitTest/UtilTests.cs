@@ -4,7 +4,9 @@ using NUnit.Framework;
 
 namespace GitHubAction.UnitTest
 {
-    public class UtilTests
+	using NUnit.Framework.Legacy;
+
+	public class UtilTests
     {
         private int _total;
         private Task<int> CountUpAsync(int val)
@@ -32,7 +34,7 @@ namespace GitHubAction.UnitTest
                 TimeSpan.FromMilliseconds(0));
 
             // Then
-            Assert.AreEqual(1, _total);
+            ClassicAssert.AreEqual(1, _total);
         }
 
         [Test]
@@ -48,14 +50,14 @@ namespace GitHubAction.UnitTest
                 TimeSpan.FromMilliseconds(6));
 
             // Then
-            Assert.AreEqual(5, _total);
+            ClassicAssert.AreEqual(5, _total);
         }
 
         [Test]
         public void ExecuteWithRetryAsync_MultipleAttemptsButNeverValid_Timeout()
         {
             // When
-            Assert.ThrowsAsync<TimeoutException>(
+            ClassicAssert.ThrowsAsync<TimeoutException>(
                 async () => await Utils.ExecuteWithRetryAsync(
                     async () => await CountUpAsync(1),
                     (output) => output == 5,
@@ -65,7 +67,7 @@ namespace GitHubAction.UnitTest
                     TimeSpan.FromMilliseconds(5)));
 
             // Then
-            Assert.AreEqual(4, _total);
+            ClassicAssert.AreEqual(4, _total);
         }
     }
 }
