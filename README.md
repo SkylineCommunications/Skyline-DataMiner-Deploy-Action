@@ -17,7 +17,7 @@ Previously, the GitHub Action encompassed a bundled approach, performing three d
 
 However, this bundled functionality didn't always align with the specific needs of our users. In response, we have modularized these tasks into individual .NET tools, allowing for tailored usage based on the unique requirements of each scenario.
 
-Below is an example of a full migration of the GitHub action:
+Below, we present an example detailing the migration process from the GitHub action:
 
 ```yaml
        - name: Install .NET Tools
