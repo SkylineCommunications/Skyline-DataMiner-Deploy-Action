@@ -5,17 +5,17 @@
 >
 > The old readme file can be found here: [old readme](oldReadme.md)
 
-## Migration to .NET Tools
+## Transition to .NET Tools
 
-Instead of using the GitHub action, we are now using .NET tools. These are more flexible as they can be used on any commonly used platform like GitHub, GitLab, Azure DevOps, ...
+Our workflow has evolved from relying solely on GitHub actions to embracing the versatility of .NET tools. This transition offers enhanced flexibility, enabling seamless integration across various widely utilized platforms such as GitHub, GitLab, Azure DevOps, and more.
 
-The GitHub Action did 3 things in 1 which wasn't always what was wanted by our users:
+Previously, the GitHub Action encompassed a bundled approach, performing three distinct tasks:
 
-- Creating a package
-- Uploading a package to Catalog
-- Deploying a package to a DataMiner
+1. Generating a package
+1. Uploading the package to the Catalog
+1. Deploying the package to a DataMiner
 
-These 3 steps have been converted into their own .NET tool and can be used separately depending on the scenario.
+However, this bundled functionality didn't always align with the specific needs of our users. In response, we have modularized these tasks into individual .NET tools, allowing for tailored usage based on the unique requirements of each scenario.
 
 Below is an example of a full migration of the GitHub action:
 
