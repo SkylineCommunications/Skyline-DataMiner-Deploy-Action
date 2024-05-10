@@ -36,9 +36,9 @@ Below, we present an example detailing the migration process from the GitHub act
        - name: Create dmapp package
          run: dataminer-package-create dmapp "${{ github.workspace }}" --type automation --version ${{ github.ref_name }} --output "${{ github.workspace }}" --name "${{ steps.packageName.outputs.name }}"
 
-		- name: Upload to Catalog
-        id: uploadToCatalog
-        run: echo id=$(dataminer-catalog-upload with-registration --path-to-artifact "${{ github.workspace }}/${{ steps.packageName.outputs.name }}.dmapp" --dm-catalog-token ${{ secrets.api-key }} --uri-sourcecode "${{ github.server_url }}/${{ github.repository }}" --artifact-version ${{ inputs.referenceName }}) >> $GITHUB_OUTPUT
+       - name: Upload to Catalog
+         id: uploadToCatalog
+         run: echo id=$(dataminer-catalog-upload with-registration --path-to-artifact "${{ github.workspace }}/${{ steps.packageName.outputs.name }}.dmapp" --dm-catalog-token ${{ secrets.api-key }} --uri-sourcecode "${{ github.server_url }}/${{ github.repository }}" --artifact-version ${{ inputs.referenceName }}) >> $GITHUB_OUTPUT
  
        - name: Deploy to DataMiner
          run: dataminer-package-deploy from-catalog --artifact-id "${{ steps.uploadToCatalog.outputs.id }}" --dm-catalog-token ${{ secrets.DATAMINER_DEPLOY_KEY }}
