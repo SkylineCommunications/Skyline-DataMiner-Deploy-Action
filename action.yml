@@ -1,63 +1,161 @@
-name: 'Skyline DataMiner Deploy Action'
-description: 'The action builds an artifact from your solution and deploys it to your cloud connected DataMiner System.'
+name: "Skyline DataMiner Deploy Action"
+description: "The action builds an artifact from your solution and deploys it to your cloud connected DataMiner System."
 branding:
-  icon: 'download-cloud'  
-  color: 'gray-dark'
-env:
-    working-directory: ./GitHubAction/Package.Builder 
+  icon: "download-cloud"
+  color: "gray-dark"
 inputs:
-  api-key:  # id of input
-    description: 'The API-key generated in the DCP Admin app as authentication for a certain DataMiner System, saved in a GitHub secret'
+  api-key: # id of input
+    description: "The API-key generated in the DCP Admin app as authentication for a certain DataMiner System, saved in a GitHub secret"
     required: true
   solution-path:
-    description: 'The path to the .sln file of the solution. Atm only DataMiner Automation Script solutions are supported. E.g ./Example/AutomationScript.sln. Required for stages: All and Upload.' 
-    required: true
+    description: "The path to the .sln file of the solution. Atm only DataMiner Automation Script solutions are supported. E.g ./Example/AutomationScript.sln. Required for stages: All and Upload."
+    required: false
   artifact-name:
-    description: 'The chosen name of the artifact. E.g. MyPackageName.  Required for stages: All, Upload and Deploy.'
+    description: "The chosen name of the artifact. E.g. MyPackageName.  Required for stages: All and Upload."
     required: false
   version:
-    description: 'The version number for the artifact. Only required for a release run. Format A.B.C for a stable release or A.B.C-text for a pre-release. Required for stages Upload and All if no build number was provided instead.'
+    description: "The version number for the artifact. Only required for a release run. Format A.B.C for a stable release or A.B.C-text for a pre-release. Required for stages Upload and All if no build number was provided instead."
     required: false
   timeout:
-    description: 'The maximum time spent on waiting for the deployment to finish in seconds. E.g. 900.'
+    description: "[DEPRECATED] The maximum time spent on waiting for the deployment to finish in seconds. E.g. 900."
     required: false
     default: "900"
   stage:
-    description: 'The specific stage to run in this action. Possible values are: All, Upload, and Deploy. All will run all 3 stages consecutively.'
+    description: "The specific stage to run in this action. Possible values are: All, Upload, and Deploy. All will run all 3 stages consecutively."
     required: false
     default: "All"
   artifact-id:
-    description: 'The artifact Id of the artifact that you would like to deploy'
+    description: "The artifact Id of the artifact that you would like to deploy"
     required: false
   build-number:
-    description: 'The build number of a workflow run. Only required for a development run. Required for stages Upload and All if no version was provided instead.'
+    description: "The build number of a workflow run. Only required for a development run. Required for stages Upload and All if no version was provided instead."
     required: false
   debug:
-    description: 'Option to enable debug logging. Optional'
+    description: "[DEPRECATED] Option to enable debug logging. Optional."
     required: false
 outputs:
   artifact-id:
-    description: 'The artifact ID if the artifact has been uploaded'
-  
+    description: "The artifact ID if the artifact has been uploaded"
+    value: ${{ steps.setArtifactId.outputs.artifact-id }}
+
 runs:
-  using: 'docker'
-  image: 'docker://ghcr.io/skylinecommunications/skyline-dataminer-deploy-action:1.0.37'
-  args:
-    - --api-key
-    - ${{ inputs.api-key }}
-    - --solution-path
-    - ${{ inputs.solution-path }}
-    - --artifact-name
-    - ${{ inputs.artifact-name }}
-    - --version
-    - ${{ inputs.version }}
-    - --timeout
-    - ${{ inputs.timeout }}
-    - --stage
-    - ${{ inputs.stage }}
-    - --artifact-id
-    - ${{ inputs.artifact-id }}
-    - --build-number
-    - ${{ inputs.build-number }}
-    - --debug
-    - ${{ inputs.debug }}
+  using: "composite"
+  steps:
+    - name: Validate Mandatory Inputs
+      run: |
+        if [[ -z "${{ inputs.api-key }}" ]]; then
+          echo "Error: 'api-key' is required but was not provided."
+          exit 1
+        fi
+
+        if [[ -n "${{ inputs.stage }}" ]]; then
+          if [[ "${{ inputs.stage }}" != "All" && "${{ inputs.stage }}" != "Upload" && "${{ inputs.stage }}" != "Deploy" ]]; then
+            echo "Error: 'stage' must be one of 'All', 'Upload', or 'Deploy'."
+            exit 1
+          fi
+        fi
+
+        echo "All required inputs are provided."
+      shell: bash
+
+    - name: Validate Mandatory Inputs for Upload/All stage
+      if: ${{ inputs.stage == 'Upload' || inputs.stage == 'All' }}
+      run: |
+        if [[ -z "${{ inputs.solution-path }}" ]]; then
+          echo "Error: 'solution-path' is required but was not provided."
+          exit 1
+        fi
+
+        if [[ -z "${{ inputs.version }}" && -z "${{ inputs.build-number }}" ]]; then
+          echo "Error: 'version' & 'build-number' are both empty."
+          exit 1
+        fi
+
+        if [[ -z "${{ inputs.artifact-name }}" ]]; then
+          echo "Error: 'artifact-name' is required but was not provided."
+          exit 1
+        fi
+
+        echo "All required inputs for the Upload/All stages are provided."
+      shell: bash
+
+    - name: Validate Mandatory Inputs for Deploy stage
+      if: ${{ inputs.stage == 'Deploy' }}
+      run: |
+        if [[ -z "${{ inputs.artifact-id }}" ]]; then
+          echo "Error: 'artifact-id' is required but was not provided."
+          exit 1
+        fi
+
+        echo "All required inputs for the Deploy stage are provided."
+      shell: bash
+
+    - name: Install .NET Tools
+      run: |
+        dotnet tool install -g Skyline.DataMiner.CICD.Tools.Packager
+        dotnet tool install -g Skyline.DataMiner.CICD.Tools.CatalogUpload
+        dotnet tool install -g Skyline.DataMiner.CICD.Tools.DataMinerDeploy
+      shell: bash
+
+    - name: Find branch
+      id: findBranch
+      if: ${{ (inputs.stage == 'Upload' || inputs.stage == 'All') && github.ref_type == 'tag' }}
+      run: |
+        # Capture the branches containing the tag and process them
+        branches="$(git branch --contains tags/${{ github.ref_name }} -r | grep 'origin/')"
+
+        # If more than 1 branch is found, filter out the ones that have multiple slashes. 
+        # This is to filter out the developement branches as generally the tags are done on the main branches (e.g. 1.0.0.X)
+        if [ $(echo "$branches" | wc -l) -gt 1 ]; then
+          branches="$(echo "$branches" | grep -vE '.*/.*/')"
+        fi
+
+        branches="$(echo "$branches" | sed 's#origin/##' | paste -sd ',')"
+
+        # Append to GitHub Actions output
+        echo "branch=${branches}" >> $GITHUB_OUTPUT
+      shell: bash
+
+    # Use version input when filled in
+    - name: Create dmapp package
+      if: ${{ (inputs.stage == 'Upload' || inputs.stage == 'All') && inputs.version != '' }}
+      run: dataminer-package-create dmapp "${{ github.workspace }}" --type automation --version ${{ inputs.version }} --output "${{ github.workspace }}" --name "${{ inputs.artifact-name }}"
+      shell: bash
+
+    # Use build number when version is not filled in
+    - name: Create dmapp package
+      if: ${{ (inputs.stage == 'Upload' || inputs.stage == 'All') && inputs.version == '' }}
+      run: dataminer-package-create dmapp "${{ github.workspace }}" --type automation --build-number ${{ inputs.build-number }} --output "${{ github.workspace }}" --name "${{ inputs.artifact-name }}"
+      shell: bash
+
+    # Use branch name from 'findBranch' step for the branch name when a tag
+    - name: Upload to CatalogUpload
+      id: uploadToCatalogTag
+      if: ${{ (inputs.stage == 'Upload' || inputs.stage == 'All') && github.ref_type == 'tag' }}
+      run: echo "id=$(dataminer-catalog-upload with-registration --path-to-artifact "${{ github.workspace }}/${{ inputs.artifact-name }}.dmapp" --uri-sourcecode "${{ github.server_url }}/${{ github.repository }}" --branch "${{ steps.findBranch.outputs.branch }}" --dm-catalog-token ${{ inputs.api-key }})" >> $GITHUB_OUTPUT
+      shell: bash
+
+    # Use github.ref_name for the branch name when not a tag
+    - name: Upload to CatalogUpload
+      id: uploadToCatalog
+      if: ${{ (inputs.stage == 'Upload' || inputs.stage == 'All') && github.ref_type != 'tag' }}
+      run: echo "id=$(dataminer-catalog-upload with-registration --path-to-artifact "${{ github.workspace }}/${{ inputs.artifact-name }}.dmapp" --uri-sourcecode "${{ github.server_url }}/${{ github.repository }}" --branch "${{ github.ref_name }}" --dm-catalog-token ${{ inputs.api-key }})" >> $GITHUB_OUTPUT
+      shell: bash
+
+    - name: Set artifact Id
+      id: setArtifactId
+      if: ${{ inputs.stage == 'Upload' || inputs.stage == 'All' }}
+      run: echo "artifact-id=${{ steps.uploadToCatalog.outputs.id }}${{ steps.uploadToCatalogTag.outputs.id }}" >> $GITHUB_OUTPUT
+      shell: bash
+
+    # Deploy using the retrieved artifact-id from the CatalogUpload
+    - name: Deploy to DataMiner
+      if: ${{ inputs.stage == 'All' }}
+      run: dataminer-package-deploy from-catalog --artifact-id "${{ steps.setArtifactId.outputs.artifact-id }}" --dm-catalog-token ${{ inputs.api-key }}
+      shell: bash
+
+    # Depoy using the provided artifact-id
+    - name: Deploy to DataMiner
+      if: ${{ inputs.stage == 'Deploy' }}
+      run: dataminer-package-deploy from-catalog --artifact-id "${{ inputs.artifact-id }}" --dm-catalog-token ${{ inputs.api-key }}
+      shell: bash
