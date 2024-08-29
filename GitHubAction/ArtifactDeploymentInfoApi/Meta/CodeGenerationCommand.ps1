@@ -1,1 +1,0 @@
-﻿ autorest --csharp --input-file=".\swagger.json" --version=3.0.6274 --output-folder="..\Generated" --namespace="ArtifactDeploymentInfoApi.Generated" --add-credentials
