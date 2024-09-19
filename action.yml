@@ -61,10 +61,6 @@ runs:
     - name: Validate Mandatory Inputs for Upload/All stage
       if: ${{ inputs.stage == 'Upload' || inputs.stage == 'All' }}
       run: |
-        if [[ -z "${{ inputs.solution-path }}" ]]; then
-          echo "Error: 'solution-path' is required but was not provided."
-          exit 1
-        fi
 
         if [[ -z "${{ inputs.version }}" && -z "${{ inputs.build-number }}" ]]; then
           echo "Error: 'version' & 'build-number' are both empty."
