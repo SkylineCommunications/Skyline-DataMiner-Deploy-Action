@@ -117,11 +117,11 @@ runs:
       shell: bash
       
     - name: Clean package name
-         id: packageName
-         run: |  
-           tempName="${{ inputs.artifact-name }}"
-           echo name=${tempName//[\"\/\\<>|:*?]/_} >> $GITHUB_OUTPUT
-         shell: bash
+      id: packageName
+      run: |  
+        tempName="${{ inputs.artifact-name }}"
+        echo name=${tempName//[\"\/\\<>|:*?]/_} >> $GITHUB_OUTPUT
+      shell: bash
     
     # Use version input when filled in
     - name: Create dmapp package
