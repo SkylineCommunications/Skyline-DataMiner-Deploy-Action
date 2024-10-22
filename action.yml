@@ -151,7 +151,7 @@ runs:
       if: ${{ (inputs.stage == 'Upload' || inputs.stage == 'All') }}
       run: |
         dotnet tool install -g Skyline.DataMiner.CICD.Tools.GitHubToCatalogYaml --prerelease
-        github-to-catalog-yaml --workspace "${{ github.workspace }}" --github-token ${{ inputs.github-token }} --github-repository "${{ github.repository }}""
+        github-to-catalog-yaml --workspace "${{ github.workspace }}" --github-token ${{ inputs.github-token }} --github-repository "${{ github.repository }}"
       shell: bash
 
     - name: Check if catalog.yml or manifest.yml exists
