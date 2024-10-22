@@ -177,7 +177,7 @@ runs:
     - uses: actions/upload-artifact@v4
       if: env.catalogDetails != ''
       with:
-        name: Catalog Details
+        name: Catalog Details ${{ inputs.artifact-name}}
         path: "${{ github.workspace }}/${{ env.catalogDetails }}"
 
     # Only try to commit for non-tag
