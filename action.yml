@@ -142,6 +142,63 @@ runs:
       run: dataminer-package-create dmapp "${{ steps.solutionFolder.outputs.path }}" --type automation --build-number ${{ inputs.build-number }} --output "${{ steps.solutionFolder.outputs.path }}" --name "${{ steps.packageName.outputs.name }}"
       shell: bash
 
+    # Always try to auto-generate a catalog.yml
+    - name: Auto-Generating Catalog from GitHub
+      id: autoGenerateCatalogFromGithubTag
+      if: ${{ (inputs.stage == 'Upload' || inputs.stage == 'All') }}
+      run: |
+        dotnet tool install -g Skyline.DataMiner.CICD.Tools.GitHubToCatalogYaml --prerelease
+        github-to-catalog-yaml --workspace "${{ github.workspace }}" --github-token ${{ secrets.GITHUB_TOKEN }} --github-repository "${{ github.repository }}" --catalog-identifier "${{ vars.catalogIdentifier }}"
+      shell: bash
+
+    - name: Check if catalog.yml or manifest.yml exists
+      id: check_files
+      shell: pwsh
+      run: |
+        if (Test-Path "${{ github.workspace }}/catalog.yml") {
+          echo "catalogDetails=catalog.yml" >> $env:GITHUB_ENV
+        }
+        elseif (Test-Path "${{ github.workspace }}/manifest.yml") {
+          echo "catalogDetails=manifest.yml" >> $env:GITHUB_ENV
+        }
+        else {
+          Write-Host "No valid file found!"
+          exit 1
+        }
+    
+    - uses: actions/upload-artifact@v4
+      if: env.catalogDetails != ''
+      with:
+        name: Catalog Details
+        path: "${{ github.workspace }}/${{ env.catalogDetails }}"
+
+    # Only try to commit for non-tag
+    - name: Commit .githubtocatalog/auto-generated-catalog
+      if: ${{ (inputs.stage == 'Upload' || inputs.stage == 'All') && github.ref_type != 'tag' }}
+      shell: pwsh
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git add "${{ github.workspace }}/.githubtocatalog/auto-generated-catalog.yml"
+        
+        # Check if there are any changes to be committed
+        git diff --staged --quiet
+        if ($LASTEXITCODE -ne 0) {
+          git commit -m "auto-generated"
+        }
+        else {
+          Write-Host "No changes to commit."
+        }
+
+    # Only try to push for non-tag
+    - name: Push .githubtocatalog/auto-generated-catalog
+      if: ${{ (inputs.stage == 'Upload' || inputs.stage == 'All') && github.ref_type != 'tag' }}
+      run: |
+        git push
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      shell: pwsh
+
     # Use branch name from 'findBranch' step for the branch name when a tag
     - name: Upload to CatalogUpload
       id: uploadToCatalogTag
