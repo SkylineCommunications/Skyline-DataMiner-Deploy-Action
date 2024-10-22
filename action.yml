@@ -51,6 +51,11 @@ runs:
           exit 1
         fi
 
+        if [[ -z "${{ inputs.github-token }}" ]]; then
+          echo "Error: 'github-token' is required but was not provided. This is usually ${{ secrets.GITHUB_TOKEN }}."
+          exit 1
+        fi
+
         if [[ -n "${{ inputs.stage }}" ]]; then
           if [[ "${{ inputs.stage }}" != "All" && "${{ inputs.stage }}" != "Upload" && "${{ inputs.stage }}" != "Deploy" ]]; then
             echo "Error: 'stage' must be one of 'All', 'Upload', or 'Deploy'."
