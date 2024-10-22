@@ -174,11 +174,20 @@ runs:
           exit 1
         }
     
+    - name: Sanitize Artifact Name
+      id: sanitize-artifact-name
+      shell: bash
+      run: |
+        # Set the sanitized artifact name by replacing invalid characters
+        CLEANED_NAME=$(echo "${{ inputs.artifact-name }}" | sed 's/[":<>|*?\\\/\r\n]//g')
+        echo "SANITIZED_NAME=$CLEANED_NAME" >> $GITHUB_ENV
+  
     - uses: actions/upload-artifact@v4
       if: env.catalogDetails != ''
       with:
-        name: Catalog Details ${{ inputs.artifact-name}}
+        name: Catalog Details ${{ env.SANITIZED_NAME }}
         path: "${{ github.workspace }}/${{ env.catalogDetails }}"
+  
 
     # Only try to commit for non-tag
     - name: Commit .githubtocatalog/auto-generated-catalog
