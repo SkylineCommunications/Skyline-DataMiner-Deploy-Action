@@ -176,6 +176,7 @@ runs:
     
     - name: Sanitize Artifact Name
       id: sanitize-artifact-name
+      if: env.catalogDetails != ''
       shell: bash
       run: |
         # Set the sanitized artifact name by replacing invalid characters
