@@ -52,7 +52,7 @@ runs:
         fi
 
         if [[ -z "${{ inputs.github-token }}" ]]; then
-          echo "Error: 'github-token' is required but was not provided. This is usually ${{ secrets.GITHUB_TOKEN }}."
+          echo "Error: 'github-token' is required but was not provided. This is usually secrets.GITHUB_TOKEN."
           exit 1
         fi
 
