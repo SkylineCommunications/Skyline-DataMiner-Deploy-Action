@@ -7,6 +7,9 @@ inputs:
   api-key: # id of input
     description: "The API-key generated in the DCP Admin app as authentication for a certain DataMiner System, saved in a GitHub secret"
     required: true
+  github-token:
+    description: "The secrets.GITHUB_TOKEN."
+    required: true
   solution-path:
     description: "The path to the .sln file of the solution. Atm only DataMiner Automation Script solutions are supported. E.g ./Example/AutomationScript.sln. Required for stages: All and Upload."
     required: false
@@ -148,7 +151,7 @@ runs:
       if: ${{ (inputs.stage == 'Upload' || inputs.stage == 'All') }}
       run: |
         dotnet tool install -g Skyline.DataMiner.CICD.Tools.GitHubToCatalogYaml --prerelease
-        github-to-catalog-yaml --workspace "${{ github.workspace }}" --github-token ${{ secrets.GITHUB_TOKEN }} --github-repository "${{ github.repository }}" --catalog-identifier "${{ vars.catalogIdentifier }}"
+        github-to-catalog-yaml --workspace "${{ github.workspace }}" --github-token ${{ inputs.github-token }} --github-repository "${{ github.repository }}""
       shell: bash
 
     - name: Check if catalog.yml or manifest.yml exists
@@ -196,7 +199,7 @@ runs:
       run: |
         git push
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ inputs.github-token }}
       shell: pwsh
 
     # Use branch name from 'findBranch' step for the branch name when a tag
