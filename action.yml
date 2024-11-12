@@ -94,6 +94,16 @@ runs:
         echo "All required inputs for the Deploy stage are provided."
       shell: bash
 
+    - name: Validate auto-generated catalog YAML file existence
+      if: ${{ github.ref_type == 'tag' }}
+      shell: pwsh
+      run: |
+        if (!(Test-Path "${{ github.workspace }}/.githubtocatalog/auto-generated-catalog.yml")) {
+          Write-Host "Error: The auto-generated catalog YAML file was not found."
+          Write-Host "Run the workflow on a branch before releasing, and ensure the tag points to the latest commit containing the auto-generated-catalog.yml file."
+          exit 1
+        }
+
     - name: Install .NET Tools
       run: |
         dotnet tool install -g Skyline.DataMiner.CICD.Tools.Packager
@@ -155,7 +165,7 @@ runs:
       id: autoGenerateCatalogFromGithubTag
       if: ${{ (inputs.stage == 'Upload' || inputs.stage == 'All') }}
       run: |
-        dotnet tool install -g Skyline.DataMiner.CICD.Tools.GitHubToCatalogYaml --prerelease
+        dotnet tool install -g Skyline.DataMiner.CICD.Tools.GitHubToCatalogYaml
         github-to-catalog-yaml --workspace "${{ github.workspace }}" --github-token "${{ inputs.github-token }}" --github-repository "${{ github.repository }}"
       shell: bash
 
