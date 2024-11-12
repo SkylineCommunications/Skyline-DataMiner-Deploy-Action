@@ -8,8 +8,8 @@ inputs:
     description: "The API-key generated in the DCP Admin app as authentication for a certain DataMiner System, saved in a GitHub secret"
     required: true
   github-token:
-    description: "The secrets.GITHUB_TOKEN."
-    required: true
+    description: "The secrets.GITHUB_TOKEN. Required for stages: All and Upload."
+    required: false
   solution-path:
     description: "The path to the .sln file of the solution. Atm only DataMiner Automation Script solutions are supported. E.g ./Example/AutomationScript.sln. Required for stages: All and Upload."
     required: false
@@ -51,11 +51,6 @@ runs:
           exit 1
         fi
 
-        if [[ -z "${{ inputs.github-token }}" ]]; then
-          echo "Error: 'github-token' is required but was not provided. This is usually secrets.GITHUB_TOKEN."
-          exit 1
-        fi
-
         if [[ -n "${{ inputs.stage }}" ]]; then
           if [[ "${{ inputs.stage }}" != "All" && "${{ inputs.stage }}" != "Upload" && "${{ inputs.stage }}" != "Deploy" ]]; then
             echo "Error: 'stage' must be one of 'All', 'Upload', or 'Deploy'."
@@ -69,6 +64,11 @@ runs:
     - name: Validate Mandatory Inputs for Upload/All stage
       if: ${{ inputs.stage == 'Upload' || inputs.stage == 'All' }}
       run: |
+
+        if [[ -z "${{ inputs.github-token }}" ]]; then
+          echo "Error: 'github-token' is required but was not provided. This is usually secrets.GITHUB_TOKEN."
+          exit 1
+        fi
 
         if [[ -z "${{ inputs.version }}" && -z "${{ inputs.build-number }}" ]]; then
           echo "Error: 'version' & 'build-number' are both empty."
