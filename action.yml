@@ -7,6 +7,9 @@ inputs:
   api-key: # id of input
     description: "The API-key generated in the DCP Admin app as authentication for a certain DataMiner System, saved in a GitHub secret"
     required: true
+  github-token:
+    description: "The secrets.GITHUB_TOKEN. Required for stages: All and Upload."
+    required: false
   solution-path:
     description: "The path to the .sln file of the solution. Atm only DataMiner Automation Script solutions are supported. E.g ./Example/AutomationScript.sln. Required for stages: All and Upload."
     required: false
@@ -62,6 +65,11 @@ runs:
       if: ${{ inputs.stage == 'Upload' || inputs.stage == 'All' }}
       run: |
 
+        if [[ -z "${{ inputs.github-token }}" ]]; then
+          echo "Error: 'github-token' is required but was not provided. This is usually secrets.GITHUB_TOKEN."
+          exit 1
+        fi
+
         if [[ -z "${{ inputs.version }}" && -z "${{ inputs.build-number }}" ]]; then
           echo "Error: 'version' & 'build-number' are both empty."
           exit 1
@@ -86,9 +94,19 @@ runs:
         echo "All required inputs for the Deploy stage are provided."
       shell: bash
 
+    - name: Validate auto-generated catalog YAML file existence
+      if: ${{ github.ref_type == 'tag' }}
+      shell: pwsh
+      run: |
+        if (!(Test-Path "${{ github.workspace }}/.githubtocatalog/auto-generated-catalog.yml")) {
+          Write-Host "Error: The auto-generated catalog YAML file was not found."
+          Write-Host "Run the workflow on a branch before releasing, and ensure the tag points to the latest commit containing the auto-generated-catalog.yml file."
+          exit 1
+        }
+
     - name: Install .NET Tools
       run: |
-        dotnet tool install -g Skyline.DataMiner.CICD.Tools.Packager
+        dotnet tool install -g Skyline.DataMiner.CICD.Tools.Packager --version 2.0.3
         dotnet tool install -g Skyline.DataMiner.CICD.Tools.CatalogUpload
         dotnet tool install -g Skyline.DataMiner.CICD.Tools.DataMinerDeploy
       shell: bash
@@ -142,18 +160,84 @@ runs:
       run: dataminer-package-create dmapp "${{ steps.solutionFolder.outputs.path }}" --type automation --build-number ${{ inputs.build-number }} --output "${{ steps.solutionFolder.outputs.path }}" --name "${{ steps.packageName.outputs.name }}"
       shell: bash
 
+    # Always try to auto-generate a catalog.yml
+    - name: Auto-Generating Catalog from GitHub
+      id: autoGenerateCatalogFromGithubTag
+      if: ${{ (inputs.stage == 'Upload' || inputs.stage == 'All') }}
+      run: |
+        dotnet tool install -g Skyline.DataMiner.CICD.Tools.GitHubToCatalogYaml
+        github-to-catalog-yaml --workspace "${{ github.workspace }}" --github-token "${{ inputs.github-token }}" --github-repository "${{ github.repository }}"
+      shell: bash
+
+    - name: Check if catalog.yml or manifest.yml exists
+      id: check_files
+      shell: pwsh
+      run: |
+        if (Test-Path "${{ github.workspace }}/catalog.yml") {
+          echo "catalogDetails=catalog.yml" >> $env:GITHUB_ENV
+        }
+        elseif (Test-Path "${{ github.workspace }}/manifest.yml") {
+          echo "catalogDetails=manifest.yml" >> $env:GITHUB_ENV
+        }
+        else {
+          Write-Host "No valid file found!"
+          exit 1
+        }
+    
+    - name: Sanitize Artifact Name
+      id: sanitize-artifact-name
+      if: env.catalogDetails != ''
+      shell: bash
+      run: |
+        # Set the sanitized artifact name by replacing invalid characters
+        CLEANED_NAME=$(echo "${{ inputs.artifact-name }}" | sed 's/[":<>|*?\\\/\r\n]//g')
+        echo "SANITIZED_NAME=$CLEANED_NAME" >> $GITHUB_ENV
+  
+    - uses: actions/upload-artifact@v4
+      if: env.catalogDetails != ''
+      with:
+        name: Catalog Details ${{ env.SANITIZED_NAME }}
+        path: "${{ github.workspace }}/${{ env.catalogDetails }}"
+  
+    # Only try to commit for non-tag
+    - name: Commit .githubtocatalog/auto-generated-catalog
+      if: ${{ (inputs.stage == 'Upload' || inputs.stage == 'All') && github.ref_type != 'tag' }}
+      shell: pwsh
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git add "${{ github.workspace }}/.githubtocatalog/auto-generated-catalog.yml"
+        
+        # Check if there are any changes to be committed
+        git diff --staged --quiet
+        if ($LASTEXITCODE -ne 0) {
+          git commit -m "auto-generated"
+        }
+        else {
+          Write-Host "No changes to commit."
+        }
+
+    # Only try to push for non-tag
+    - name: Push .githubtocatalog/auto-generated-catalog
+      if: ${{ (inputs.stage == 'Upload' || inputs.stage == 'All') && github.ref_type != 'tag' }}
+      run: |
+        git push
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+      shell: pwsh
+
     # Use branch name from 'findBranch' step for the branch name when a tag
     - name: Upload to CatalogUpload
       id: uploadToCatalogTag
       if: ${{ (inputs.stage == 'Upload' || inputs.stage == 'All') && github.ref_type == 'tag' }}
-      run: echo "id=$(dataminer-catalog-upload with-registration --path-to-artifact "${{ steps.solutionFolder.outputs.path }}/${{ steps.packageName.outputs.name }}.dmapp" --uri-sourcecode "${{ github.server_url }}/${{ github.repository }}" --branch "${{ steps.findBranch.outputs.branch }}" --dm-catalog-token ${{ inputs.api-key }})" >> $GITHUB_OUTPUT
+      run: echo "id=$(dataminer-catalog-upload with-registration --path-to-artifact "${{ steps.solutionFolder.outputs.path }}/${{ steps.packageName.outputs.name }}.dmapp" --artifact-version "${{ github.ref_name }}" --branch "${{ steps.findBranch.outputs.branch }}" --dm-catalog-token ${{ inputs.api-key }})" >> $GITHUB_OUTPUT
       shell: bash
 
     # Use github.ref_name for the branch name when not a tag
     - name: Upload to CatalogUpload
       id: uploadToCatalog
       if: ${{ (inputs.stage == 'Upload' || inputs.stage == 'All') && github.ref_type != 'tag' }}
-      run: echo "id=$(dataminer-catalog-upload with-registration --path-to-artifact "${{ steps.solutionFolder.outputs.path }}/${{ steps.packageName.outputs.name }}.dmapp" --uri-sourcecode "${{ github.server_url }}/${{ github.repository }}" --branch "${{ github.ref_name }}" --dm-catalog-token ${{ inputs.api-key }})" >> $GITHUB_OUTPUT
+      run: echo "id=$(dataminer-catalog-upload with-registration --path-to-artifact "${{ steps.solutionFolder.outputs.path }}/${{ steps.packageName.outputs.name }}.dmapp" --artifact-version "${{ github.ref_name }}" --branch "${{ github.ref_name }}" --dm-catalog-token ${{ inputs.api-key }})" >> $GITHUB_OUTPUT
       shell: bash
 
     - name: Set artifact Id

@@ -4,6 +4,50 @@
 > This GitHub action no longer runs under its own docker image. The docker image has been deprecated and is replaced by .NET tools which makes it easier to create workflows/pipelines/... outside GitHub and still be able to deploy packages to DataMiner.
 > You can still use this GitHub action in GitHub workflows. It will perform the dotnet tool calls on the current runner.
 
+## **Important Changes Since Version 2.0.0**
+
+- The **catalog identifier** (GUID identifying the catalog item on [catalog.dataminer.services](https://catalog.dataminer.services/)) is now required. It must be specified in a `catalog.yml` file as described [here](https://docs.dataminer.services/user-guide/Cloud_Platform/Catalog/Register_Catalog_Item.html#manifest-file).
+  
+- If a `README.md` file or an `Images` folder exists in the same directory (or a parent directory) as the `.dmapp` file, they will be automatically registered alongside the package.
+
+- Either the repository’s name or a GitHub topic must be used to infer the catalog item type.
+
+### **Inferring Catalog Item Type:**
+
+The GitHub action can automatically determine the artifact type in two ways:
+
+1. **Repository Naming Convention:**
+   - If the repository follows the naming conventions outlined in the [GitHub Repository Naming Convention](https://docs.dataminer.services/develop/CICD/Skyline%20Communications/Github/Use_Github_Guidelines.html#repository-naming-convention), the tool can infer the type from the repository name itself without needing a GitHub topic.
+
+2. **GitHub Topic:**
+   - If the repository does not follow the naming convention, the tool relies on the presence of a GitHub topic that matches one of the [Artifact Types](#artifact-types) to determine the type.
+
+If neither the repository name follows the convention nor the appropriate GitHub topic is present, the tool will fail to detect the type and return an error.
+
+### Artifact Types
+
+- **AS**: automationscript
+- **C**: connector
+- **CF**: companionfile
+- **CHATOPS**: chatopsextension
+- **D**: dashboard
+- **DISMACRO**: dismacro
+- **DOC**: documentation
+- **F**: functiondefinition
+- **GQIDS**: gqidatasource
+- **GQIO**: gqioperator
+- **LSO**: lifecycleserviceorchestration
+- **PA**: processautomation
+- **PLS**: profileloadscript
+- **S**: solution
+- **SC**: scriptedconnector
+- **T**: testingsolution
+- **UDAPI**: userdefinedapi
+- **V**: visio
+
+> [!IMPORTANT]
+> Currently only Automation Script solutions are supported. This will limit the types to 'automationscript', 'gqidatasource', 'gqioperator', 'lifecycleserviceorchestration', 'profileloadscript' and 'userdefinedapi'.
+
 ## Transition to .NET Tools
 
 Our workflow has evolved from relying solely on GitHub actions to embracing the versatility of .NET tools. This transition offers enhanced flexibility, enabling seamless integration across various widely utilized platforms such as GitHub, GitLab, Azure DevOps, and more.
@@ -37,7 +81,7 @@ Below, we present an example detailing the migration process from the GitHub act
 
        - name: Upload to Catalog
          id: uploadToCatalog
-         run: echo id=$(dataminer-catalog-upload with-registration --path-to-artifact "${{ github.workspace }}/${{ steps.packageName.outputs.name }}.dmapp" --dm-catalog-token ${{ secrets.api-key }} --uri-sourcecode "${{ github.server_url }}/${{ github.repository }}" --artifact-version ${{ inputs.referenceName }}) >> $GITHUB_OUTPUT
+         run: echo id=$(dataminer-catalog-upload with-registration --path-to-artifact "${{ github.workspace }}/${{ steps.packageName.outputs.name }}.dmapp" --dm-catalog-token ${{ secrets.api-key }} --artifact-version ${{ inputs.referenceName }}) >> $GITHUB_OUTPUT
  
        - name: Deploy to DataMiner
          run: dataminer-package-deploy from-catalog --artifact-id "${{ steps.uploadToCatalog.outputs.id }}" --dm-catalog-token ${{ secrets.DATAMINER_DEPLOY_KEY }}
@@ -79,6 +123,10 @@ This action currently only supports the creation of artifacts with Automation sc
 ### `solution-path`
 
 **Required**. The path to the .sln file of the solution. At present, only DataMiner Automation Script solutions are supported. E.g. `'./Example/AutomationScript.sln'`. Required for stages `'Upload'` and `'All'`.
+
+### `github-token`
+
+**Optional**. The secrets.GITHUB_TOKEN.  Required for stages `'Upload'` and `'All'`.
 
 ### `artifact-name`
 
@@ -125,10 +173,10 @@ jobs:
     name: Deploy the artifact on the DataMiner System job
     steps:
       # To use this action, the repository must be checked out 
-      - name: Checkout	
-        uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
       - name: Set up NuGet
-        uses: nuget/setup-nuget@v1.1.1      
+        uses: nuget/setup-nuget@v2.0.1     
       - name: NuGet restore solution
         run: nuget restore "AutomationScript.sln" -OutputDirectory ${{ github.workspace }}/packages
       - name: Deploy the artifact on the DataMiner System step
@@ -137,6 +185,7 @@ jobs:
         with:
           api-key: ${{ secrets.NAME_OF_YOUR_APIKEY_SECRET }}
           solution-path: './Example/AutomationScript.sln'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           artifact-name: 'MyArtifactName'
           version: '1.0.1'
           timeout: '300'
@@ -155,10 +204,10 @@ jobs:
     outputs:
       ARTIFACT_ID: ${{ steps.Build_and_upload_artifact_step.outputs.ARTIFACT_ID }}
     steps:
-      - name: Checkout	
-        uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
       - name: Set up NuGet
-        uses: nuget/setup-nuget@v1.1.1      
+        uses: nuget/setup-nuget@v2.0.1     
       - name: NuGet restore solution
         run: nuget restore "AutomationScript.sln" -OutputDirectory ${{ github.workspace }}/packages
       - name: Deploy the artifact on the DataMiner System step
@@ -167,6 +216,7 @@ jobs:
         with:
           api-key: ${{ secrets.NAME_OF_YOUR_APIKEY_SECRET }}
           solution-path: './Example/AutomationScript.sln'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           artifact-name: 'MyArtifactName'
           version: '1.0.1'
           stage: Upload
