@@ -260,7 +260,7 @@ runs:
 
     # Deploy using the provided artifact-id TO BE REMOVED ON 01/05/2025
     - name: Deploy to DataMiner
-      if: ${{ inputs.stage == 'Deploy' && catalog-id == '' }}
+      if: ${{ inputs.stage == 'Deploy' && inputs.catalog-id == '' }}
       run: dataminer-package-deploy from-catalog --artifact-id "${{ inputs.artifact-id }}" --dm-catalog-token ${{ inputs.api-key }}
       shell: bash
 
@@ -272,6 +272,6 @@ runs:
 
     # Deploy using the provided catalog-id and catalog-version
     - name: Deploy to DataMiner
-      if: ${{ inputs.stage == 'Deploy' && !(catalog-id == '') }}
+      if: ${{ inputs.stage == 'Deploy' && !(inputs.catalog-id == '') }}
       run: dataminer-package-deploy from-catalog --catalog-id "${{ inputs.catalog-id }}" --catalog-version "${{ inputs.catalog-version }}" --dm-catalog-token ${{ inputs.api-key }}
       shell: bash
