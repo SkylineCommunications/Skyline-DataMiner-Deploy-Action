@@ -109,9 +109,9 @@ runs:
 
     - name: Install .NET Tools
       run: |
-        dotnet tool install -g Skyline.DataMiner.CICD.Tools.Packager --version 2.0.*
-        dotnet tool install -g Skyline.DataMiner.CICD.Tools.CatalogUpload --version 3.0.*
-        dotnet tool install -g Skyline.DataMiner.CICD.Tools.DataMinerDeploy --version 2.0.*
+        dotnet tool update -g Skyline.DataMiner.CICD.Tools.Packager --version 2.0.*
+        dotnet tool update -g Skyline.DataMiner.CICD.Tools.CatalogUpload --version 3.0.*
+        dotnet tool update -g Skyline.DataMiner.CICD.Tools.DataMinerDeploy --version 2.0.*
       shell: bash
 
     - name: Find branch
@@ -168,7 +168,7 @@ runs:
       id: autoGenerateCatalogFromGithubTag
       if: ${{ (inputs.stage == 'Upload' || inputs.stage == 'All') }}
       run: |
-        dotnet tool install -g Skyline.DataMiner.CICD.Tools.GitHubToCatalogYaml --version 1.0.*
+        dotnet tool update -g Skyline.DataMiner.CICD.Tools.GitHubToCatalogYaml --version 1.0.*
         github-to-catalog-yaml --workspace "${{ github.workspace }}" --github-token "${{ inputs.github-token }}" --github-repository "${{ github.repository }}"
       shell: bash
 
