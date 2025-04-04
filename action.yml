@@ -186,9 +186,10 @@ runs:
           Write-Host "No valid file found!"
           exit 1
         }
-    
+
     - name: Retrieve Catalog ID from YAML
       id: get-catalog-id
+      if: env.catalogDetails == 'catalog.yml'
       shell: pwsh
       run: |
         $yamlPath = Join-Path $env:GITHUB_WORKSPACE $env:catalogDetails
@@ -202,7 +203,7 @@ runs:
         if ($yamlContent -match $regex) {
           $id = $matches[1]
           Write-Host "Found ID: $id"
-          echo "catalogId=$id" >> $env:GITHUB_ENV
+          echo "catalogId=$id" >> $env:GITHUB_OUTPUT
         }
         else {
           Write-Host "No valid 'id' field found in the YAML file."
