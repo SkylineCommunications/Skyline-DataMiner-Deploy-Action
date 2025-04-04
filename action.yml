@@ -90,8 +90,8 @@ runs:
       if: ${{ inputs.stage == 'Deploy' }}
       shell: bash
       run: |
-        if [[ -z "${{ inputs.artifact-id }}" && -z "${{ inputs.agent-destination }}" ]]; then
-          echo "Error: Either 'artifact-id' or 'agent-destination' must be provided for the Deploy stage."
+        if [[ -z "${{ inputs.artifact-id }}" && -z "${{ inputs.agent-destination-id }}" ]]; then
+          echo "Error: Either 'artifact-id' or 'agent-destination-id' must be provided for the Deploy stage."
           exit 1
         fi
 
