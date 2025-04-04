@@ -87,28 +87,15 @@ runs:
       shell: bash
 
     - name: Validate Mandatory Inputs for Deploy stage
-      if: ${{ inputs.stage == 'Deploy' && inputs.agent-destination-id == '' }}
+      if: ${{ inputs.stage == 'Deploy' }}
+      shell: bash
       run: |
-        if [[ -z "${{ inputs.artifact-id }}" ]]; then
-          echo "Error: 'artifact-id' is required but was not provided."
+        if [[ -z "${{ inputs.artifact-id }}" && -z "${{ inputs.agent-destination }}" ]]; then
+          echo "Error: Either 'artifact-id' or 'agent-destination' must be provided for the Deploy stage."
           exit 1
         fi
 
-        echo "All required inputs for the Deploy stage are provided."
-      shell: bash
-
-
-    - name: Validate Mandatory Inputs for Deploy stage
-      if: ${{ inputs.stage == 'Deploy' && !(inputs.agent-destination-id == '') }}
-      run: |
-        if [[ -z "${{ inputs.agent-destination-id }}" ]]; then
-          echo "Error: 'agent-destination-id' is required but was not provided."
-          exit 1
-        fi
-
-        echo "All required inputs for the Deploy stage are provided."
-      shell: bash
-
+        echo "Valid input(s) detected for the Deploy stage."
 
     - name: Validate auto-generated catalog YAML file existence
       if: ${{ github.ref_type == 'tag' }}
