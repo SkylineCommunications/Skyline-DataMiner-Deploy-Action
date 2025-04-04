@@ -86,16 +86,16 @@ runs:
         echo "All required inputs for the Upload/All stages are provided."
       shell: bash
 
-    - name: Validate Mandatory Inputs for Deploy stage
-      if: ${{ inputs.stage == 'Deploy' }}
-      run: |
-        if [[ -z "${{ inputs.artifact-id }}" ]]; then
-          echo "Error: 'artifact-id' is required but was not provided."
-          exit 1
-        fi
+    # - name: Validate Mandatory Inputs for Deploy stage
+    #   if: ${{ inputs.stage == 'Deploy' }}
+    #   run: |
+    #     if [[ -z "${{ inputs.artifact-id }}" ]]; then
+    #       echo "Error: 'artifact-id' is required but was not provided."
+    #       exit 1
+    #     fi
 
-        echo "All required inputs for the Deploy stage are provided."
-      shell: bash
+    #     echo "All required inputs for the Deploy stage are provided."
+    #   shell: bash
 
     - name: Validate auto-generated catalog YAML file existence
       if: ${{ github.ref_type == 'tag' }}
