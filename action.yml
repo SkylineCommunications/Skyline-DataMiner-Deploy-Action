@@ -5,7 +5,7 @@ branding:
   color: "gray-dark"
 inputs:
   api-key: # id of input
-    description: "The API-key generated in the DCP Admin app as authentication for a certain DataMiner System, saved in a GitHub secret"
+    description: "The API-key generated in the DCP Admin app as authentication for a certain Organization, saved in a GitHub secret"
     required: true
   github-token:
     description: "The secrets.GITHUB_TOKEN. Required for stages: All and Upload."
@@ -28,13 +28,19 @@ inputs:
     required: false
     default: "All"
   artifact-id:
-    description: "The artifact Id of the artifact that you would like to deploy"
+    description: "[DEPRECATED - Will be removed 01-05-2025] Please use catalog-id, catalog-version and an Organization Key."
     required: false
   build-number:
     description: "The build number of a workflow run. Only required for a development run. Required for stages Upload and All if no version was provided instead."
     required: false
   debug:
     description: "[DEPRECATED] Option to enable debug logging. Optional."
+    required: false
+  catalog-id:
+    description: "The catalog Id of the artifact that you would like to deploy"
+    required: false
+  catalog-version:
+    description: "The catalog version of the artifact that you would like to deploy"
     required: false
 outputs:
   artifact-id:
@@ -246,14 +252,26 @@ runs:
       run: echo "artifact-id=${{ steps.uploadToCatalog.outputs.id }}${{ steps.uploadToCatalogTag.outputs.id }}" >> $GITHUB_OUTPUT
       shell: bash
 
-    # Deploy using the retrieved artifact-id from the CatalogUpload
+    # Deploy using the retrieved artifact-id from the CatalogUpload TO BE REMOVED ON 01/05/2025
     - name: Deploy to DataMiner
-      if: ${{ inputs.stage == 'All' }}
+      if: ${{ inputs.stage == 'All' && catalog-id == '' }}
       run: dataminer-package-deploy from-catalog --artifact-id "${{ steps.setArtifactId.outputs.artifact-id }}" --dm-catalog-token ${{ inputs.api-key }}
       shell: bash
 
-    # Depoy using the provided artifact-id
+    # Deploy using the provided artifact-id TO BE REMOVED ON 01/05/2025
     - name: Deploy to DataMiner
-      if: ${{ inputs.stage == 'Deploy' }}
+      if: ${{ inputs.stage == 'Deploy' && catalog-id == '' }}
       run: dataminer-package-deploy from-catalog --artifact-id "${{ inputs.artifact-id }}" --dm-catalog-token ${{ inputs.api-key }}
+      shell: bash
+
+    # Deploy using the retrieved catalog-id and catalog-version from the CatalogUpload
+    - name: Deploy to DataMiner
+      if: ${{ inputs.stage == 'All' && !(catalog-id == '')  }}
+      run: dataminer-package-deploy from-catalog --catalog-id "${{ steps.setArtifactId.outputs.artifact-id }}" --catalog-version "${{ github.ref_name }}" --dm-catalog-token ${{ inputs.api-key }}
+      shell: bash
+
+    # Deploy using the provided catalog-id and catalog-version
+    - name: Deploy to DataMiner
+      if: ${{ inputs.stage == 'Deploy' && !(catalog-id == '') }}
+      run: dataminer-package-deploy from-catalog --catalog-id "${{ inputs.catalog-id }}" --catalog-version "${{ inputs.catalog-version }}" --dm-catalog-token ${{ inputs.api-key }}
       shell: bash
