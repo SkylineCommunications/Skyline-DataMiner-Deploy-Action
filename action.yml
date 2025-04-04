@@ -28,7 +28,7 @@ inputs:
     required: false
     default: "All"
   artifact-id:
-    description: "[DEPRECATED - Will be removed 01-05-2025] Please use catalog-id, version and an Organization Key."
+    description: "[DEPRECATED - Will be removed 01-05-2025]. Now uses the catalog ID from the catalog.yml or manifest.yml file already present alongside an Organization Key."
     required: false
   build-number:
     description: "The build number of a workflow run. Only required for a development run. Required for stages Upload and All if no version was provided instead."
@@ -36,8 +36,8 @@ inputs:
   debug:
     description: "[DEPRECATED] Option to enable debug logging. Optional."
     required: false
-  catalog-id:
-    description: "The catalog Id of the artifact that you would like to deploy"
+  agent-destination-id:
+    description: "  The destination agent ID to deploy to. To obtain this ID for an existing DataMiner System, navigate to its details page in the Admin app. The ID is the last GUID of the URL. This is required when the dm-catalog-token is an OrganizationToken."
     required: false
 outputs:
   artifact-id:
@@ -86,16 +86,29 @@ runs:
         echo "All required inputs for the Upload/All stages are provided."
       shell: bash
 
-    # - name: Validate Mandatory Inputs for Deploy stage
-    #   if: ${{ inputs.stage == 'Deploy' }}
-    #   run: |
-    #     if [[ -z "${{ inputs.artifact-id }}" ]]; then
-    #       echo "Error: 'artifact-id' is required but was not provided."
-    #       exit 1
-    #     fi
+    - name: Validate Mandatory Inputs for Deploy stage
+      if: ${{ inputs.stage == 'Deploy' && inputs.agent-destination-id == '' }}
+      run: |
+        if [[ -z "${{ inputs.artifact-id }}" ]]; then
+          echo "Error: 'artifact-id' is required but was not provided."
+          exit 1
+        fi
 
-    #     echo "All required inputs for the Deploy stage are provided."
-    #   shell: bash
+        echo "All required inputs for the Deploy stage are provided."
+      shell: bash
+
+
+    - name: Validate Mandatory Inputs for Deploy stage
+      if: ${{ inputs.stage == 'Deploy' && !(inputs.agent-destination-id == '') }}
+      run: |
+        if [[ -z "${{ inputs.agent-destination-id }}" ]]; then
+          echo "Error: 'agent-destination-id' is required but was not provided."
+          exit 1
+        fi
+
+        echo "All required inputs for the Deploy stage are provided."
+      shell: bash
+
 
     - name: Validate auto-generated catalog YAML file existence
       if: ${{ github.ref_type == 'tag' }}
@@ -187,6 +200,28 @@ runs:
           exit 1
         }
     
+    - name: Retrieve Catalog ID from YAML
+      id: get-catalog-id
+      shell: pwsh
+      run: |
+        $yamlPath = Join-Path $env:GITHUB_WORKSPACE $env:catalogDetails
+        if (!(Test-Path $yamlPath)) {
+          Write-Host "YAML file not found at path: $yamlPath"
+          exit 1
+        }
+
+        $yamlContent = Get-Content $yamlPath -Raw
+        $regex = 'id:\s*([0-9a-fA-F\-]{36})'
+        if ($yamlContent -match $regex) {
+          $id = $matches[1]
+          Write-Host "Found ID: $id"
+          echo "catalogId=$id" >> $env:GITHUB_ENV
+        }
+        else {
+          Write-Host "No valid 'id' field found in the YAML file."
+          exit 1
+        }
+
     - name: Sanitize Artifact Name
       id: sanitize-artifact-name
       if: env.catalogDetails != ''
@@ -257,18 +292,18 @@ runs:
 
     # Deploy using the provided artifact-id TO BE REMOVED ON 01/05/2025
     - name: Deploy to DataMiner
-      if: ${{ inputs.stage == 'Deploy' && inputs.catalog-id == '' }}
+      if: ${{ inputs.stage == 'Deploy' && inputs.agent-destination-id == '' }}
       run: dataminer-package-deploy from-catalog --artifact-id "${{ inputs.artifact-id }}" --dm-catalog-token ${{ inputs.api-key }}
       shell: bash
 
     # CAN ONLY ENABLE THIS FOR ALL WHEN WE REMOVE THE PREVIOUS DEPLOY FOR ALL: Deploy using the retrieved catalog-id and version from the CatalogUpload
     # - name: Deploy to DataMiner
     #   if: ${{ inputs.stage == 'All' }}
-    #   run: dataminer-package-deploy from-catalog --catalog-id "${{ steps.setArtifactId.outputs.artifact-id }}" --catalog-version "${{ inputs.version }}" --dm-catalog-token ${{ inputs.api-key }}
+    #   run: dataminer-package-deploy from-catalog --catalog-id "${{ steps.get-catalog-id.outputs.catalog-id }}" --catalog-version "${{ inputs.version }}" --dm-catalog-token ${{ inputs.api-key }} --agent-destination-id ${{ inputs.agent-destination-id }}
     #   shell: bash
 
     # Deploy using the provided catalog-id and catalog-version
     - name: Deploy to DataMiner
-      if: ${{ inputs.stage == 'Deploy' && !(inputs.catalog-id == '') }}
-      run: dataminer-package-deploy from-catalog --catalog-id "${{ inputs.catalog-id }}" --catalog-version "${{ inputs.version }}" --dm-catalog-token ${{ inputs.api-key }}
+      if: ${{ inputs.stage == 'Deploy' && !(inputs.agent-destination-id  == '') }}
+      run: dataminer-package-deploy from-catalog --catalog-id "${{ steps.get-catalog-id.outputs.catalog-id }}" --catalog-version "${{ inputs.version }}" --dm-catalog-token ${{ inputs.api-key }} --agent-destination-id ${{ inputs.agent-destination-id }}
       shell: bash
