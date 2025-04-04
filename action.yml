@@ -233,14 +233,14 @@ runs:
     - name: Upload to CatalogUpload
       id: uploadToCatalogTag
       if: ${{ (inputs.stage == 'Upload' || inputs.stage == 'All') && github.ref_type == 'tag' }}
-      run: echo "id=$(dataminer-catalog-upload with-registration --path-to-artifact "${{ steps.solutionFolder.outputs.path }}/${{ steps.packageName.outputs.name }}.dmapp" --artifact-version "${{ github.ref_name }}" --branch "${{ steps.findBranch.outputs.branch }}" --dm-catalog-token ${{ inputs.api-key }})" >> $GITHUB_OUTPUT
+      run: echo "id=$(dataminer-catalog-upload with-registration --path-to-artifact "${{ steps.solutionFolder.outputs.path }}/${{ steps.packageName.outputs.name }}.dmapp" --artifact-version "${{ inputs.version }}" --branch "${{ steps.findBranch.outputs.branch }}" --dm-catalog-token ${{ inputs.api-key }})" >> $GITHUB_OUTPUT
       shell: bash
 
     # Use github.ref_name for the branch name when not a tag
     - name: Upload to CatalogUpload
       id: uploadToCatalog
       if: ${{ (inputs.stage == 'Upload' || inputs.stage == 'All') && github.ref_type != 'tag' }}
-      run: echo "id=$(dataminer-catalog-upload with-registration --path-to-artifact "${{ steps.solutionFolder.outputs.path }}/${{ steps.packageName.outputs.name }}.dmapp" --artifact-version "${{ github.ref_name }}" --branch "${{ github.ref_name }}" --dm-catalog-token ${{ inputs.api-key }})" >> $GITHUB_OUTPUT
+      run: echo "id=$(dataminer-catalog-upload with-registration --path-to-artifact "${{ steps.solutionFolder.outputs.path }}/${{ steps.packageName.outputs.name }}.dmapp" --artifact-version "${{ inputs.version }}" --branch "${{ github.ref_name }}" --dm-catalog-token ${{ inputs.api-key }})" >> $GITHUB_OUTPUT
       shell: bash
 
     - name: Set artifact Id
@@ -264,7 +264,7 @@ runs:
     # CAN ONLY ENABLE THIS FOR ALL WHEN WE REMOVE THE PREVIOUS DEPLOY FOR ALL: Deploy using the retrieved catalog-id and version from the CatalogUpload
     # - name: Deploy to DataMiner
     #   if: ${{ inputs.stage == 'All' }}
-    #   run: dataminer-package-deploy from-catalog --catalog-id "${{ steps.setArtifactId.outputs.artifact-id }}" --version "${{ github.ref_name }}" --dm-catalog-token ${{ inputs.api-key }}
+    #   run: dataminer-package-deploy from-catalog --catalog-id "${{ steps.setArtifactId.outputs.artifact-id }}" --version "${{ inputs.version }}" --dm-catalog-token ${{ inputs.api-key }}
     #   shell: bash
 
     # Deploy using the provided catalog-id and catalog-version
