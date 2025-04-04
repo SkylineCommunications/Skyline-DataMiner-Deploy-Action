@@ -17,7 +17,7 @@ inputs:
     description: "The chosen name of the artifact. E.g. MyPackageName.  Required for stages: All and Upload."
     required: false
   version:
-    description: "The version number for the artifact. Only required for a release run. Format A.B.C for a stable release or A.B.C-text for a pre-release. Required for stages Upload and All if no build number was provided instead."
+    description: "The version number for the artifact. Only required for a release or deployment. Format A.B.C for a stable release or A.B.C-text for a pre-release. Required for stages Upload and All if no build number was provided instead."
     required: false
   timeout:
     description: "[DEPRECATED] The maximum time spent on waiting for the deployment to finish in seconds. E.g. 900."
@@ -28,7 +28,7 @@ inputs:
     required: false
     default: "All"
   artifact-id:
-    description: "[DEPRECATED - Will be removed 01-05-2025] Please use catalog-id, catalog-version and an Organization Key."
+    description: "[DEPRECATED - Will be removed 01-05-2025] Please use catalog-id, version and an Organization Key."
     required: false
   build-number:
     description: "The build number of a workflow run. Only required for a development run. Required for stages Upload and All if no version was provided instead."
@@ -38,9 +38,6 @@ inputs:
     required: false
   catalog-id:
     description: "The catalog Id of the artifact that you would like to deploy"
-    required: false
-  catalog-version:
-    description: "The catalog version of the artifact that you would like to deploy"
     required: false
 outputs:
   artifact-id:
@@ -264,14 +261,14 @@ runs:
       run: dataminer-package-deploy from-catalog --artifact-id "${{ inputs.artifact-id }}" --dm-catalog-token ${{ inputs.api-key }}
       shell: bash
 
-    # CAN ONLY ENABLE THIS FOR ALL WHEN WE REMOVE THE PREVIOUS DEPLOY FOR ALL: Deploy using the retrieved catalog-id and catalog-version from the CatalogUpload
+    # CAN ONLY ENABLE THIS FOR ALL WHEN WE REMOVE THE PREVIOUS DEPLOY FOR ALL: Deploy using the retrieved catalog-id and version from the CatalogUpload
     # - name: Deploy to DataMiner
     #   if: ${{ inputs.stage == 'All' }}
-    #   run: dataminer-package-deploy from-catalog --catalog-id "${{ steps.setArtifactId.outputs.artifact-id }}" --catalog-version "${{ github.ref_name }}" --dm-catalog-token ${{ inputs.api-key }}
+    #   run: dataminer-package-deploy from-catalog --catalog-id "${{ steps.setArtifactId.outputs.artifact-id }}" --version "${{ github.ref_name }}" --dm-catalog-token ${{ inputs.api-key }}
     #   shell: bash
 
     # Deploy using the provided catalog-id and catalog-version
     - name: Deploy to DataMiner
       if: ${{ inputs.stage == 'Deploy' && !(inputs.catalog-id == '') }}
-      run: dataminer-package-deploy from-catalog --catalog-id "${{ inputs.catalog-id }}" --catalog-version "${{ inputs.catalog-version }}" --dm-catalog-token ${{ inputs.api-key }}
+      run: dataminer-package-deploy from-catalog --catalog-id "${{ inputs.catalog-id }}" --version "${{ inputs.version }}" --dm-catalog-token ${{ inputs.api-key }}
       shell: bash
