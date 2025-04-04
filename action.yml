@@ -264,11 +264,11 @@ runs:
     # CAN ONLY ENABLE THIS FOR ALL WHEN WE REMOVE THE PREVIOUS DEPLOY FOR ALL: Deploy using the retrieved catalog-id and version from the CatalogUpload
     # - name: Deploy to DataMiner
     #   if: ${{ inputs.stage == 'All' }}
-    #   run: dataminer-package-deploy from-catalog --catalog-id "${{ steps.setArtifactId.outputs.artifact-id }}" --version "${{ inputs.version }}" --dm-catalog-token ${{ inputs.api-key }}
+    #   run: dataminer-package-deploy from-catalog --catalog-id "${{ steps.setArtifactId.outputs.artifact-id }}" --catalog-version "${{ inputs.version }}" --dm-catalog-token ${{ inputs.api-key }}
     #   shell: bash
 
     # Deploy using the provided catalog-id and catalog-version
     - name: Deploy to DataMiner
       if: ${{ inputs.stage == 'Deploy' && !(inputs.catalog-id == '') }}
-      run: dataminer-package-deploy from-catalog --catalog-id "${{ inputs.catalog-id }}" --version "${{ inputs.version }}" --dm-catalog-token ${{ inputs.api-key }}
+      run: dataminer-package-deploy from-catalog --catalog-id "${{ inputs.catalog-id }}" --catalog-version "${{ inputs.version }}" --dm-catalog-token ${{ inputs.api-key }}
       shell: bash
