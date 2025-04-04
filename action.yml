@@ -254,7 +254,7 @@ runs:
 
     # Deploy using the retrieved artifact-id from the CatalogUpload TO BE REMOVED ON 01/05/2025
     - name: Deploy to DataMiner
-      if: ${{ inputs.stage == 'All' && catalog-id == '' }}
+      if: ${{ inputs.stage == 'All'}}
       run: dataminer-package-deploy from-catalog --artifact-id "${{ steps.setArtifactId.outputs.artifact-id }}" --dm-catalog-token ${{ inputs.api-key }}
       shell: bash
 
@@ -264,11 +264,11 @@ runs:
       run: dataminer-package-deploy from-catalog --artifact-id "${{ inputs.artifact-id }}" --dm-catalog-token ${{ inputs.api-key }}
       shell: bash
 
-    # Deploy using the retrieved catalog-id and catalog-version from the CatalogUpload
-    - name: Deploy to DataMiner
-      if: ${{ inputs.stage == 'All' && !(catalog-id == '')  }}
-      run: dataminer-package-deploy from-catalog --catalog-id "${{ steps.setArtifactId.outputs.artifact-id }}" --catalog-version "${{ github.ref_name }}" --dm-catalog-token ${{ inputs.api-key }}
-      shell: bash
+    # CAN ONLY ENABLE THIS FOR ALL WHEN WE REMOVE THE PREVIOUS DEPLOY FOR ALL: Deploy using the retrieved catalog-id and catalog-version from the CatalogUpload
+    # - name: Deploy to DataMiner
+    #   if: ${{ inputs.stage == 'All' }}
+    #   run: dataminer-package-deploy from-catalog --catalog-id "${{ steps.setArtifactId.outputs.artifact-id }}" --catalog-version "${{ github.ref_name }}" --dm-catalog-token ${{ inputs.api-key }}
+    #   shell: bash
 
     # Deploy using the provided catalog-id and catalog-version
     - name: Deploy to DataMiner
