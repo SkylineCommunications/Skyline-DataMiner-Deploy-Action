@@ -61,7 +61,7 @@ If neither the repository name follows the convention nor the appropriate GitHub
 - **V**: visio
 
 > [!IMPORTANT]
-> The types to 'automationscript', 'gqidatasource', 'gqioperator', 'lifecycleserviceorchestration', 'profileloadscript' and 'userdefinedapi'
+> The valid types for this GitHub Action are limited to 'automationscript', 'gqidatasource', 'gqioperator', 'lifecycleserviceorchestration', 'profileloadscript' and 'userdefinedapi'
 
 ## Transition to .NET Tools
 
