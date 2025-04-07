@@ -37,7 +37,7 @@ inputs:
     description: "[DEPRECATED] Option to enable debug logging. Optional."
     required: false
   agent-destination-id:
-    description: "  The destination agent ID to deploy to. To obtain this ID for an existing DataMiner System, navigate to its details page in the Admin app. The ID is the last GUID of the URL. This is required when the dm-catalog-token is an OrganizationToken."
+    description: "The destination agent ID to deploy to. To obtain this ID for an existing DataMiner System, navigate to its details page in the Admin app. The ID is the last GUID of the URL. This is required when the dm-catalog-token is an OrganizationToken."
     required: false
 outputs:
   artifact-id:

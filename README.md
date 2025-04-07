@@ -4,6 +4,21 @@
 > This GitHub action no longer runs under its own docker image. The docker image has been deprecated and is replaced by .NET tools which makes it easier to create workflows/pipelines/... outside GitHub and still be able to deploy packages to DataMiner.
 > You can still use this GitHub action in GitHub workflows. It will perform the dotnet tool calls on the current runner.
 
+## **Important Changes Effective from May 1, 2025**
+
+- artifact-id is deprecated and will be removed.
+
+- Deployments now require specifying the catalog-guid within a catalog.yml file, as explained here.
+
+- The api-key must now exclusively contain an Organization Key.
+
+- A new mandatory input, agent-destination-id, specifying the target DataMiner Agent is required.
+
+These changes improve security, enhance flexibility, and ensure compatibility with newer workflows and tooling.
+
+> [!IMPORTANT]
+> Only Legacy Automation Script solutions are supported. Automation Scripts build upon the Skyline.DataMiner.Sdk are not supported by this Action. Please use the .NET Tools and built-in SDK actions (build and publish).
+
 ## **Important Changes Since Version 2.0.0**
 
 - The **catalog identifier** (GUID identifying the catalog item on [catalog.dataminer.services](https://catalog.dataminer.services/)) is now required. It must be specified in a `catalog.yml` file as described [here](https://docs.dataminer.services/user-guide/Cloud_Platform/Catalog/Register_Catalog_Item.html#manifest-file).
@@ -46,7 +61,7 @@ If neither the repository name follows the convention nor the appropriate GitHub
 - **V**: visio
 
 > [!IMPORTANT]
-> Currently only Automation Script solutions are supported. This will limit the types to 'automationscript', 'gqidatasource', 'gqioperator', 'lifecycleserviceorchestration', 'profileloadscript' and 'userdefinedapi'.
+> The types to 'automationscript', 'gqidatasource', 'gqioperator', 'lifecycleserviceorchestration', 'profileloadscript' and 'userdefinedapi'
 
 ## Transition to .NET Tools
 
@@ -81,10 +96,10 @@ Below, we present an example detailing the migration process from the GitHub act
 
        - name: Upload to Catalog
          id: uploadToCatalog
-         run: echo id=$(dataminer-catalog-upload with-registration --path-to-artifact "${{ github.workspace }}/${{ steps.packageName.outputs.name }}.dmapp" --dm-catalog-token ${{ secrets.api-key }} --artifact-version ${{ inputs.referenceName }}) >> $GITHUB_OUTPUT
+         run: dataminer-catalog-upload with-registration --path-to-artifact "${{ github.workspace }}/${{ steps.packageName.outputs.name }}.dmapp" --dm-catalog-token ${{ secrets.api-key }} --artifact-version ${{ inputs.referenceName }}
  
        - name: Deploy to DataMiner
-         run: dataminer-package-deploy from-catalog --artifact-id "${{ steps.uploadToCatalog.outputs.id }}" --dm-catalog-token ${{ secrets.DATAMINER_DEPLOY_KEY }}
+         run: dataminer-package-deploy from-catalog --catalog-id TODO:FillInCatalogGuidHere --catalog-version ${{ secrets.api-key }} --agent-destination-id TODO:FillInAgentDestinationGuidHere --dm-catalog-token ${{ secrets.api-key }}
 
 ```
 
@@ -112,13 +127,13 @@ This stage deploys the artifact from the artifact storage to your cloud-connecte
 
 ## Limitations
 
-This action currently only supports the creation of artifacts with Automation scripts.
+This action currently only supports the creation of artifacts with Automation scripts as a solution.
 
 ## Inputs
 
 ### `api-key`
 
-**Required**. The API key generated in the [DCP Admin app](https://admin.dataminer.services) to authenticate to a certain DataMiner System. E.g. `${{ secrets.NAME_OF_YOUR_APIKEY_SECRET }}`. For more information about creating a key, refer to the [DataMiner documentation](https://docs.dataminer.services/user-guide/Cloud_Platform/CloudAdminApp/Managing_DCP_keys.html).
+**Required**. The API key generated in the [DCP Admin app](https://admin.dataminer.services) to authenticate to a certain DataMiner Organization. E.g. `${{ secrets.NAME_OF_YOUR_APIKEY_SECRET }}`. For more information about creating a key, refer to the [DataMiner documentation](https://docs.dataminer.services/user-guide/Cloud_Platform/CloudAdminApp/Managing_DCP_keys.html).
 
 ### `solution-path`
 
@@ -145,20 +160,14 @@ The version number for the artifact. Only required for a release run. Format A.B
 
 **Optional**. The stage of the action to run. Options are: `'Upload'`, `'Deploy'` and `'All'`. Default: 'All'.
 
-### `artifact-id`
+### `destination-agent-id`
 
-**Optional**. The private artifact to deploy. This is only needed when 'stage' is `'Deploy'`.
+**Optional**. The destination agent ID to deploy to. To obtain this ID for an existing DataMiner System, navigate to its details page in the Admin app. The ID is the last GUID of the URL. This is required when the dm-catalog-token is an OrganizationToken.Required for stages `'Deploy'` and `'All'`.
 
 ### `build-number`
 
 **Optional**.
 The build number of a workflow run. Only required for a development run. Required for stages `'Upload'` and `'All'` if no version was provided instead.
-
-## Outputs
-
-### `artifact-id`
-
-The ID of the private artifact that has been deployed. This is only filled in for stages `'Upload'` and `'All'`.
 
 ## Example usage
 
@@ -188,7 +197,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           artifact-name: 'MyArtifactName'
           version: '1.0.1'
-          timeout: '300'
+          agent-destination-id: 'abc-abc-abc'
 ```
 
 ### Separate stages
@@ -201,8 +210,6 @@ jobs:
   build:
     name: build
     runs-on: ubuntu-latest
-    outputs:
-      ARTIFACT_ID: ${{ steps.Build_and_upload_artifact_step.outputs.ARTIFACT_ID }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -230,9 +237,10 @@ jobs:
         uses: SkylineCommunications/Skyline-DataMiner-Deploy-Action@v1
         with:
           api-key: ${{ secrets.NAME_OF_YOUR_APIKEY_SECRET }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          agent-destination-id: 'abc-abc-abc'
+          version: '1.0.1'
           stage: Deploy
-          timeout: '300'
-          artifact-id: ${{ needs.build.outputs.ARTIFACT_ID }}
 ```
 
 ## License
