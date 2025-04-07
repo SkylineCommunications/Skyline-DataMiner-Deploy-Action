@@ -28,7 +28,7 @@ inputs:
     required: false
     default: "All"
   artifact-id:
-    description: "[DEPRECATED - Will be removed 01-05-2025]. Now uses the catalog ID from the catalog.yml or manifest.yml file already present alongside an Organization Key."
+    description: "[DEPRECATED - Will be removed 01-05-2025]. Please use the agent-destination-id alongside an Organization Key inside api-key."
     required: false
   build-number:
     description: "The build number of a workflow run. Only required for a development run. Required for stages Upload and All if no version was provided instead."
@@ -224,6 +224,7 @@ runs:
       with:
         name: Catalog Details ${{ env.SANITIZED_NAME }} ${{ inputs.version }}
         path: "${{ github.workspace }}/${{ env.catalogDetails }}"
+        overwrite: true
   
     # Only try to commit for non-tag
     - name: Commit .githubtocatalog/auto-generated-catalog
