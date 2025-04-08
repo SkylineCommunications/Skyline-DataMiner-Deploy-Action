@@ -8,11 +8,11 @@
 
 - artifact-id is deprecated and will be removed.
 
-- Deployments now require specifying the catalog-guid within a catalog.yml file, as explained here.
+- Deployments now require specifying the catalog-guid within a catalog.yml file, as explained [here](xref:Important_Changes_Since_Version_2.0.0).
 
 - The api-key must now exclusively contain an Organization Key.
 
-- A new mandatory input, agent-destination-id, specifying the target DataMiner Agent is required.
+- A new mandatory input, agent-destination-id, specifying the target DataMiner Agent is required. To obtain this ID for an existing DataMiner System, navigate to its details page in the admin.dataminer.services. The ID is the last GUID of the URL.
 
 These changes improve security, enhance flexibility, and ensure compatibility with newer workflows and tooling.
 
@@ -99,7 +99,7 @@ Below, we present an example detailing the migration process from the GitHub act
          run: dataminer-catalog-upload with-registration --path-to-artifact "${{ github.workspace }}/${{ steps.packageName.outputs.name }}.dmapp" --dm-catalog-token ${{ secrets.api-key }} --artifact-version ${{ inputs.referenceName }}
  
        - name: Deploy to DataMiner
-         run: dataminer-package-deploy from-catalog --catalog-id TODO:FillInCatalogGuidHere --catalog-version ${{ secrets.api-key }} --agent-destination-id TODO:FillInAgentDestinationGuidHere --dm-catalog-token ${{ secrets.api-key }}
+         run: dataminer-package-deploy from-catalog --catalog-id TODO:FillInCatalogGuidHere --catalog-version ${{ github.ref_name }} --agent-destination-id TODO:FillInAgentDestinationGuidHere --dm-catalog-token ${{ secrets.api-key }}
 
 ```
 
