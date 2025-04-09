@@ -96,7 +96,7 @@ Below, we present an example detailing the migration process from the GitHub act
 
        - name: Upload to Catalog
          id: uploadToCatalog
-         run: dataminer-catalog-upload with-registration --path-to-artifact "${{ github.workspace }}/${{ steps.packageName.outputs.name }}.dmapp" --dm-catalog-token ${{ secrets.api-key }} --artifact-version ${{ inputs.referenceName }}
+         run: dataminer-catalog-upload with-registration --path-to-artifact "${{ github.workspace }}/${{ steps.packageName.outputs.name }}.dmapp" --dm-catalog-token ${{ secrets.api-key }} --artifact-version ${{ github.ref_name }}
  
        - name: Deploy to DataMiner
          run: dataminer-package-deploy from-catalog --catalog-id TODO:FillInCatalogGuidHere --catalog-version ${{ github.ref_name }} --agent-destination-id TODO:FillInAgentDestinationGuidHere --dm-catalog-token ${{ secrets.api-key }}
