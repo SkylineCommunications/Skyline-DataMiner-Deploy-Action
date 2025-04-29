@@ -271,7 +271,7 @@ runs:
     - name: Upload to CatalogUpload
       id: uploadToCatalog
       if: ${{ (inputs.stage == 'Upload' || inputs.stage == 'All') && github.ref_type != 'tag' }}
-      run: echo "id=$(dataminer-catalog-upload with-registration --path-to-artifact "${{ steps.solutionFolder.outputs.path }}/${{ steps.packageName.outputs.name }}.dmapp" --artifact-version "${{ inputs.version }}" --branch "${{ github.ref_name }}" --dm-catalog-token ${{ inputs.api-key }})" >> $GITHUB_OUTPUT
+      run: echo "id=$(dataminer-catalog-upload with-registration --path-to-artifact "${{ steps.solutionFolder.outputs.path }}/${{ steps.packageName.outputs.name }}.dmapp" --branch "${{ github.ref_name }}" --dm-catalog-token ${{ inputs.api-key }})" >> $GITHUB_OUTPUT
       shell: bash
 
     - name: Set artifact Id
