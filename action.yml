@@ -105,8 +105,8 @@ runs:
     - name: Install .NET Tools
       run: |
         dotnet tool update -g Skyline.DataMiner.CICD.Tools.Packager --version 2.0.*
-        dotnet tool update -g Skyline.DataMiner.CICD.Tools.CatalogUpload --version 3.0.*
-        dotnet tool update -g Skyline.DataMiner.CICD.Tools.DataMinerDeploy --version 2.0.*
+        dotnet tool update -g Skyline.DataMiner.CICD.Tools.CatalogUpload --version 3.0.10-alpha1
+        dotnet tool update -g Skyline.DataMiner.CICD.Tools.DataMinerDeploy --version 3.0.0-alpha1
       shell: bash
 
     - name: Find branch
