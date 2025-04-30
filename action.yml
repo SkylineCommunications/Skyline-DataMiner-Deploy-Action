@@ -58,13 +58,6 @@ runs:
         echo "All required inputs are provided."
       shell: bash
 
-    - name: Warn if Deprecated artifact-id is Provided
-      run: |
-        if [[ -n "${{ inputs.artifact-id }}" ]]; then
-          echo "::warning::Warning: The 'artifact-id' input is deprecated. Using 'artifact-id' with an API key for the DataMiner System will be removed on May 1, 2025. Please switch to using a DataMiner Organization Key—which you can generate at https://admin.dataminer.services/{your organization guid}/organization/keys—and the corresponding 'agent-destination-id' (found as the last GUID in your system’s details page in the Admin app). Pipelines using 'artifact-id' will break after the deprecation date."
-        fi
-      shell: bash
-
     - name: Validate Mandatory Inputs for Upload/All stage
       if: ${{ inputs.stage == 'Upload' || inputs.stage == 'All' }}
       run: |
@@ -87,12 +80,13 @@ runs:
         echo "All required inputs for the Upload/All stages are provided."
       shell: bash
 
-    - name: Validate Mandatory Inputs for Deploy stage
-      if: ${{ inputs.stage == 'Deploy' }}
+    - name: Validate Mandatory Inputs for Deploy/All stage
+      if: ${{ inputs.stage == 'Deploy' || inputs.stage == 'All' }}
       shell: bash
       run: |
-        if [[ -z "${{ inputs.artifact-id }}" && -z "${{ inputs.agent-destination-id }}" ]]; then
-          echo "Error: Either 'artifact-id' or 'agent-destination-id' must be provided for the Deploy stage."
+
+        if [[ -z "${{ inputs.agent-destination-id }}" ]]; then
+          echo "Error: 'agent-destination-id' must be provided for the Deploy stage."
           exit 1
         fi
 
