@@ -264,6 +264,6 @@ runs:
 
     # Deploy using the provided catalog-id and catalog-version
     - name: Deploy to DataMiner
-      if: ${{ (inputs.stage == 'Deploy' || inputs.stage == 'All')' && !(inputs.agent-destination-id  == '') }}
+      if: ${{ (inputs.stage == 'Deploy' || inputs.stage == 'All') }}
       run: dataminer-package-deploy from-catalog --catalog-id "${{ steps.get-catalog-id.outputs.catalogId }}" --catalog-version "${{ inputs.version }}" --dm-catalog-token ${{ inputs.api-key }} --agent-destination-id ${{ inputs.agent-destination-id }} --debug "${{ inputs.debug }}"
       shell: bash
