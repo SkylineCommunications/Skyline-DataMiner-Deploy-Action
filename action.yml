@@ -27,22 +27,16 @@ inputs:
     description: "The specific stage to run in this action. Possible values are: All, Upload, and Deploy. All will run all 3 stages consecutively."
     required: false
     default: "All"
-  artifact-id:
-    description: "[DEPRECATED - Will be removed 01-05-2025]. Please use the agent-destination-id alongside an Organization Key inside api-key."
-    required: false
   build-number:
     description: "The build number of a workflow run. Only required for a development run. Required for stages Upload and All if no version was provided instead."
     required: false
   debug:
-    description: "[DEPRECATED] Option to enable debug logging. Optional."
+    description: "Option to enable debug logging. Optional."
     required: false
+    default: "false"
   agent-destination-id:
     description: "The destination agent ID to deploy to. To obtain this ID for an existing DataMiner System, navigate to its details page in the admin.dataminer.services. The ID is the last GUID of the URL. This is required when the dm-catalog-token is an OrganizationToken."
     required: false
-outputs:
-  artifact-id:
-    description: "The artifact ID if the artifact has been uploaded"
-    value: ${{ steps.setArtifactId.outputs.artifact-id }}
 
 runs:
   using: "composite"
@@ -264,42 +258,18 @@ runs:
     - name: Upload to CatalogUpload
       id: uploadToCatalogTag
       if: ${{ (inputs.stage == 'Upload' || inputs.stage == 'All') && github.ref_type == 'tag' }}
-      run: echo "id=$(dataminer-catalog-upload with-registration --path-to-artifact "${{ steps.solutionFolder.outputs.path }}/${{ steps.packageName.outputs.name }}.dmapp" --artifact-version "${{ inputs.version }}" --branch "${{ steps.findBranch.outputs.branch }}" --dm-catalog-token ${{ inputs.api-key }})" >> $GITHUB_OUTPUT
+      run: dataminer-catalog-upload with-registration --path-to-artifact "${{ steps.solutionFolder.outputs.path }}/${{ steps.packageName.outputs.name }}.dmapp" --artifact-version "${{ inputs.version }}" --branch "${{ steps.findBranch.outputs.branch }}" --dm-catalog-token ${{ inputs.api-key }} --debug "${{ inputs.debug }}"
       shell: bash
 
     # Use github.ref_name for the branch name when not a tag
     - name: Upload to CatalogUpload
       id: uploadToCatalog
       if: ${{ (inputs.stage == 'Upload' || inputs.stage == 'All') && github.ref_type != 'tag' }}
-      run: echo "id=$(dataminer-catalog-upload with-registration --path-to-artifact "${{ steps.solutionFolder.outputs.path }}/${{ steps.packageName.outputs.name }}.dmapp" --branch "${{ github.ref_name }}" --dm-catalog-token ${{ inputs.api-key }})" >> $GITHUB_OUTPUT
+      run: dataminer-catalog-upload with-registration --path-to-artifact "${{ steps.solutionFolder.outputs.path }}/${{ steps.packageName.outputs.name }}.dmapp" --branch "${{ github.ref_name }}" --dm-catalog-token ${{ inputs.api-key }} --debug "${{ inputs.debug }}"
       shell: bash
-
-    - name: Set artifact Id
-      id: setArtifactId
-      if: ${{ inputs.stage == 'Upload' || inputs.stage == 'All' }}
-      run: echo "artifact-id=${{ steps.uploadToCatalog.outputs.id }}${{ steps.uploadToCatalogTag.outputs.id }}" >> $GITHUB_OUTPUT
-      shell: bash
-
-    # Deploy using the retrieved artifact-id from the CatalogUpload TO BE REMOVED ON 01/05/2025
-    - name: Deploy to DataMiner
-      if: ${{ inputs.stage == 'All'}}
-      run: dataminer-package-deploy from-catalog --artifact-id "${{ steps.setArtifactId.outputs.artifact-id }}" --dm-catalog-token ${{ inputs.api-key }}
-      shell: bash
-
-    # Deploy using the provided artifact-id TO BE REMOVED ON 01/05/2025
-    - name: Deploy to DataMiner
-      if: ${{ inputs.stage == 'Deploy' && inputs.agent-destination-id == '' }}
-      run: dataminer-package-deploy from-catalog --artifact-id "${{ inputs.artifact-id }}" --dm-catalog-token ${{ inputs.api-key }}
-      shell: bash
-
-    # CAN ONLY ENABLE THIS FOR ALL WHEN WE REMOVE THE PREVIOUS DEPLOY FOR ALL: Deploy using the retrieved catalog-id and version from the CatalogUpload
-    # - name: Deploy to DataMiner
-    #   if: ${{ inputs.stage == 'All' }}
-    #   run: dataminer-package-deploy from-catalog --catalog-id "${{ steps.get-catalog-id.outputs.catalogId }}" --catalog-version "${{ inputs.version }}" --dm-catalog-token ${{ inputs.api-key }} --agent-destination-id ${{ inputs.agent-destination-id }}
-    #   shell: bash
 
     # Deploy using the provided catalog-id and catalog-version
     - name: Deploy to DataMiner
-      if: ${{ inputs.stage == 'Deploy' && !(inputs.agent-destination-id  == '') }}
-      run: dataminer-package-deploy from-catalog --catalog-id "${{ steps.get-catalog-id.outputs.catalogId }}" --catalog-version "${{ inputs.version }}" --dm-catalog-token ${{ inputs.api-key }} --agent-destination-id ${{ inputs.agent-destination-id }}
+      if: ${{ (inputs.stage == 'Deploy' || inputs.stage == 'All')' && !(inputs.agent-destination-id  == '') }}
+      run: dataminer-package-deploy from-catalog --catalog-id "${{ steps.get-catalog-id.outputs.catalogId }}" --catalog-version "${{ inputs.version }}" --dm-catalog-token ${{ inputs.api-key }} --agent-destination-id ${{ inputs.agent-destination-id }} --debug "${{ inputs.debug }}"
       shell: bash
