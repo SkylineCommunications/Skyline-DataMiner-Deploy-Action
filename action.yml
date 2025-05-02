@@ -20,7 +20,7 @@ inputs:
     description: "The version number for the artifact. Only required for a release or deployment. Format A.B.C for a stable release or A.B.C-text for a pre-release. Required for stages Upload and All if no build number was provided instead."
     required: false
   timeout:
-    description: "[DEPRECATED] The maximum time spent on waiting for the deployment to finish in seconds. E.g. 900."
+    description: "The maximum time spent on waiting for the deployment to finish in seconds. E.g. 900."
     required: false
     default: "900"
   stage:
@@ -105,8 +105,8 @@ runs:
     - name: Install .NET Tools
       run: |
         dotnet tool update -g Skyline.DataMiner.CICD.Tools.Packager --version 2.0.*
-        dotnet tool update -g Skyline.DataMiner.CICD.Tools.CatalogUpload --version 3.0.10-alpha1
-        dotnet tool update -g Skyline.DataMiner.CICD.Tools.DataMinerDeploy --version 3.0.0-alpha1
+        dotnet tool update -g Skyline.DataMiner.CICD.Tools.CatalogUpload --version 4.0.*
+        dotnet tool update -g Skyline.DataMiner.CICD.Tools.DataMinerDeploy --version 3.0.*
       shell: bash
 
     - name: Find branch
@@ -265,5 +265,5 @@ runs:
     # Deploy using the provided catalog-id and catalog-version
     - name: Deploy to DataMiner
       if: ${{ (inputs.stage == 'Deploy' || inputs.stage == 'All') }}
-      run: dataminer-package-deploy from-catalog --catalog-id "${{ steps.get-catalog-id.outputs.catalogId }}" --catalog-version "${{ inputs.version }}" --dm-catalog-token ${{ inputs.api-key }} --agent-destination-id ${{ inputs.agent-destination-id }} --debug "${{ inputs.debug }}"
+      run: dataminer-package-deploy from-catalog --catalog-id "${{ steps.get-catalog-id.outputs.catalogId }}" --catalog-version "${{ inputs.version }}" --dm-catalog-token ${{ inputs.api-key }} --agent-destination-id ${{ inputs.agent-destination-id }} --deploy-timeout-in-seconds ${{ inputs.timeout }} --debug "${{ inputs.debug }}"
       shell: bash
