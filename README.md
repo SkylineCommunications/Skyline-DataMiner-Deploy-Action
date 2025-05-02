@@ -8,7 +8,7 @@
 
 - artifact-id is deprecated and will be removed.
 
-- Deployments now require specifying the catalog-guid within a catalog.yml file, as explained [here](xref:Important_Changes_Since_Version_2.0.0).
+- Deployments now require specifying the catalog-guid within a catalog.yml file, as explained [here](xref:important-changes-since-version-200).
 
 - The api-key must now exclusively contain an Organization Key.
 
@@ -133,7 +133,7 @@ This action currently only supports the creation of artifacts with Automation sc
 
 ### `api-key`
 
-**Required**. The API key generated in the [DCP Admin app](https://admin.dataminer.services) to authenticate to a certain DataMiner Organization. E.g. `${{ secrets.NAME_OF_YOUR_APIKEY_SECRET }}`. For more information about creating a key, refer to the [DataMiner documentation](https://docs.dataminer.services/user-guide/Cloud_Platform/CloudAdminApp/Managing_DCP_keys.html).
+**Required**. The API key generated in the [DCP Admin app](https://admin.dataminer.services) to authenticate to a certain DataMiner Organization. E.g. `${{ secrets.NAME_OF_YOUR_APIKEY_SECRET }}`. For more information about creating a key, refer to the [DataMiner documentation](https://docs.dataminer.services/user-guide/dataminer_services/Admin/Managing_dataminer_services_keys.html#organization-keys).
 
 ### `solution-path`
 
@@ -154,7 +154,7 @@ The version number for the artifact. Only required for a release run. Format A.B
 
 ### `timeout`
 
-**Optional-Deprecated**. The maximum time spent waiting for the deployment to finish, in seconds. Default '900'. E.g. `'300'`.
+**Optional**. The maximum time spent waiting for the deployment to finish, in seconds. Default '900'. E.g. `'300'`.
 
 ### `stage`
 
@@ -162,7 +162,7 @@ The version number for the artifact. Only required for a release run. Format A.B
 
 ### `destination-agent-id`
 
-**Optional**. The destination agent ID to deploy to. To obtain this ID for an existing DataMiner System, navigate to its details page in the Admin app. The ID is the last GUID of the URL. This is required when the dm-catalog-token is an OrganizationToken.Required for stages `'Deploy'` and `'All'`.
+**Optional**. The destination agent ID to deploy to. To obtain this ID for an existing DataMiner System, navigate to its details page in the Admin app. The ID is the last GUID of the URL. Required for stages `'Deploy'` and `'All'`.
 
 ### `build-number`
 
