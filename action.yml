@@ -20,29 +20,23 @@ inputs:
     description: "The version number for the artifact. Only required for a release or deployment. Format A.B.C for a stable release or A.B.C-text for a pre-release. Required for stages Upload and All if no build number was provided instead."
     required: false
   timeout:
-    description: "[DEPRECATED] The maximum time spent on waiting for the deployment to finish in seconds. E.g. 900."
+    description: "The maximum time spent on waiting for the deployment to finish in seconds. E.g. 900."
     required: false
     default: "900"
   stage:
     description: "The specific stage to run in this action. Possible values are: All, Upload, and Deploy. All will run all 3 stages consecutively."
     required: false
     default: "All"
-  artifact-id:
-    description: "[DEPRECATED - Will be removed 01-05-2025]. Please use the agent-destination-id alongside an Organization Key inside api-key."
-    required: false
   build-number:
     description: "The build number of a workflow run. Only required for a development run. Required for stages Upload and All if no version was provided instead."
     required: false
   debug:
-    description: "[DEPRECATED] Option to enable debug logging. Optional."
+    description: "Option to enable debug logging. Optional."
     required: false
+    default: "false"
   agent-destination-id:
     description: "The destination agent ID to deploy to. To obtain this ID for an existing DataMiner System, navigate to its details page in the admin.dataminer.services. The ID is the last GUID of the URL. This is required when the dm-catalog-token is an OrganizationToken."
     required: false
-outputs:
-  artifact-id:
-    description: "The artifact ID if the artifact has been uploaded"
-    value: ${{ steps.setArtifactId.outputs.artifact-id }}
 
 runs:
   using: "composite"
@@ -62,13 +56,6 @@ runs:
         fi
 
         echo "All required inputs are provided."
-      shell: bash
-
-    - name: Warn if Deprecated artifact-id is Provided
-      run: |
-        if [[ -n "${{ inputs.artifact-id }}" ]]; then
-          echo "::warning::Warning: The 'artifact-id' input is deprecated. Using 'artifact-id' with an API key for the DataMiner System will be removed on May 1, 2025. Please switch to using a DataMiner Organization Key—which you can generate at https://admin.dataminer.services/{your organization guid}/organization/keys—and the corresponding 'agent-destination-id' (found as the last GUID in your system’s details page in the Admin app). Pipelines using 'artifact-id' will break after the deprecation date."
-        fi
       shell: bash
 
     - name: Validate Mandatory Inputs for Upload/All stage
@@ -93,12 +80,13 @@ runs:
         echo "All required inputs for the Upload/All stages are provided."
       shell: bash
 
-    - name: Validate Mandatory Inputs for Deploy stage
-      if: ${{ inputs.stage == 'Deploy' }}
+    - name: Validate Mandatory Inputs for Deploy/All stage
+      if: ${{ inputs.stage == 'Deploy' || inputs.stage == 'All' }}
       shell: bash
       run: |
-        if [[ -z "${{ inputs.artifact-id }}" && -z "${{ inputs.agent-destination-id }}" ]]; then
-          echo "Error: Either 'artifact-id' or 'agent-destination-id' must be provided for the Deploy stage."
+
+        if [[ -z "${{ inputs.agent-destination-id }}" ]]; then
+          echo "Error: 'agent-destination-id' must be provided for the Deploy stage."
           exit 1
         fi
 
@@ -117,8 +105,8 @@ runs:
     - name: Install .NET Tools
       run: |
         dotnet tool update -g Skyline.DataMiner.CICD.Tools.Packager --version 2.0.*
-        dotnet tool update -g Skyline.DataMiner.CICD.Tools.CatalogUpload --version 3.0.*
-        dotnet tool update -g Skyline.DataMiner.CICD.Tools.DataMinerDeploy --version 2.0.*
+        dotnet tool update -g Skyline.DataMiner.CICD.Tools.CatalogUpload --version 4.0.*
+        dotnet tool update -g Skyline.DataMiner.CICD.Tools.DataMinerDeploy --version 3.0.*
       shell: bash
 
     - name: Find branch
@@ -264,42 +252,18 @@ runs:
     - name: Upload to CatalogUpload
       id: uploadToCatalogTag
       if: ${{ (inputs.stage == 'Upload' || inputs.stage == 'All') && github.ref_type == 'tag' }}
-      run: echo "id=$(dataminer-catalog-upload with-registration --path-to-artifact "${{ steps.solutionFolder.outputs.path }}/${{ steps.packageName.outputs.name }}.dmapp" --artifact-version "${{ inputs.version }}" --branch "${{ steps.findBranch.outputs.branch }}" --dm-catalog-token ${{ inputs.api-key }})" >> $GITHUB_OUTPUT
+      run: dataminer-catalog-upload with-registration --path-to-artifact "${{ steps.solutionFolder.outputs.path }}/${{ steps.packageName.outputs.name }}.dmapp" --artifact-version "${{ inputs.version }}" --branch "${{ steps.findBranch.outputs.branch }}" --dm-catalog-token ${{ inputs.api-key }} --debug "${{ inputs.debug }}"
       shell: bash
 
     # Use github.ref_name for the branch name when not a tag
     - name: Upload to CatalogUpload
       id: uploadToCatalog
       if: ${{ (inputs.stage == 'Upload' || inputs.stage == 'All') && github.ref_type != 'tag' }}
-      run: echo "id=$(dataminer-catalog-upload with-registration --path-to-artifact "${{ steps.solutionFolder.outputs.path }}/${{ steps.packageName.outputs.name }}.dmapp" --branch "${{ github.ref_name }}" --dm-catalog-token ${{ inputs.api-key }})" >> $GITHUB_OUTPUT
+      run: dataminer-catalog-upload with-registration --path-to-artifact "${{ steps.solutionFolder.outputs.path }}/${{ steps.packageName.outputs.name }}.dmapp" --branch "${{ github.ref_name }}" --dm-catalog-token ${{ inputs.api-key }} --debug "${{ inputs.debug }}"
       shell: bash
-
-    - name: Set artifact Id
-      id: setArtifactId
-      if: ${{ inputs.stage == 'Upload' || inputs.stage == 'All' }}
-      run: echo "artifact-id=${{ steps.uploadToCatalog.outputs.id }}${{ steps.uploadToCatalogTag.outputs.id }}" >> $GITHUB_OUTPUT
-      shell: bash
-
-    # Deploy using the retrieved artifact-id from the CatalogUpload TO BE REMOVED ON 01/05/2025
-    - name: Deploy to DataMiner
-      if: ${{ inputs.stage == 'All'}}
-      run: dataminer-package-deploy from-catalog --artifact-id "${{ steps.setArtifactId.outputs.artifact-id }}" --dm-catalog-token ${{ inputs.api-key }}
-      shell: bash
-
-    # Deploy using the provided artifact-id TO BE REMOVED ON 01/05/2025
-    - name: Deploy to DataMiner
-      if: ${{ inputs.stage == 'Deploy' && inputs.agent-destination-id == '' }}
-      run: dataminer-package-deploy from-catalog --artifact-id "${{ inputs.artifact-id }}" --dm-catalog-token ${{ inputs.api-key }}
-      shell: bash
-
-    # CAN ONLY ENABLE THIS FOR ALL WHEN WE REMOVE THE PREVIOUS DEPLOY FOR ALL: Deploy using the retrieved catalog-id and version from the CatalogUpload
-    # - name: Deploy to DataMiner
-    #   if: ${{ inputs.stage == 'All' }}
-    #   run: dataminer-package-deploy from-catalog --catalog-id "${{ steps.get-catalog-id.outputs.catalogId }}" --catalog-version "${{ inputs.version }}" --dm-catalog-token ${{ inputs.api-key }} --agent-destination-id ${{ inputs.agent-destination-id }}
-    #   shell: bash
 
     # Deploy using the provided catalog-id and catalog-version
     - name: Deploy to DataMiner
-      if: ${{ inputs.stage == 'Deploy' && !(inputs.agent-destination-id  == '') }}
-      run: dataminer-package-deploy from-catalog --catalog-id "${{ steps.get-catalog-id.outputs.catalogId }}" --catalog-version "${{ inputs.version }}" --dm-catalog-token ${{ inputs.api-key }} --agent-destination-id ${{ inputs.agent-destination-id }}
+      if: ${{ (inputs.stage == 'Deploy' || inputs.stage == 'All') }}
+      run: dataminer-package-deploy from-catalog --catalog-id "${{ steps.get-catalog-id.outputs.catalogId }}" --catalog-version "${{ inputs.version }}" --dm-catalog-token ${{ inputs.api-key }} --agent-destination-id ${{ inputs.agent-destination-id }} --deploy-timeout-in-seconds ${{ inputs.timeout }} --debug "${{ inputs.debug }}"
       shell: bash
