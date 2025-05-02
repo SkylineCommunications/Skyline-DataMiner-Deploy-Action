@@ -8,7 +8,7 @@
 
 - artifact-id is deprecated and will be removed.
 
-- Deployments now require specifying the catalog-guid within a catalog.yml file, as explained [here](xref:important-changes-since-version-200).
+- Deployments now require specifying the catalog-guid within a catalog.yml file, as explained [here](#important-changes-since-version-200).
 
 - The api-key must now exclusively contain an Organization Key.
 
