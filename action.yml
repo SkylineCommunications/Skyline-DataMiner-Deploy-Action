@@ -163,7 +163,7 @@ runs:
       id: autoGenerateCatalogFromGithubTag
       if: ${{ (inputs.stage == 'Upload' || inputs.stage == 'All') }}
       run: |
-        dotnet tool update -g Skyline.DataMiner.CICD.Tools.GitHubToCatalogYaml --version 1.0.*
+        dotnet tool update -g Skyline.DataMiner.CICD.Tools.GitHubToCatalogYaml --version 2.0.*
         github-to-catalog-yaml --workspace "${{ github.workspace }}" --github-token "${{ inputs.github-token }}" --github-repository "${{ github.repository }}"
       shell: bash
 
